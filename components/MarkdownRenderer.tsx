@@ -97,9 +97,17 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
           td: ({ node, ...props }) => (
             <td className="border border-gray-300 px-2 md:px-4 py-2 text-xs md:text-base" {...props} />
           ),
-          a: ({ node, ...props }) => (
-            <a className="text-blue-600 hover:text-blue-800 underline break-all" {...props} />
-          ),
+          a: ({ node, href, ...props }) => {
+            const isExternal = href?.startsWith('http://') || href?.startsWith('https://');
+            return (
+              <a
+                href={href}
+                className="text-blue-600 hover:text-blue-800 underline break-all"
+                {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
+                {...props}
+              />
+            );
+          },
         }}
       >
         {content}
