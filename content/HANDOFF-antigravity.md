@@ -1,15 +1,23 @@
 # Antigravity講座 引き継ぎ資料
 
 **作成日**: 2025-12-02
-**作成済み**: antigravity-01-setup.md（セットアップ編）
+**作成済み**:
+- antigravity-01-setup.md（セットアップ編）
+- antigravity-02-browser-extension.md（Chrome拡張機能編）
 
 ---
 
 ## 次に作成すべき講座
 
-### antigravity-02: 基本操作と設定
+### antigravity-03: Agent Managerの使い方
 
 以下の内容を講座化する：
+- マルチエージェント機能
+- 並列実行
+- Workspaces管理
+- Knowledgeベース
+
+### 参考情報（02で講座化済み）
 
 ---
 
@@ -198,7 +206,7 @@
 | モジュール | タイトル | 内容 |
 |-----------|---------|------|
 | 01 | セットアップ | ✅ 作成済み |
-| 02 | Chrome拡張機能とブラウザ操作 | 拡張機能設定、ブラウザ統合 |
+| 02 | Chrome拡張機能とブラウザ操作 | ✅ 作成済み |
 | 03 | Agent Managerの使い方 | マルチエージェント、並列実行 |
 | 04 | 実践：Webアプリ開発 | Next.jsアプリをエージェントで作成 |
 | 05 | 実践：Web自動化 | スクレイピング、データ抽出 |
@@ -210,15 +218,30 @@
 ## 画像アセット
 
 配置済み: `public/antigravity/`
-- ant1.png 〜 ant8.png（セットアップ編で使用）
 
-追加で必要な画像:
-- Chrome拡張機能のインストール画面
-- Agent Managerのダッシュボード
-- ブラウザ操作のデモ
+### 01: セットアップ編
+- ant1.png 〜 ant8.png
+
+### 02: Chrome拡張機能編（新規追加）
+- agent-manager.png - Agent Manager画面
+- settings-agent.png - Agent設定
+- settings-browser.png - Browser設定
+- settings-editor.png - Editor設定
+- settings-tab.png - Tab設定
+- settings-notifications.png - Notifications設定
+- browser-request.png - ブラウザ操作リクエスト
+- browser-setup.png - Browser Setup画面
+- chrome-webstore.png - Chrome Web Store
+- browser-success.png - 操作成功画面
+- browser-control.png - Browser Control画面
+- browser-demo.mp4 - ブラウザ操作デモ動画（10MB, 3840x2080, 下80pxクロップ済み）
+
+### 追加で必要な画像（03以降）
 - Artifacts表示画面
 - マルチエージェント実行画面
+- Workspaces管理画面
+- Knowledgeベース画面
 
 ---
 
-**最終更新**: 2025-12-02
+**最終更新**: 2025-12-02 15:10
