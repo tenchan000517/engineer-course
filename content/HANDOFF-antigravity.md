@@ -5,17 +5,17 @@
 - antigravity-01-setup.md（セットアップ編）
 - antigravity-02-browser-extension.md（Chrome拡張機能編）
 - antigravity-03-agent-manager.md（Agent Managerとマルチエージェント編）
+- antigravity-04-web-app.md（実践：Webアプリ開発編）
 
 ---
 
 ## 次に作成すべき講座
 
-### antigravity-04: 実践：Webアプリ開発
+### antigravity-05: 実践：Web自動化
 
 以下の内容を講座化する：
-- Next.jsアプリをエージェントで作成
-- エージェントへの効果的な指示方法
-- 計画→実装→検証のサイクル
+- スクレイピング、データ抽出
+- ブラウザ操作を伴うタスク
 
 ### 参考情報（03で講座化済み）
 - Workspace作成・管理
@@ -212,7 +212,7 @@
 | 01 | セットアップ | ✅ 作成済み |
 | 02 | Chrome拡張機能とブラウザ操作 | ✅ 作成済み |
 | 03 | Agent Managerとマルチエージェント | ✅ 作成済み |
-| 04 | 実践：Webアプリ開発 | Next.jsアプリをエージェントで作成 |
+| 04 | 実践：Webアプリ開発 | ✅ 作成済み |
 | 05 | 実践：Web自動化 | スクレイピング、データ抽出 |
 | 06 | ワークフローとルール | カスタマイズ、効率化 |
 | 07 | セキュリティとベストプラクティス | 安全な使い方 |
@@ -253,10 +253,23 @@
 - am-inbox.png - Inbox画面
 - am-knowledge.png - Knowledge画面
 
-### 追加で必要な画像（04以降）
-- Artifacts詳細表示画面
+### 04: 実践：Webアプリ開発編（新規追加）
+- 04-workspace-ready.png - Workspace準備画面
+- 04-dual-screen.png - 2画面構成（Agent Manager + Editor）
+- 04-prompt-start.png - 指示入力、計画開始
+- 04-plan-accept.png - 計画完了、Accept待ち
+- 04-creating-project.png - プロジェクト作成中
+- 04-project-structure.png - プロジェクト構造表示
+- 04-css-error.png - CSSエラー検出（ブラウザ）
+- 04-game-running.png - ゲーム動作画面
+- 04-walkthrough.png - Walkthrough生成、完成報告
+- 04-self-fix.png - 自己修正の試み
+- 04-gemini-fix.png - Gemini 3 Proでの修正
+- 04-typing-game-demo.mp4 - 完成版タイピングゲームのデモ動画（65秒、2640x1920）
+
+### 追加で必要な画像（05以降）
 - Rules/Workflows設定画面
-- 実践プロジェクトのスクリーンショット
+- スクレイピング実行画面
 
 ---
 
