@@ -1,0 +1,17 @@
+{
+  "id": "portfolio",
+  "title": "Next.jsポートフォリオサイト制作講座",
+  "description": "非エンジニアでも、動画も含めた本格的なポートフォリオサイトが作れる",
+  "icon": "briefcase",
+  "color": "blue",
+  "order": 1,
+  "tags": {
+    "language": ["javascript", "typescript"],
+    "framework": ["nextjs", "react"],
+    "editor": ["vscode", "claude-code"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "beginner",
+    "topics": ["web-development", "portfolio", "deployment"]
+  },
+  "moduleCount": 8
+}

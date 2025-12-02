@@ -1,0 +1,110 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { ModuleData } from '@/lib/markdown';
+
+interface SidebarProps {
+  modules: ModuleData[];
+}
+
+export default function Sidebar({ modules }: SidebarProps) {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      {/* ハンバーガーメニューボタン (モバイルのみ) */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded-lg shadow-lg"
+        aria-label="メニュー"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          {isOpen ? (
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          ) : (
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          )}
+        </svg>
+      </button>
+
+      {/* オーバーレイ (モバイルのみ) */}
+      {isOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* サイドバー */}
+      <aside
+        className={`w-64 bg-white border-r border-gray-200 h-screen overflow-y-auto fixed left-0 top-0 z-40 transition-transform duration-300 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
+        <div className="p-6">
+          <Link href="/" className="block mb-8" onClick={() => setIsOpen(false)}>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Engineer Course
+            </h1>
+            <p className="text-sm text-gray-600 mt-1">
+              Next.jsポートフォリオ講座
+            </p>
+          </Link>
+
+          <nav>
+            <div className="space-y-1">
+              {modules.map((module) => {
+                const isActive = pathname === `/module/${module.slug}`;
+                return (
+                  <Link
+                    key={module.slug}
+                    href={`/module/${module.slug}`}
+                    onClick={() => setIsOpen(false)}
+                    className={`block px-4 py-3 rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-blue-50 text-blue-700 font-medium'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                          isActive
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 text-gray-600'
+                        }`}
+                      >
+                        {module.order}
+                      </span>
+                      <span className="text-sm flex-1 break-words">
+                        {module.title.replace(/^モジュール\d+:\s*/, '')}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </nav>
+        </div>
+      </aside>
+    </>
+  );
+}

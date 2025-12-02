@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 横スクロール防止 */
+html {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
+}
+
+/* 特定の要素の幅制限 */
+img,
+video,
+iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Proseスタイリング（マークダウン用） */
+.prose {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose * {
+  max-width: 100% !important;
+}
+
+.prose h1 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.prose h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose pre {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.prose code {
+  font-size: 0.875em;
+  overflow-wrap: break-word;
+  max-width: 100% !important;
+}
+
+.prose table {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: block !important;
+  overflow-x: auto !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* スムーススクロール */
+html {
+  scroll-behavior: smooth;
+}
+
+/* コードブロックのスタイリング改善 */
+pre {
+  background-color: #111827 !important; /* gray-900 */
+  color: #f3f4f6 !important; /* gray-100 */
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+}
+
+pre code {
+  background: transparent !important;
+  padding: 0 !important;
+  display: block;
+  overflow-x: auto;
+  color: #f3f4f6 !important; /* gray-100 - 見やすい明るいグレー */
+  font-weight: 400;
+}
+
+/* インラインコードのコントラスト改善 */
+code:not(pre code) {
+  color: #dc2626 !important; /* red-600 - より濃い赤 */
+  background-color: #f3f4f6 !important; /* gray-100 */
+  font-weight: 600;
 }

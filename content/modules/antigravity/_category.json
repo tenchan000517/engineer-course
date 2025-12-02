@@ -1,0 +1,17 @@
+{
+  "id": "antigravity",
+  "title": "Google Antigravity講座",
+  "description": "AIエージェントが自律的にコードを書く、次世代の開発プラットフォーム",
+  "icon": "rocket",
+  "color": "purple",
+  "order": 2,
+  "tags": {
+    "language": ["javascript", "python", "any"],
+    "framework": ["any"],
+    "editor": ["antigravity"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "beginner",
+    "topics": ["ai-coding", "automation", "agent"]
+  },
+  "moduleCount": 1
+}
