@@ -4,20 +4,24 @@
 **作成済み**:
 - antigravity-01-setup.md（セットアップ編）
 - antigravity-02-browser-extension.md（Chrome拡張機能編）
+- antigravity-03-agent-manager.md（Agent Managerとマルチエージェント編）
 
 ---
 
 ## 次に作成すべき講座
 
-### antigravity-03: Agent Managerの使い方
+### antigravity-04: 実践：Webアプリ開発
 
 以下の内容を講座化する：
-- マルチエージェント機能
-- 並列実行
-- Workspaces管理
-- Knowledgeベース
+- Next.jsアプリをエージェントで作成
+- エージェントへの効果的な指示方法
+- 計画→実装→検証のサイクル
 
-### 参考情報（02で講座化済み）
+### 参考情報（03で講座化済み）
+- Workspace作成・管理
+- マルチエージェント（並列実行）
+- モデル選択
+- Inbox管理
 
 ---
 
@@ -207,7 +211,7 @@
 |-----------|---------|------|
 | 01 | セットアップ | ✅ 作成済み |
 | 02 | Chrome拡張機能とブラウザ操作 | ✅ 作成済み |
-| 03 | Agent Managerの使い方 | マルチエージェント、並列実行 |
+| 03 | Agent Managerとマルチエージェント | ✅ 作成済み |
 | 04 | 実践：Webアプリ開発 | Next.jsアプリをエージェントで作成 |
 | 05 | 実践：Web自動化 | スクレイピング、データ抽出 |
 | 06 | ワークフローとルール | カスタマイズ、効率化 |
@@ -236,12 +240,24 @@
 - browser-control.png - Browser Control画面
 - browser-demo.mp4 - ブラウザ操作デモ動画（10MB, 3840x2080, 下80pxクロップ済み）
 
-### 追加で必要な画像（03以降）
-- Artifacts表示画面
-- マルチエージェント実行画面
-- Workspaces管理画面
-- Knowledgeベース画面
+### 03: Agent Managerとマルチエージェント編（新規追加）
+- am-main.png - Agent Managerメイン画面
+- am-workspace-select.png - Workspace選択画面
+- am-trust-folder-1.png - セキュリティ確認ダイアログ1
+- am-trust-folder-2.png - セキュリティ確認ダイアログ2
+- am-workspace-ready.png - Workspace準備完了画面
+- am-model-select.png - モデル選択ドロップダウン
+- am-agent-complete.png - エージェントタスク完了画面
+- am-editor-view.png - エディター画面（3サーフェス同時表示）
+- am-multiagent.png - マルチエージェント完了画面
+- am-inbox.png - Inbox画面
+- am-knowledge.png - Knowledge画面
+
+### 追加で必要な画像（04以降）
+- Artifacts詳細表示画面
+- Rules/Workflows設定画面
+- 実践プロジェクトのスクリーンショット
 
 ---
 
-**最終更新**: 2025-12-02 15:10
+**最終更新**: 2025-12-02
