@@ -5,6 +5,7 @@
 - module-01-docker-setup.md（Dockerセットアップ編）
 - module-02-instagram-api-setup.md（Instagram API設定編）
 - module-03-instagram-post.md（Instagram投稿ワークフロー編）
+- module-04-google-sheets.md（Google Sheets連携編）
 
 ---
 
@@ -138,6 +139,7 @@ A: 回答
 | 01 | module-01-docker-setup.md | 完了 |
 | 02 | module-02-instagram-api-setup.md | 完了 |
 | 03 | module-03-instagram-post.md | 完了 |
+| 04 | module-04-google-sheets.md | 完了 |
 
 ### Module 01の修正履歴
 
@@ -436,43 +438,97 @@ GET https://graph.facebook.com/oauth/access_token
 - 43-instagram-post.png
 - 44-workflow-complete.png
 
+**Module 04:**
+- 45-api-library-search.png
+- 46-sheets-api-result.png
+- 47-sheets-api-detail.png
+- 48-sheets-api-enabled.png
+- 49-oauth-start.png
+- 50-oauth-configured.png
+- 51-client-type-select.png
+- 52-client-settings.png
+- 53-client-created.png
+- 54-client-list.png
+- 55-n8n-credentials.png
+- 56-add-credential.png
+- 57-credential-form.png
+- 58-google-unverified.png
+- 59-permission-select.png
+- 60-account-connected.png
+- 61-sheets-operations.png
+- 62-create-spreadsheet.png
+- 63-create-success.png
+- 64-no-columns.png
+- 65-columns-found.png
+- 66-sheets-data.png
+- 67-get-rows-setting.png
+- 68-get-rows-success.png
+- 69-update-success.png
+
 ---
 
 ## 次に作成すべき講座
 
 ### 全体ビジョン
 
-最終目標は以下のような自動化フローを構築すること：
+**スプレッドシートをコンテンツ管理の中心**に据える。
 
-```
-[調査・リサーチ] → [スプレッドシート] → [AI生成] → [Instagram投稿]
-                    （コンテンツ管理ハブ）
-```
+最終的なフローは未確定。以下の要素を組み合わせる可能性がある：
+- 単一画像投稿 / カルーセル投稿 / リール動画投稿
+- Canva連携（テンプレート一括生成）
+- AI生成（キャプション、画像等）
+- スケジュール投稿
 
-**スプレッドシートがコンテンツ管理の中心**となり、調査結果の蓄積、投稿内容の構成、AI生成の入力、投稿ステータス管理などを一元化する。
+Module 04でシートの基盤を固め、実践を通じて最適なフローを決定する。
 
 ---
 
-### Module 04: Google Sheets連携（基本）
+### Module 04 完了記録
 
 **テーマ**: n8nとGoogle Sheetsの連携設定と基本操作
 
-**状態**: 未着手
+**調査日**: 2025-12-04
 
-**目的**: 後続のAI連携・統合ワークフローの**土台を固める**
+**実践日**: 2025-12-04
 
-**学習内容**:
-1. Google Cloud ConsoleでOAuth認証設定
-2. n8nのGoogle Sheets Credential作成
-3. データの読み込み（Get Rows）
-4. データの書き込み（Append Row）
-5. データの更新（Update Row）
-6. 投稿管理用シートの設計例
+**状態**: 完了（講座作成済み）
 
-**成果物**:
-- Google Sheets認証が設定されたn8n環境
-- 読み書き・更新ができるサンプルワークフロー
-- 投稿管理用スプレッドシートのテンプレート
+**調査・設計書**: `content/modules/n8n/module-04-research.md`
+
+---
+
+#### 実践結果
+
+| 項目 | 結果 |
+|------|------|
+| ワークフロー名 | Google Sheets Test |
+| 作成したスプレッドシート | n8n-test |
+| spreadsheetId | 1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKIQ |
+| テストデータ | POST-001, DRAFT→READY, テスト投稿1 |
+
+**完成したワークフロー構成**:
+```
+[Manual Trigger] → [Google Sheets] → [Google Sheets1] → [Google Sheets2] → [Google Sheets3]
+  (実行開始)        (Create)          (Append Row)       (Get Rows)         (Update Row)
+```
+
+**実践で止まった箇所（トラブルシューティングに記載済み）**:
+1. access_deniedエラー
+   - 原因: テストユーザーが追加されていなかった
+   - 解決: OAuth同意画面→対象→テストユーザー追加
+2. No columns found in Google Sheets
+   - 原因: スプレッドシートにヘッダー行がなかった
+   - 解決: 1行目にpost_id, status, captionを入力
+
+---
+
+### Module 04: Google Sheets連携（基本）（計画との差分）
+
+**当初計画**: 投稿管理用シート（posts/media）の構築まで
+
+**実際の完了範囲**: 基本操作（Create/Append/Get/Update）まで
+
+**残タスク**: Phase 3（投稿管理シートの本格構築）は次回以降
 
 ---
 
@@ -516,7 +572,7 @@ GET https://graph.facebook.com/oauth/access_token
   "icon": "workflow",
   "color": "orange",
   "order": 3,
-  "moduleCount": 3
+  "moduleCount": 4
 }
 ```
 
@@ -524,4 +580,4 @@ GET https://graph.facebook.com/oauth/access_token
 
 ---
 
-**最終更新**: 2025-12-04 （Module 03 完了、Module 04-06 計画追加）
+**最終更新**: 2025-12-04 （Module 04 完了・講座作成済み）
