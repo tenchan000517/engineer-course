@@ -4,6 +4,7 @@
 **作成済み**:
 - module-01-docker-setup.md（Dockerセットアップ編）
 - module-02-instagram-api-setup.md（Instagram API設定編）
+- module-03-instagram-post.md（Instagram投稿ワークフロー編）
 
 ---
 
