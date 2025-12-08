@@ -38,7 +38,7 @@ n8n基礎講座（Module 01-11）を完了し、Instagram自動投稿システ�
 | トピック | 概要 | 状態 |
 |---------|------|------|
 | 投稿内容の精度アップ | Geminiプロンプト改善、コンテンツ品質向上 | 未着手 |
-| AI音声生成 | Fish Audio連携でナレーション自動生成 | **実装中**（Module 01完了） |
+| AI音声生成 | Fish Audio連携でナレーション自動生成 | **実装中**（残タスクあり） |
 | インサイト取得 | Instagram Insights APIで分析データ取得 | 未着手 |
 
 ---
@@ -171,6 +171,9 @@ A: 回答
 | モジュール | ファイル | 状態 |
 |-----------|---------|------|
 | 01 AI音声生成の基本セットアップ | module-01-audio-setup.md | 完了 |
+| 02【前編】音声合成ワークフローの構築 | module-02a-audio-workflow.md | 完了 |
+| 02【中編】音声合成ワークフローの構築 | module-02b-audio-workflow.md | 完了 |
+| 02【後編】ループ完成・ステータス更新 | module-02c-audio-workflow.md | **実践待ち** |
 
 ---
 
@@ -227,6 +230,43 @@ https://script.google.com/macros/s/AKfycbzKG2-JfMU9wcuF9r8jC5JJoAU-P26qiqmFnWURQ
 
 ## 技術メモ
 
+### n8nノード指示のルール（重要）
+
+**Google Sheets / Google Drive ノードを指示する際は、必ずActionを明記すること。**
+
+ノード追加時にAction選択画面が表示されるため、Actionの指定がないと受講者が迷う。
+
+**Google Sheets Actions**:
+| Action | 用途 |
+|--------|------|
+| Get row(s) in sheet | シートからデータ取得 |
+| Append row in sheet | 行を追加 |
+| Update row in sheet | 行を更新 |
+| Append or update row in sheet | 行を追加または更新（upsert） |
+| Clear sheet | シートをクリア |
+| Delete rows or columns from sheet | 行/列を削除 |
+
+**Google Drive Actions**:
+| Action | 用途 |
+|--------|------|
+| Search files and folders | ファイル/フォルダを検索 |
+| Download file | ファイルをダウンロード |
+| Upload file | ファイルをアップロード |
+| Move file | ファイルを移動 |
+| Create folder | フォルダを作成 |
+| Delete a file | ファイルを削除 |
+| Copy file | ファイルをコピー |
+
+**指示例**:
+```
+Google Sheetsノードを追加:
+- Action: Get row(s) in sheet
+- Document: n8n-test
+- Sheet: canva_A
+```
+
+---
+
 ### n8nワークフローJSONのフォーマット仕様
 
 **Google Sheetsノードの正しい構造**:
@@ -282,13 +322,15 @@ https://script.google.com/macros/s/AKfycbzKG2-JfMU9wcuF9r8jC5JJoAU-P26qiqmFnWURQ
 
 **目的**: リール動画にAIナレーションを自動追加
 
-**状態**: **実装中**
+**状態**: **実装中**（残タスクあり - 詳細は「次にやること（緊急引き継ぎ）」参照）
 
-**完了したモジュール**:
+**作成済みモジュール**:
 - Module 01: AI音声生成の基本セットアップ（`module-01-audio-setup.md`）
+- Module 02【前編】: 音声合成ワークフローの構築（`module-02a-audio-workflow.md`）
+- Module 02【中編】: 音声合成ワークフローの構築（`module-02b-audio-workflow.md`）
 
-**次に作成するモジュール**:
-- Module 02: 音声生成ワークフロー（シートから音声生成→Drive保存→ffmpegで合成）
+**未作成モジュール**:
+- Module 02【後編】: ループ完成、ステータス更新、全カテゴリ対応（`module-02c-audio-workflow.md`）- **実践待ち**
 
 ---
 
@@ -455,18 +497,147 @@ ffmpeg -i video.mp4 -i narration_1.mp3 -i narration_2.mp3 \
   - n8n Credential設定
   - 音声生成テスト
 
-### 次にやること
+### 音声合成ワークフロー実装状況（2025-12-08 19:10時点）
 
-**AI音声生成の続き（Module 02相当）**:
+**完了したステップ**:
+1. canva_Aシートからデータ取得（Get canva_A）- OK
+2. audio_statusが空の行をフィルタ（Filter Pending）- OK
+3. フォルダ名を動的生成（Set Folder Names）- OK
+4. カテゴリフォルダを検索（Search Category Folder）- OK
+5. アーカイブフォルダを検索・作成（Search Archive Folder / If Archive Exists / Create Archive Folder）- OK
+6. ループ用データ準備（Prepare Loop Data）- OK
+7. 1件ずつループ処理（Loop Over Items）- OK
+8. 動画ファイル検索（Search Video File）- OK
+9. 動画存在チェック（If Video Exists）- OK
 
-1. canva_Aシートからnarration_1, narration_2を取得
-2. Fish Audio APIで前半・後半の音声を生成
-3. Google Driveに音声ファイルを保存
-4. ffmpegで動画と音声を合成
-5. 合成済み動画をDriveにアップロード
+**次に実装するステップ**:
+10. 動画ファイルをダウンロード
+11. Fish Audio APIで音声生成（narration_1, narration_2）
+12. ffmpegで動画と音声を合成
+13. 合成済み動画をアーカイブフォルダにアップロード
+14. シートのaudio_statusを更新
 
-**参考: 設計済みフロー**（本HANDOFF内「音声合成フロー（設計）」セクション参照）
+**現在のワークフローJSON**: `C:\Users\tench\Downloads\音声合成 (1).json`
+
+**重要な修正点（トラブルシューティング用）**:
+
+1. **Google Drive検索で部分一致問題**
+   - Search Category Folderで「202512Instagram投稿A」を検索すると「202512Instagram投稿A_archive」も返る
+   - 解決: Prepare Loop Dataで正確な名前でフィルタする
+   ```javascript
+   const categoryFolder = $('Search Category Folder').all()
+     .find(item => item.json.name === folderNames.folder_name);
+   ```
+
+2. **フォルダ検索はループの外で1回だけ**
+   - 同じフォルダを毎回検索するのは無駄
+   - Set Folder Namesで1件だけ返し、フォルダ検索を1回だけ実行
+   - Prepare Loop DataでFilter Pendingの全データを復元してcategory_folder_idを付与
+
+3. **Google DriveノードのFolder ID指定でエラー**
+   - 「File not found: .」エラーが発生することがある
+   - ExpressionでIDを渡す場合、前のノードのデータが正しく参照できているか確認
+
+**講座用スクショ（配置済み）**:
+
+Module 02【前編】で使用した画像（`public/n8n-advanced/`に配置済み）:
+
+| ファイル名 | 内容 |
+|-----------|------|
+| `get-canva-a-success.png` | Get canva_A - 5件取得成功 |
+| `filter-pending-success.png` | Filter Pending - フィルタ成功 |
+| `loop-over-items-setup.png` | Loop Over Items - Batch Size 1設定 |
+| `search-category-folder-success.png` | Search Category Folder - フォルダ検索成功 |
+| `if-archive-exists-true.png` | If Archive Exists - True Branch成功 |
+| `create-archive-folder-success.png` | Create Archive Folder - フォルダ作成成功 |
+| `google-drive-video-exists.png` | Google Drive - 動画ファイル存在確認 |
+| `if-video-exists-success.png` | If Video Exists - True Branch成功 |
+| `workflow-overview.png` | ワークフロー全体図（Step 1-9完了時点） |
+
+Module 02【中編】で使用した画像（`public/n8n-advanced/`に配置済み）:
+
+| ファイル名 | 内容 |
+|-----------|------|
+| `download-file-success.png` | Download file - 動画ダウンロード成功 |
+| `generate-audio-1-success.png` | Generate Audio 1 - 音声生成成功 |
+| `generate-audio-2-success.png` | Generate Audio 2 - 音声生成成功 |
+| `save-video-setup.png` | Save Video - 設定画面 |
+| `execute-command-success.png` | Execute Command - ffmpeg合成成功（exitCode: 0） |
+| `read-output-success.png` | Read Output - 合成済み動画読み込み成功 |
+| `move-original-to-archive-success.png` | Move Original to Archive - 元動画移動成功 |
+| `upload-new-video-success.png` | Upload New Video - 新動画アップロード成功 |
+| `workflow-complete.png` | ワークフロー完成図 |
+
+**受講者用ワークフローJSON**:
+| ファイル名 | 内容 |
+|-----------|------|
+| `audio-workflow-template.json` | 音声合成ワークフロー（機密情報プレースホルダー化済み） |
 
 ---
 
-**最終更新**: 2025-12-08（Module 01完了、Module 02実装開始待ち）
+### 次にやること
+
+**AI音声生成トピックは未完了** - 以下の残タスクあり
+
+---
+
+#### 完了済みタスク
+
+- [x] 講座構成の修正: module-02bを【中編】にリネーム
+- [x] Save Video用スクショを講座に追加（`save-video-setup.png`）
+- [x] 受講者用ワークフローJSONの作成（`audio-workflow-template.json`）
+
+---
+
+#### 残タスク1: Save Audio 1/Save Audio 2のスクショ撮影
+
+**問題**: Save Audio 1/Save Audio 2の設定・結果スクショが未撮影
+
+**対応**: 次回実践時に撮影して講座に追加
+
+---
+
+#### 残タスク2: 【後編】で実装する機能（実践待ち）
+
+**【後編】で追加する機能**:
+
+1. **ループ処理の完成**
+   - 現在はLoop Over Itemsで1件だけ処理して終わり
+   - Upload New Video後、Loop Over Itemsのloopブランチに戻す接続を追加
+   - API呼び出しのレート制限対策（Wait 5sは追加済みだが、追加のWaitが必要かも）
+
+2. **audio_statusの更新**
+   - Upload New Video成功後、Google Sheets: Update rowでaudio_statusを「DONE」に更新
+   - 対象シート: canva_A（将来的にはcanva_A〜E）
+   - 更新対象行の特定: row_numberを使用
+
+3. **全カテゴリ対応**
+   - 現在はcanva_Aのみ対応
+   - canva_A〜Eすべてを1回の実行で処理したい
+   - Google Drive内の動画で、該当ステータス（audio_status空）のものをすべて処理する
+   - 実装方法はユーザーと相談して決める（勝手に決めない）
+
+---
+
+#### 重要な注意事項
+
+1. **講座フォーマットルール**（本HANDOFF内「講座フォーマット仕様」参照）
+   - 絵文字禁止
+   - 各セクション末尾にチェックポイント
+   - トラブルシューティングは実際に発生した問題のみ記載
+   - 参考資料・よくある質問を必ず記載
+
+2. **n8nノード指示ルール**（本HANDOFF内「n8nノード指示のルール」参照）
+   - Google Sheets/Google Driveノードは必ずActionを明記
+
+3. **画像には必ず説明文を追加**
+   - 「○○の実行結果：」のような一文を画像の前に入れる
+   - 画像だけ連続させない
+
+4. **進捗はTodoWriteで管理**
+   - 作業開始時にタスク一覧を作成
+   - 各タスク完了時に即座にcompletedに更新
+
+---
+
+**最終更新**: 2025-12-08（残タスク対応: 講座構成修正、スクショ追加、ワークフローJSON作成完了）
