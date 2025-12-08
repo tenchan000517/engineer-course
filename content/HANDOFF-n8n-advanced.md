@@ -33,13 +33,13 @@ n8n基礎講座（Module 01-11）を完了し、Instagram自動投稿システ�
   n8n Schedule Trigger → Instagram Graph API
 ```
 
-### 上級編で扱う内容（確定）
+### 上級編で扱うトピック（確定）
 
-| Module | トピック | 概要 | 状態 |
-|--------|---------|------|------|
-| 01 | 投稿内容の精度アップ | Geminiプロンプト改善、コンテンツ品質向上 | 未着手 |
-| 02 | AI音声生成 | Fish Audio連携でナレーション自動生成 | 調査中 |
-| 03 | インサイト取得 | Instagram Insights APIで分析データ取得 | 未着手 |
+| トピック | 概要 | 状態 |
+|---------|------|------|
+| 投稿内容の精度アップ | Geminiプロンプト改善、コンテンツ品質向上 | 未着手 |
+| AI音声生成 | Fish Audio連携でナレーション自動生成 | **実装中**（Module 01完了） |
+| インサイト取得 | Instagram Insights APIで分析データ取得 | 未着手 |
 
 ---
 
@@ -256,9 +256,9 @@ https://script.google.com/macros/s/AKfycbzKG2-JfMU9wcuF9r8jC5JJoAU-P26qiqmFnWURQ
 
 ---
 
-## モジュール詳細
+## トピック詳細
 
-### Module 01: 投稿内容の精度アップ
+### トピック1: 投稿内容の精度アップ
 
 **目的**: 現在のGeminiプロンプトで生成されるコンテンツの品質を向上
 
@@ -278,11 +278,17 @@ https://script.google.com/macros/s/AKfycbzKG2-JfMU9wcuF9r8jC5JJoAU-P26qiqmFnWURQ
 
 ---
 
-### Module 02: AI音声生成（Fish Audio）
+### トピック2: AI音声生成（Fish Audio）
 
 **目的**: リール動画にAIナレーションを自動追加
 
-**状態**: 実装中
+**状態**: **実装中**
+
+**完了したモジュール**:
+- Module 01: AI音声生成の基本セットアップ（`module-01-audio-setup.md`）
+
+**次に作成するモジュール**:
+- Module 02: 音声生成ワークフロー（シートから音声生成→Drive保存→ffmpegで合成）
 
 ---
 
@@ -401,7 +407,7 @@ ffmpeg -i video.mp4 -i narration_1.mp3 -i narration_2.mp3 \
 
 ---
 
-### Module 03: インサイト取得
+### トピック3: インサイト取得
 
 **目的**: Instagram Insights APIを使って投稿パフォーマンスを自動取得・分析
 
@@ -432,14 +438,35 @@ ffmpeg -i video.mp4 -i narration_1.mp3 -i narration_2.mp3 \
 ## 次のセッションへの指示
 
 ### 現在の状態
-- 上級編ディレクトリ作成完了
-- HANDOFFファイル作成完了
-- 3モジュールの概要定義完了
+
+**n8n環境**:
+- ffmpegインストール済み（`docker exec n8n ffmpeg -version` で確認可能）
+- Fish Audio Credential設定済み（Header Auth: `Fish Audio API`）
+- テストワークフロー「Fish Audio テスト」で音声生成成功確認済み
+
+**講座用設定**:
+- Voice ID（元気な女性）: `b756350f646543bdb0b7e8df76bae3fd`
+- ユーザーは別途カスタムボイス（自分の声）を使用
+
+**完了したモジュール**:
+- Module 01: AI音声生成の基本セットアップ（`module-01-audio-setup.md`）
+  - ffmpeg追加手順
+  - Fish Audioアカウント・APIキー・Voice ID取得
+  - n8n Credential設定
+  - 音声生成テスト
 
 ### 次にやること
-1. Module 01（投稿内容の精度アップ）から着手するか、Module 02（Fish Audio）の追加調査から始めるか確認
-2. 選択したモジュールの調査→実践→講座作成サイクルを開始
+
+**AI音声生成の続き（Module 02相当）**:
+
+1. canva_Aシートからnarration_1, narration_2を取得
+2. Fish Audio APIで前半・後半の音声を生成
+3. Google Driveに音声ファイルを保存
+4. ffmpegで動画と音声を合成
+5. 合成済み動画をDriveにアップロード
+
+**参考: 設計済みフロー**（本HANDOFF内「音声合成フロー（設計）」セクション参照）
 
 ---
 
-**最終更新**: 2025-12-08（3モジュール定義）
+**最終更新**: 2025-12-08（Module 01完了、Module 02実装開始待ち）
