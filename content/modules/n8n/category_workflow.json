@@ -1,0 +1,775 @@
+{
+  "name": "Canva用シート振り分け",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "DRAFT"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-posts",
+      "name": "Get DRAFT Posts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [460, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\nfor (const item of $input.all()) {\n  const postId = item.json.post_id;\n  const contentJsonStr = item.json.content_json;\n  \n  if (!contentJsonStr) continue;\n  \n  try {\n    const json = JSON.parse(contentJsonStr);\n    const pattern = json.pattern || '';\n    \n    let category = '';\n    switch (pattern) {\n      case 'versus': category = 'A'; break;\n      case 'instant_hack': category = 'B'; break;\n      case 'secret_feature': category = 'C'; break;\n      case 'warning': category = 'D'; break;\n      case 'ranking': category = 'E'; break;\n      default: category = 'C';\n    }\n    \n    const steps = json.solution_steps || [];\n    \n    results.push({\n      json: {\n        post_id: postId,\n        category: category,\n        hook: json.hook || '',\n        problem: json.problem || '',\n        step1: steps[0] || '',\n        step2: steps[1] || '',\n        step3: steps[2] || '',\n        cta: json.cta || ''\n      }\n    });\n  } catch (e) {\n    // skip invalid JSON\n  }\n}\n\nreturn results;"
+      },
+      "id": "parse-json",
+      "name": "Parse JSON & Category",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "A",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category A"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "B",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category B"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "C",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category C"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "D",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category D"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "E",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category E"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "switch-category",
+      "name": "Switch Category",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 178071259,
+          "mode": "list",
+          "cachedResultName": "canva_A",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=178071259"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "hook": "={{ $json.hook }}",
+            "problem": "={{ $json.problem }}",
+            "step1": "={{ $json.step1 }}",
+            "step2": "={{ $json.step2 }}",
+            "step3": "={{ $json.step3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hook",
+              "displayName": "hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "problem",
+              "displayName": "problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step1",
+              "displayName": "step1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step2",
+              "displayName": "step2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step3",
+              "displayName": "step3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cta",
+              "displayName": "cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "append-canva-a",
+      "name": "Append to canva_A",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1140, 100],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 715847450,
+          "mode": "list",
+          "cachedResultName": "canva_B",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=715847450"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "hook": "={{ $json.hook }}",
+            "problem": "={{ $json.problem }}",
+            "step1": "={{ $json.step1 }}",
+            "step2": "={{ $json.step2 }}",
+            "step3": "={{ $json.step3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hook",
+              "displayName": "hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "problem",
+              "displayName": "problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step1",
+              "displayName": "step1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step2",
+              "displayName": "step2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step3",
+              "displayName": "step3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cta",
+              "displayName": "cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "append-canva-b",
+      "name": "Append to canva_B",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1140, 220],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 924087630,
+          "mode": "list",
+          "cachedResultName": "canva_C",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=924087630"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "hook": "={{ $json.hook }}",
+            "problem": "={{ $json.problem }}",
+            "step1": "={{ $json.step1 }}",
+            "step2": "={{ $json.step2 }}",
+            "step3": "={{ $json.step3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hook",
+              "displayName": "hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "problem",
+              "displayName": "problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step1",
+              "displayName": "step1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step2",
+              "displayName": "step2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step3",
+              "displayName": "step3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cta",
+              "displayName": "cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "append-canva-c",
+      "name": "Append to canva_C",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1140, 340],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1012946509,
+          "mode": "list",
+          "cachedResultName": "canva_D",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1012946509"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "hook": "={{ $json.hook }}",
+            "problem": "={{ $json.problem }}",
+            "step1": "={{ $json.step1 }}",
+            "step2": "={{ $json.step2 }}",
+            "step3": "={{ $json.step3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hook",
+              "displayName": "hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "problem",
+              "displayName": "problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step1",
+              "displayName": "step1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step2",
+              "displayName": "step2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step3",
+              "displayName": "step3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cta",
+              "displayName": "cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "append-canva-d",
+      "name": "Append to canva_D",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1140, 460],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1593159234,
+          "mode": "list",
+          "cachedResultName": "canva_E",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1593159234"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "hook": "={{ $json.hook }}",
+            "problem": "={{ $json.problem }}",
+            "step1": "={{ $json.step1 }}",
+            "step2": "={{ $json.step2 }}",
+            "step3": "={{ $json.step3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hook",
+              "displayName": "hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "problem",
+              "displayName": "problem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step1",
+              "displayName": "step1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step2",
+              "displayName": "step2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "step3",
+              "displayName": "step3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cta",
+              "displayName": "cta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "append-canva-e",
+      "name": "Append to canva_E",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1140, 580],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [{ "node": "Get DRAFT Posts", "type": "main", "index": 0 }]
+      ]
+    },
+    "Get DRAFT Posts": {
+      "main": [
+        [{ "node": "Parse JSON & Category", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse JSON & Category": {
+      "main": [
+        [{ "node": "Switch Category", "type": "main", "index": 0 }]
+      ]
+    },
+    "Switch Category": {
+      "main": [
+        [{ "node": "Append to canva_A", "type": "main", "index": 0 }],
+        [{ "node": "Append to canva_B", "type": "main", "index": 0 }],
+        [{ "node": "Append to canva_C", "type": "main", "index": 0 }],
+        [{ "node": "Append to canva_D", "type": "main", "index": 0 }],
+        [{ "node": "Append to canva_E", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

@@ -1,0 +1,150 @@
+{
+    "name": "Fish Audio Narration Generator",
+    "nodes": [
+        {
+            "parameters": {},
+            "id": "trigger-node",
+            "name": "When clicking \"Execute Workflow\"",
+            "type": "n8n-nodes-base.manualTrigger",
+            "typeVersion": 1,
+            "position": [
+                250,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "getAll",
+                "documentId": {
+                    "__rl": true,
+                    "value": "",
+                    "mode": "url"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "value": "Sheet1",
+                    "mode": "list",
+                    "cachedResultName": "Sheet1"
+                },
+                "options": {}
+            },
+            "id": "google-sheets-read",
+            "name": "Read Scripts",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                470,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+                    "name": "Google Sheets account"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.fish.audio/v1/tts",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpHeaderAuth",
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "text",
+                            "value": "={{ $json.script }}"
+                        },
+                        {
+                            "name": "reference_id",
+                            "value": "YOUR_VOICE_ID_HERE"
+                        },
+                        {
+                            "name": "format",
+                            "value": "mp3"
+                        },
+                        {
+                            "name": "mp3_bitrate",
+                            "value": "128"
+                        }
+                    ]
+                },
+                "options": {
+                    "responseFormat": "file",
+                    "fileName": "={{ $json.title }}.mp3"
+                }
+            },
+            "id": "fish-audio-tts",
+            "name": "Fish Audio TTS",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                690,
+                300
+            ],
+            "credentials": {
+                "httpHeaderAuth": {
+                    "id": "YOUR_FISH_AUDIO_CREDENTIAL_ID",
+                    "name": "Fish Audio API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "binaryData": true,
+                "name": "={{ $json.fileName }}",
+                "options": {}
+            },
+            "id": "google-drive-upload",
+            "name": "Upload to Drive",
+            "type": "n8n-nodes-base.googleDrive",
+            "typeVersion": 3,
+            "position": [
+                910,
+                300
+            ],
+            "credentials": {
+                "googleDriveOAuth2Api": {
+                    "id": "YOUR_GOOGLE_DRIVE_CREDENTIAL_ID",
+                    "name": "Google Drive account"
+                }
+            }
+        }
+    ],
+    "connections": {
+        "When clicking \"Execute Workflow\"": {
+            "main": [
+                [
+                    {
+                        "node": "Read Scripts",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Read Scripts": {
+            "main": [
+                [
+                    {
+                        "node": "Fish Audio TTS",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Fish Audio TTS": {
+            "main": [
+                [
+                    {
+                        "node": "Upload to Drive",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

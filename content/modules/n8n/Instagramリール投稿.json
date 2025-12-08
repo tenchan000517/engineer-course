@@ -1,0 +1,411 @@
+{
+  "name": "Instagram Reel from Drive",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-1280, -400],
+      "id": "trigger",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "operation": "search",
+        "queryString": "\"1fNld8ykqqtTtpt44EHdojgT7taTPrLDp\" in parents and mimeType=\"video/mp4\"",
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-1072, -400],
+      "id": "drive-search",
+      "name": "Get Drive Files",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-864, -400],
+      "id": "drive-share",
+      "name": "Share File Public",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ファイル名からpost_idを抽出し、公開URLを生成\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const fileName = item.json.name || '';\n  // 拡張子を除去してpost_idを取得\n  const postId = fileName.replace(/\\.[^/.]+$/, '');\n  const fileId = item.json.id;\n  \n  // Google Drive直接ダウンロードURL\n  // 注意: 大きいファイルはウイルススキャン警告が出る可能性あり\n  const publicUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;\n  \n  results.push({\n    json: {\n      post_id: postId,\n      file_id: fileId,\n      file_name: fileName,\n      video_url: publicUrl,\n      web_view_link: item.json.webViewLink || '',\n      web_content_link: item.json.webContentLink || ''\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-656, -400],
+      "id": "extract-postid",
+      "name": "Extract post_id & URL"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "post_id",
+              "lookupValue": "={{ $json.post_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-448, -400],
+      "id": "get-posts",
+      "name": "Get Post Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.instagram.com/v20.0/me",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "user_id,username"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-240, -400],
+      "id": "get-userid",
+      "name": "Get User ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v20.0/{{ $json.user_id }}/media",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "media_type",
+              "value": "REELS"
+            },
+            {
+              "name": "video_url",
+              "value": "={{ $('Extract post_id & URL').item.json.video_url }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Get Post Data').item.json.caption }}\n\n{{ $('Get Post Data').item.json.hashtags }}"
+            },
+            {
+              "name": "share_to_feed",
+              "value": "true"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-32, -400],
+      "id": "create-container",
+      "name": "Create Reel Container"
+    },
+    {
+      "parameters": {
+        "unit": "seconds",
+        "value": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [176, -400],
+      "id": "wait-processing",
+      "name": "Wait 30s",
+      "webhookId": "wait-reel"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.instagram.com/{{ $json.id }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "status_code"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [384, -400],
+      "id": "check-status",
+      "name": "Check Container Status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.status_code }}",
+              "rightValue": "FINISHED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "id": "finished-check"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [592, -400],
+      "id": "if-finished",
+      "name": "If FINISHED"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v20.0/{{ $('Get User ID').item.json.user_id }}/media_publish",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $('Create Reel Container').item.json.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [800, -560],
+      "id": "publish-reel",
+      "name": "Publish Reel"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-postid",
+              "name": "post_id",
+              "value": "={{ $('Extract post_id & URL').item.json.post_id }}",
+              "type": "string"
+            },
+            {
+              "id": "set-status",
+              "name": "status",
+              "value": "PUBLISHED",
+              "type": "string"
+            },
+            {
+              "id": "set-igpostid",
+              "name": "ig_post_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "set-publishedat",
+              "name": "published_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1008, -560],
+      "id": "edit-fields",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "status": "={{ $json.status }}",
+            "ig_post_id": "={{ $json.ig_post_id }}",
+            "published_at": "={{ $json.published_at }}"
+          },
+          "matchingColumns": ["post_id"],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "status", "displayName": "status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "ig_post_id", "displayName": "ig_post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "published_at", "displayName": "published_at", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1216, -560],
+      "id": "update-sheet",
+      "name": "Update Posts Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "unit": "seconds",
+        "value": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [800, -240],
+      "id": "wait-retry",
+      "name": "Wait 15s Retry",
+      "webhookId": "wait-retry"
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [[{"node": "Get Drive Files", "type": "main", "index": 0}]]
+    },
+    "Get Drive Files": {
+      "main": [[{"node": "Share File Public", "type": "main", "index": 0}]]
+    },
+    "Share File Public": {
+      "main": [[{"node": "Extract post_id & URL", "type": "main", "index": 0}]]
+    },
+    "Extract post_id & URL": {
+      "main": [[{"node": "Get Post Data", "type": "main", "index": 0}]]
+    },
+    "Get Post Data": {
+      "main": [[{"node": "Get User ID", "type": "main", "index": 0}]]
+    },
+    "Get User ID": {
+      "main": [[{"node": "Create Reel Container", "type": "main", "index": 0}]]
+    },
+    "Create Reel Container": {
+      "main": [[{"node": "Wait 30s", "type": "main", "index": 0}]]
+    },
+    "Wait 30s": {
+      "main": [[{"node": "Check Container Status", "type": "main", "index": 0}]]
+    },
+    "Check Container Status": {
+      "main": [[{"node": "If FINISHED", "type": "main", "index": 0}]]
+    },
+    "If FINISHED": {
+      "main": [
+        [{"node": "Publish Reel", "type": "main", "index": 0}],
+        [{"node": "Wait 15s Retry", "type": "main", "index": 0}]
+      ]
+    },
+    "Publish Reel": {
+      "main": [[{"node": "Edit Fields", "type": "main", "index": 0}]]
+    },
+    "Edit Fields": {
+      "main": [[{"node": "Update Posts Sheet", "type": "main", "index": 0}]]
+    },
+    "Wait 15s Retry": {
+      "main": [[{"node": "Check Container Status", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "module-10-v1",
+  "meta": {"instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"},
+  "id": "instagram-reel-drive",
+  "tags": []
+}

@@ -1,0 +1,722 @@
+{
+  "name": "Canva用シート振り分け",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "70e79000-d0ed-4577-bc8d-5c86bdcf829f",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "DRAFT"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "490240d0-c7d0-48ca-99fa-97a2909fb3e5",
+      "name": "Get DRAFT Posts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -688,
+        208
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\nfor (const item of $input.all()) {\n  const postId = item.json.post_id;\n  const contentJsonStr = item.json.content_json;\n  \n  if (!contentJsonStr) continue;\n  \n  try {\n    const json = JSON.parse(contentJsonStr);\n    const pattern = json.pattern || '';\n    \n    let category = '';\n    switch (pattern) {\n      case 'versus': category = 'A'; break;\n      case 'instant_hack': category = 'B'; break;\n      case 'secret_feature': category = 'C'; break;\n      case 'warning': category = 'D'; break;\n      case 'ranking': category = 'E'; break;\n      default: category = 'C';\n    }\n    \n    results.push({\n      json: {\n        post_id: postId,\n        category: category,\n        narration_1: json.narration_1 || '',\n        narration_2: json.narration_2 || '',\n        hook: json.hook || '',\n        title_1: json.title_1 || '',\n        title_2: json.title_2 || '',\n        title_3: json.title_3 || '',\n        problem_1: json.problem_1 || '',\n        problem_2: json.problem_2 || '',\n        problem_3: json.problem_3 || '',\n        step1_title: json.step1_title || '',\n        step1_1: json.step1_1 || '',\n        step1_2: json.step1_2 || '',\n        step1_3: json.step1_3 || '',\n        step2_title: json.step2_title || '',\n        step2_1: json.step2_1 || '',\n        step2_2: json.step2_2 || '',\n        step2_3: json.step2_3 || '',\n        step3_title: json.step3_title || '',\n        step3_1: json.step3_1 || '',\n        step3_2: json.step3_2 || '',\n        step3_3: json.step3_3 || '',\n        cta: json.cta || ''\n      }\n    });\n  } catch (e) {\n    // skip invalid JSON\n  }\n}\n\nreturn results;"
+      },
+      "id": "d3678cd2-8fa3-425b-8f49-12d2daff4473",
+      "name": "Parse JSON & Category",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "A",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category A"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "B",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category B"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "C",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category C"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "D",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category D"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "E",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category E"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1f629d88-34e0-4507-9cc8-3cb47cceca88",
+      "name": "Switch Category",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -240,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1459009746,
+          "mode": "list",
+          "cachedResultName": "canva_A",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1459009746"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "hook": "={{ $json.hook }}",
+            "title_1": "={{ $json.title_1 }}",
+            "title_2": "={{ $json.title_2 }}",
+            "title_3": "={{ $json.title_3 }}",
+            "problem_1": "={{ $json.problem_1 }}",
+            "problem_2": "={{ $json.problem_2 }}",
+            "problem_3": "={{ $json.problem_3 }}",
+            "step1_title": "={{ $json.step1_title }}",
+            "step1_1": "={{ $json.step1_1 }}",
+            "step1_2": "={{ $json.step1_2 }}",
+            "step1_3": "={{ $json.step1_3 }}",
+            "step2_title": "={{ $json.step2_title }}",
+            "step2_1": "={{ $json.step2_1 }}",
+            "step2_2": "={{ $json.step2_2 }}",
+            "step2_3": "={{ $json.step2_3 }}",
+            "step3_title": "={{ $json.step3_title }}",
+            "step3_1": "={{ $json.step3_1 }}",
+            "step3_2": "={{ $json.step3_2 }}",
+            "step3_3": "={{ $json.step3_3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "hook", "displayName": "hook", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_1", "displayName": "title_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_2", "displayName": "title_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_3", "displayName": "title_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_1", "displayName": "problem_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_2", "displayName": "problem_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_3", "displayName": "problem_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_title", "displayName": "step1_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_1", "displayName": "step1_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_2", "displayName": "step1_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_3", "displayName": "step1_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_title", "displayName": "step2_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_1", "displayName": "step2_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_2", "displayName": "step2_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_3", "displayName": "step2_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_title", "displayName": "step3_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_1", "displayName": "step3_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_2", "displayName": "step3_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_3", "displayName": "step3_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "cta", "displayName": "cta", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7520eb8f-3872-47a7-a1dd-487c91c418af",
+      "name": "Append to canva_A",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [0, 0],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1989446321,
+          "mode": "list",
+          "cachedResultName": "canva_B",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1989446321"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "hook": "={{ $json.hook }}",
+            "title_1": "={{ $json.title_1 }}",
+            "title_2": "={{ $json.title_2 }}",
+            "title_3": "={{ $json.title_3 }}",
+            "problem_1": "={{ $json.problem_1 }}",
+            "problem_2": "={{ $json.problem_2 }}",
+            "problem_3": "={{ $json.problem_3 }}",
+            "step1_title": "={{ $json.step1_title }}",
+            "step1_1": "={{ $json.step1_1 }}",
+            "step1_2": "={{ $json.step1_2 }}",
+            "step1_3": "={{ $json.step1_3 }}",
+            "step2_title": "={{ $json.step2_title }}",
+            "step2_1": "={{ $json.step2_1 }}",
+            "step2_2": "={{ $json.step2_2 }}",
+            "step2_3": "={{ $json.step2_3 }}",
+            "step3_title": "={{ $json.step3_title }}",
+            "step3_1": "={{ $json.step3_1 }}",
+            "step3_2": "={{ $json.step3_2 }}",
+            "step3_3": "={{ $json.step3_3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "hook", "displayName": "hook", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_1", "displayName": "title_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_2", "displayName": "title_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_3", "displayName": "title_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_1", "displayName": "problem_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_2", "displayName": "problem_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_3", "displayName": "problem_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_title", "displayName": "step1_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_1", "displayName": "step1_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_2", "displayName": "step1_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_3", "displayName": "step1_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_title", "displayName": "step2_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_1", "displayName": "step2_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_2", "displayName": "step2_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_3", "displayName": "step2_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_title", "displayName": "step3_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_1", "displayName": "step3_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_2", "displayName": "step3_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_3", "displayName": "step3_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "cta", "displayName": "cta", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "de2706c5-6714-4562-b1df-d87443d78f80",
+      "name": "Append to canva_B",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [0, 128],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 10904001,
+          "mode": "list",
+          "cachedResultName": "canva_C",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=10904001"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "hook": "={{ $json.hook }}",
+            "title_1": "={{ $json.title_1 }}",
+            "title_2": "={{ $json.title_2 }}",
+            "title_3": "={{ $json.title_3 }}",
+            "problem_1": "={{ $json.problem_1 }}",
+            "problem_2": "={{ $json.problem_2 }}",
+            "problem_3": "={{ $json.problem_3 }}",
+            "step1_title": "={{ $json.step1_title }}",
+            "step1_1": "={{ $json.step1_1 }}",
+            "step1_2": "={{ $json.step1_2 }}",
+            "step1_3": "={{ $json.step1_3 }}",
+            "step2_title": "={{ $json.step2_title }}",
+            "step2_1": "={{ $json.step2_1 }}",
+            "step2_2": "={{ $json.step2_2 }}",
+            "step2_3": "={{ $json.step2_3 }}",
+            "step3_title": "={{ $json.step3_title }}",
+            "step3_1": "={{ $json.step3_1 }}",
+            "step3_2": "={{ $json.step3_2 }}",
+            "step3_3": "={{ $json.step3_3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "hook", "displayName": "hook", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_1", "displayName": "title_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_2", "displayName": "title_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_3", "displayName": "title_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_1", "displayName": "problem_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_2", "displayName": "problem_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_3", "displayName": "problem_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_title", "displayName": "step1_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_1", "displayName": "step1_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_2", "displayName": "step1_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_3", "displayName": "step1_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_title", "displayName": "step2_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_1", "displayName": "step2_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_2", "displayName": "step2_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_3", "displayName": "step2_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_title", "displayName": "step3_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_1", "displayName": "step3_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_2", "displayName": "step3_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_3", "displayName": "step3_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "cta", "displayName": "cta", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "0e6f5a7d-507f-4d53-8de8-922a10686c1e",
+      "name": "Append to canva_C",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [0, 240],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 920483375,
+          "mode": "list",
+          "cachedResultName": "canva_D",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=920483375"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "hook": "={{ $json.hook }}",
+            "title_1": "={{ $json.title_1 }}",
+            "title_2": "={{ $json.title_2 }}",
+            "title_3": "={{ $json.title_3 }}",
+            "problem_1": "={{ $json.problem_1 }}",
+            "problem_2": "={{ $json.problem_2 }}",
+            "problem_3": "={{ $json.problem_3 }}",
+            "step1_title": "={{ $json.step1_title }}",
+            "step1_1": "={{ $json.step1_1 }}",
+            "step1_2": "={{ $json.step1_2 }}",
+            "step1_3": "={{ $json.step1_3 }}",
+            "step2_title": "={{ $json.step2_title }}",
+            "step2_1": "={{ $json.step2_1 }}",
+            "step2_2": "={{ $json.step2_2 }}",
+            "step2_3": "={{ $json.step2_3 }}",
+            "step3_title": "={{ $json.step3_title }}",
+            "step3_1": "={{ $json.step3_1 }}",
+            "step3_2": "={{ $json.step3_2 }}",
+            "step3_3": "={{ $json.step3_3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "hook", "displayName": "hook", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_1", "displayName": "title_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_2", "displayName": "title_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_3", "displayName": "title_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_1", "displayName": "problem_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_2", "displayName": "problem_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_3", "displayName": "problem_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_title", "displayName": "step1_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_1", "displayName": "step1_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_2", "displayName": "step1_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_3", "displayName": "step1_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_title", "displayName": "step2_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_1", "displayName": "step2_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_2", "displayName": "step2_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_3", "displayName": "step2_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_title", "displayName": "step3_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_1", "displayName": "step3_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_2", "displayName": "step3_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_3", "displayName": "step3_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "cta", "displayName": "cta", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a527738e-a86e-4bba-867c-8ce1428e5203",
+      "name": "Append to canva_D",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [0, 368],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1645982552,
+          "mode": "list",
+          "cachedResultName": "canva_E",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1645982552"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "hook": "={{ $json.hook }}",
+            "title_1": "={{ $json.title_1 }}",
+            "title_2": "={{ $json.title_2 }}",
+            "title_3": "={{ $json.title_3 }}",
+            "problem_1": "={{ $json.problem_1 }}",
+            "problem_2": "={{ $json.problem_2 }}",
+            "problem_3": "={{ $json.problem_3 }}",
+            "step1_title": "={{ $json.step1_title }}",
+            "step1_1": "={{ $json.step1_1 }}",
+            "step1_2": "={{ $json.step1_2 }}",
+            "step1_3": "={{ $json.step1_3 }}",
+            "step2_title": "={{ $json.step2_title }}",
+            "step2_1": "={{ $json.step2_1 }}",
+            "step2_2": "={{ $json.step2_2 }}",
+            "step2_3": "={{ $json.step2_3 }}",
+            "step3_title": "={{ $json.step3_title }}",
+            "step3_1": "={{ $json.step3_1 }}",
+            "step3_2": "={{ $json.step3_2 }}",
+            "step3_3": "={{ $json.step3_3 }}",
+            "cta": "={{ $json.cta }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "hook", "displayName": "hook", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_1", "displayName": "title_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_2", "displayName": "title_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "title_3", "displayName": "title_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_1", "displayName": "problem_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_2", "displayName": "problem_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "problem_3", "displayName": "problem_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_title", "displayName": "step1_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_1", "displayName": "step1_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_2", "displayName": "step1_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step1_3", "displayName": "step1_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_title", "displayName": "step2_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_1", "displayName": "step2_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_2", "displayName": "step2_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step2_3", "displayName": "step2_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_title", "displayName": "step3_title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_1", "displayName": "step3_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_2", "displayName": "step3_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "step3_3", "displayName": "step3_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "cta", "displayName": "cta", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "37f4458e-667d-43da-a62b-e53956735dc1",
+      "name": "Append to canva_E",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [0, 480],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get DRAFT Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get DRAFT Posts": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON & Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSON & Category": {
+      "main": [
+        [
+          {
+            "node": "Switch Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Category": {
+      "main": [
+        [
+          {
+            "node": "Append to canva_A",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append to canva_B",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append to canva_C",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append to canva_D",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append to canva_E",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3fd6933b-5820-4d10-afb2-8374be2cbfc9",
+  "meta": {
+    "instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"
+  },
+  "id": "44r1Jzhh3VkFuKY8",
+  "tags": []
+}

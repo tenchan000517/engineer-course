@@ -89,13 +89,16 @@ https://console.cloud.google.com/
 
 ### Google Drive APIも有効化
 
-同様の手順で **Google Drive API** も有効化します：
+n8nのGoogle SheetsノードはスプレッドシートのリストやIDを検索する際にGoogle Drive APIも使用します。同様の手順で有効化してください。
 
 1. **「APIとサービス」** → **「ライブラリ」** を選択
-2. **「Google Drive API」** を検索
-3. **「有効にする」** をクリック
+2. 検索ボックスに **「Google Drive API」** と入力
+3. 検索結果から **「Google Drive API」** をクリック
+4. **「有効にする」** ボタンをクリック
 
-> **重要**: n8nのGoogle Sheets連携にはGoogle Drive APIも必要です。
+![Google Drive API](/n8n-setup/48b-drive-api-detail.png)
+
+> **重要**: Drive APIを有効化しないと、後のワークフロー構築時に「Drive API has not been used in project」エラーが発生します。
 
 ### チェックポイント
 

@@ -18,6 +18,14 @@ export interface CategoryTags {
   topics: string[];
 }
 
+export interface SubcourseData {
+  id: string;
+  title: string;
+  description: string;
+  moduleCount: number;
+  level: string;
+}
+
 export interface CategoryData {
   id: string;
   title: string;
@@ -27,6 +35,10 @@ export interface CategoryData {
   order: number;
   tags: CategoryTags;
   moduleCount: number;
+  hasSubcourses?: boolean;
+  subcourses?: SubcourseData[];
+  isSubcourse?: boolean;
+  parentCategory?: string;
 }
 
 export interface ModuleData {
@@ -59,6 +71,7 @@ export function getAllCategories(): CategoryData[] {
       return categoryData as CategoryData;
     })
     .filter((cat): cat is CategoryData => cat !== null)
+    .filter((cat) => !cat.isSubcourse) // サブコースは講座一覧から除外
     .sort((a, b) => a.order - b.order);
 
   return categories;

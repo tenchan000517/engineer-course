@@ -1,0 +1,534 @@
+{
+  "name": "Scheduled Instagram Reel Post",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-2224, 480],
+      "id": "manual-trigger",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "your-spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_POSTS_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_POSTS_SHEET_GID"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "DRAFT"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-1984, 480],
+      "id": "get-draft-posts",
+      "name": "Get DRAFT Posts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [-1744, 480],
+      "id": "loop",
+      "name": "Loop"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst contentJson = JSON.parse(item.json.content_json || '{}');\nconst pattern = contentJson.pattern || '';\n\n// patternからカテゴリを判定\nconst patternToCategory = {\n  'versus': 'A',\n  'instant_hack': 'B',\n  'secret_feature': 'C',\n  'warning': 'D',\n  'ranking': 'E'\n};\n\nconst category = patternToCategory[pattern] || 'A';\n\n// フォルダ名を生成（例: 202512Instagram投稿A）\nconst now = new Date();\nconst yearMonth = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0');\nconst folderName = `${yearMonth}Instagram投稿${category}`;\n\nreturn [{\n  json: {\n    ...item.json,\n    category: category,\n    folder_name: folderName,\n    pattern: pattern\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1504, 480],
+      "id": "get-category",
+      "name": "Get Category from Pattern"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.folder_name }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "YOUR_PARENT_FOLDER_ID",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-1264, 480],
+      "id": "search-folder",
+      "name": "Search Category Folder",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $('Get Category from Pattern').item.json.post_id }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-1024, 480],
+      "id": "search-file",
+      "name": "Search Video File",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              },
+              "id": "file-exists-check"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-784, 480],
+      "id": "if-file-exists",
+      "name": "IF File Exists"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/video/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "=https://drive.google.com/uc?export=download&id={{ $json.id }}"
+            },
+            {
+              "name": "upload_preset",
+              "value": "YOUR_UPLOAD_PRESET"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-544, 480],
+      "id": "upload-cloudinary",
+      "name": "Upload to Cloudinary"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.instagram.com/v20.0/me",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "user_id,username"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-2048, 752],
+      "id": "get-user-id",
+      "name": "Get User ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v20.0/{{ $json.user_id }}/media",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "media_type",
+              "value": "REELS"
+            },
+            {
+              "name": "video_url",
+              "value": "={{ $('Upload to Cloudinary').item.json.secure_url }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Get Category from Pattern').item.json.caption }}\n\n{{ $('Get Category from Pattern').item.json.hashtags }}"
+            },
+            {
+              "name": "share_to_feed",
+              "value": "true"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-1808, 752],
+      "id": "create-container",
+      "name": "Create Reel Container"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-1568, 752],
+      "id": "wait-30s",
+      "name": "Wait 30s",
+      "webhookId": "wait-container"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.instagram.com/{{ $('Create Reel Container').item.json.id }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "status_code"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-1328, 752],
+      "id": "check-status",
+      "name": "Check Container Status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "status-check",
+              "leftValue": "={{ $json.status_code }}",
+              "rightValue": "FINISHED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-1136, 752],
+      "id": "if-finished",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v20.0/{{ $('Get User ID').item.json.user_id }}/media_publish",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $('Create Reel Container').item.json.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-944, 752],
+      "id": "publish-reel",
+      "name": "Publish Reel"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-postid",
+              "name": "post_id",
+              "value": "={{ $('Get Category from Pattern').item.json.post_id }}",
+              "type": "string"
+            },
+            {
+              "id": "set-status",
+              "name": "status",
+              "value": "PUBLISHED",
+              "type": "string"
+            },
+            {
+              "id": "set-igpostid",
+              "name": "ig_post_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "set-publishedat",
+              "name": "published_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-752, 752],
+      "id": "edit-fields",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "your-spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_POSTS_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_POSTS_SHEET_GID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "status": "={{ $json.status }}",
+            "ig_post_id": "={{ $json.ig_post_id }}",
+            "published_at": "={{ $json.published_at }}"
+          },
+          "matchingColumns": ["post_id"],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ig_post_id",
+              "displayName": "ig_post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "published_at",
+              "displayName": "published_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-544, 752],
+      "id": "update-sheet",
+      "name": "Update Posts Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 6,12,18 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-2224, 288],
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [[]]
+    },
+    "Get DRAFT Posts": {
+      "main": [[{"node": "Loop", "type": "main", "index": 0}]]
+    },
+    "Loop": {
+      "main": [[], [{"node": "Get Category from Pattern", "type": "main", "index": 0}]]
+    },
+    "Get Category from Pattern": {
+      "main": [[{"node": "Search Category Folder", "type": "main", "index": 0}]]
+    },
+    "Search Category Folder": {
+      "main": [[{"node": "Search Video File", "type": "main", "index": 0}]]
+    },
+    "Search Video File": {
+      "main": [[{"node": "IF File Exists", "type": "main", "index": 0}]]
+    },
+    "IF File Exists": {
+      "main": [
+        [{"node": "Upload to Cloudinary", "type": "main", "index": 0}],
+        [{"node": "Loop", "type": "main", "index": 0}]
+      ]
+    },
+    "Upload to Cloudinary": {
+      "main": [[{"node": "Get User ID", "type": "main", "index": 0}]]
+    },
+    "Get User ID": {
+      "main": [[{"node": "Create Reel Container", "type": "main", "index": 0}]]
+    },
+    "Create Reel Container": {
+      "main": [[{"node": "Wait 30s", "type": "main", "index": 0}]]
+    },
+    "Wait 30s": {
+      "main": [[{"node": "Check Container Status", "type": "main", "index": 0}]]
+    },
+    "Check Container Status": {
+      "main": [[{"node": "If", "type": "main", "index": 0}]]
+    },
+    "If": {
+      "main": [
+        [{"node": "Publish Reel", "type": "main", "index": 0}],
+        [{"node": "Wait 30s", "type": "main", "index": 0}]
+      ]
+    },
+    "Publish Reel": {
+      "main": [[{"node": "Edit Fields", "type": "main", "index": 0}]]
+    },
+    "Edit Fields": {
+      "main": [[{"node": "Update Posts Sheet", "type": "main", "index": 0}]]
+    },
+    "Schedule Trigger": {
+      "main": [[{"node": "Get DRAFT Posts", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "module-11-template",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "id": "scheduled-reel-post",
+  "tags": []
+}

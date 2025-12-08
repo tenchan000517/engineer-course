@@ -1,0 +1,544 @@
+{
+  "name": "Instagram Post from Sheet",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        -416
+      ],
+      "id": "f5905238-a096-4e09-8bc7-194b3354b83d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "READY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -880,
+        -416
+      ],
+      "id": "fc64e163-e519-4395-b7d1-d92c7ceed30c",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 574334522,
+          "mode": "list",
+          "cachedResultName": "media",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=574334522"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "media_id",
+              "lookupValue": "={{ $json.media_ids }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -672,
+        -416
+      ],
+      "id": "956ef773-15a1-4da6-a870-6b1678264d5e",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.instagram.com/v20.0/me",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "user_id,username"
+            },
+            {
+              "name": "access_token",
+              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -464,
+        -416
+      ],
+      "id": "23be9643-6503-4e45-9bd4-0d65c0d7221d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v20.0/{{ $json.user_id }}/media",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "image_url",
+              "value": "={{ $('Get row(s) in sheet1').item.json.public_url }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Get row(s) in sheet').item.json.caption }}"
+            },
+            {
+              "name": "access_token",
+              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -256,
+        -416
+      ],
+      "id": "0edc5599-a098-4425-9967-fabb25c2e095",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v20.0/{{ $('HTTP Request').item.json.user_id }}/media_publish",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        160,
+        -416
+      ],
+      "id": "e72a1264-1f7c-4212-9acf-81a9d460eee4",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "19225a01-06ff-49ee-87f3-514c6044241b",
+              "name": "post_id ",
+              "value": "={{ $('Get row(s) in sheet').item.json.post_id }}",
+              "type": "string"
+            },
+            {
+              "id": "615e79ca-80af-4efc-8bfb-fbd85493b279",
+              "name": "status",
+              "value": "PUBLISHED",
+              "type": "string"
+            },
+            {
+              "id": "336d011f-308e-442b-934e-4bc1fa4860bd",
+              "name": "ig_post_id",
+              "value": "={{ $json.id }} ",
+              "type": "string"
+            },
+            {
+              "id": "6e20697e-5803-4bb0-a511-ca75189eb7a8",
+              "name": "published_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        368,
+        -416
+      ],
+      "id": "52289daa-a04c-4308-b99a-99e31a42d4e1",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -48,
+        -416
+      ],
+      "id": "b6b5b3c9-704a-4420-890e-33888316b37e",
+      "name": "Wait",
+      "webhookId": "fe7430b7-68e6-44cc-983b-62436cc57f1e"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $('Get row(s) in sheet').item.json.post_id }}",
+            "status": "={{ $json.status }}",
+            "ig_post_id": "={{ $json.ig_post_id }}",
+            "published_at": "={{ $json.published_at }}"
+          },
+          "matchingColumns": [
+            "post_id"
+          ],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "post_type",
+              "displayName": "post_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hashtags",
+              "displayName": "hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "media_ids",
+              "displayName": "media_ids",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "scheduled_at",
+              "displayName": "scheduled_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "published_at",
+              "displayName": "published_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ig_post_id",
+              "displayName": "ig_post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "share_to_feed",
+              "displayName": "share_to_feed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "thumb_offset_ms",
+              "displayName": "thumb_offset_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "retry_count",
+              "displayName": "retry_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_id ",
+              "displayName": "post_id ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        -416
+      ],
+      "id": "9c085913-da6d-4ca8-9bb1-112fd24f15f7",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "df1c55d6-95be-45b0-9b4b-8e4892752812",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"
+  },
+  "id": "j9i5zu8IZbGMDz7d",
+  "tags": []
+}

@@ -1,0 +1,497 @@
+{
+  "name": "SNS投稿作成",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-960, -144],
+      "id": "trigger",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_IDEAS_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_IDEAS_SHEET_GID"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "NEW"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-752, -144],
+      "id": "get-ideas",
+      "name": "Get Ideas (status=NEW)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// カテゴリごとに5件ずつに制限\nconst items = $input.all();\nconst categoryCount = { A: 0, B: 0, C: 0, D: 0, E: 0 };\nconst result = [];\n\nfor (const item of items) {\n  const cat = item.json.category;\n  if (categoryCount[cat] !== undefined && categoryCount[cat] < 5) {\n    result.push(item);\n    categoryCount[cat]++;\n  }\n}\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-544, -144],
+      "id": "limit-5-per-category",
+      "name": "Limit 5 per Category"
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [-336, -144],
+      "id": "loop",
+      "name": "Loop"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "A",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cond-a"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category A"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-b",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "B",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category B"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-c",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "C",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category C"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-d",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "D",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category D"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-e",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "E",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category E"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [-128, -144],
+      "id": "switch",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール動画の台本ライターです。\n\n以下の投稿企画を「VS対決型」の60秒リール台本に変換してください。\n\n## 投稿企画\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n## VS対決型の構成\n- hook: 惹きつけワード（例：「知らないと損！」）\n- title_1: 対決の左側（ツール名など）例: 「Antigravity」\n- title_2: 「VS」（固定）\n- title_3: 対決の右側（比較対象）例: 「従来の開発」\n- problem_1〜3: 視聴者の悩み・混乱\n- step1: 比較ポイント1（タイトル＋内容3行）\n- step2: 比較ポイント2（タイトル＋内容3行）\n- step3: 比較ポイント3（タイトル＋内容3行）\n- cta: 「コメントで教えて！」\n\n## 文字数制限（厳守）\n- hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n- problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n## 出力形式（JSON）\n{\n  \"post_type\": \"REEL\",\n  \"pattern\": \"versus\",\n  \"narration_1\": \"（前半30秒のナレーション全文）\",\n  \"narration_2\": \"（後半30秒のナレーション全文）\",\n  \"hook\": \"（11文字以内）\",\n  \"title_1\": \"（対決の左側、11文字以内）\",\n  \"title_2\": \"VS\",\n  \"title_3\": \"（対決の右側、11文字以内）\",\n  \"problem_1\": \"（14文字以内）\",\n  \"problem_2\": \"（14文字以内）\",\n  \"problem_3\": \"（14文字以内）\",\n  \"step1_title\": \"（11文字以内）\",\n  \"step1_1\": \"（14文字以内）\",\n  \"step1_2\": \"（14文字以内）\",\n  \"step1_3\": \"（14文字以内）\",\n  \"step2_title\": \"（11文字以内）\",\n  \"step2_1\": \"（14文字以内）\",\n  \"step2_2\": \"（14文字以内）\",\n  \"step2_3\": \"（14文字以内）\",\n  \"step3_title\": \"（11文字以内）\",\n  \"step3_1\": \"（14文字以内）\",\n  \"step3_2\": \"（14文字以内）\",\n  \"step3_3\": \"（14文字以内）\",\n  \"cta\": \"コメントで教えて！\",\n  \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n  \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n}\n\nJSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [96, -400],
+      "id": "gemini-a",
+      "name": "Gemini A (versus)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール動画の台本ライターです。\n\n以下の投稿企画を「即効ハック型」の60秒リール台本に変換してください。\n\n## 投稿企画\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n## 即効ハック型の構成\n- hook: 惹きつけワード（例：「まだ手動でやってるの？」）\n- title_1〜3: 解決できることをインパクトある形で\n- problem_1〜3: 手作業の辛さ・非効率さ\n- step1: 解決ステップ1（タイトル＋内容3行）\n- step2: 解決ステップ2（タイトル＋内容3行）\n- step3: 解決ステップ3（タイトル＋内容3行）\n- cta: 「プロフのリンクから！」\n\n## 文字数制限（厳守）\n- hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n- problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n## 出力形式（JSON）\n{\n  \"post_type\": \"REEL\",\n  \"pattern\": \"instant_hack\",\n  \"narration_1\": \"（前半30秒のナレーション全文）\",\n  \"narration_2\": \"（後半30秒のナレーション全文）\",\n  \"hook\": \"（11文字以内）\",\n  \"title_1\": \"（11文字以内）\",\n  \"title_2\": \"（11文字以内）\",\n  \"title_3\": \"（11文字以内、不要なら空文字）\",\n  \"problem_1\": \"（14文字以内）\",\n  \"problem_2\": \"（14文字以内）\",\n  \"problem_3\": \"（14文字以内）\",\n  \"step1_title\": \"（11文字以内）\",\n  \"step1_1\": \"（14文字以内）\",\n  \"step1_2\": \"（14文字以内）\",\n  \"step1_3\": \"（14文字以内）\",\n  \"step2_title\": \"（11文字以内）\",\n  \"step2_1\": \"（14文字以内）\",\n  \"step2_2\": \"（14文字以内）\",\n  \"step2_3\": \"（14文字以内）\",\n  \"step3_title\": \"（11文字以内）\",\n  \"step3_1\": \"（14文字以内）\",\n  \"step3_2\": \"（14文字以内）\",\n  \"step3_3\": \"（14文字以内）\",\n  \"cta\": \"プロフのリンクから！\",\n  \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n  \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n}\n\nJSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [96, -256],
+      "id": "gemini-b",
+      "name": "Gemini B (instant_hack)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール動画の台本ライターです。\n\n以下の投稿企画を「裏技暴露型」の60秒リール台本に変換してください。\n\n## 投稿企画\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n## 裏技暴露型の構成\n- hook: 惹きつけワード（例：「99%が知らない！」）\n- title_1〜3: 暴露する裏技・隠し機能をインパクトある形で\n- problem_1〜3: 普通の使い方では損している状況\n- step1: 裏技ステップ1（タイトル＋内容3行）\n- step2: 裏技ステップ2（タイトル＋内容3行）\n- step3: 裏技ステップ3（タイトル＋内容3行）\n- cta: 「保存して試してみて！」\n\n## 文字数制限（厳守）\n- hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n- problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n## 出力形式（JSON）\n{\n  \"post_type\": \"REEL\",\n  \"pattern\": \"secret_feature\",\n  \"narration_1\": \"（前半30秒のナレーション全文）\",\n  \"narration_2\": \"（後半30秒のナレーション全文）\",\n  \"hook\": \"（11文字以内）\",\n  \"title_1\": \"（11文字以内）\",\n  \"title_2\": \"（11文字以内）\",\n  \"title_3\": \"（11文字以内、不要なら空文字）\",\n  \"problem_1\": \"（14文字以内）\",\n  \"problem_2\": \"（14文字以内）\",\n  \"problem_3\": \"（14文字以内）\",\n  \"step1_title\": \"（11文字以内）\",\n  \"step1_1\": \"（14文字以内）\",\n  \"step1_2\": \"（14文字以内）\",\n  \"step1_3\": \"（14文字以内）\",\n  \"step2_title\": \"（11文字以内）\",\n  \"step2_1\": \"（14文字以内）\",\n  \"step2_2\": \"（14文字以内）\",\n  \"step2_3\": \"（14文字以内）\",\n  \"step3_title\": \"（11文字以内）\",\n  \"step3_1\": \"（14文字以内）\",\n  \"step3_2\": \"（14文字以内）\",\n  \"step3_3\": \"（14文字以内）\",\n  \"cta\": \"保存して試してみて！\",\n  \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n  \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n}\n\nJSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [96, -112],
+      "id": "gemini-c",
+      "name": "Gemini C (secret_feature)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール動画の台本ライターです。\n\n以下の投稿企画を「警告型」の60秒リール台本に変換してください。\n\n## 投稿企画\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n## 警告型の構成\n- hook: 惹きつけワード（例：「今すぐやめて！」）\n- title_1〜3: 警告内容をインパクトある形で\n- problem_1〜3: 放置するとどうなるか（リスク）\n- step1: 対策ステップ1（タイトル＋内容3行）\n- step2: 対策ステップ2（タイトル＋内容3行）\n- step3: 対策ステップ3（タイトル＋内容3行）\n- cta: 「保存して実践して！」\n\n## 文字数制限（厳守）\n- hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n- problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n## 出力形式（JSON）\n{\n  \"post_type\": \"REEL\",\n  \"pattern\": \"warning\",\n  \"narration_1\": \"（前半30秒のナレーション全文）\",\n  \"narration_2\": \"（後半30秒のナレーション全文）\",\n  \"hook\": \"（11文字以内）\",\n  \"title_1\": \"（11文字以内）\",\n  \"title_2\": \"（11文字以内）\",\n  \"title_3\": \"（11文字以内、不要なら空文字）\",\n  \"problem_1\": \"（14文字以内）\",\n  \"problem_2\": \"（14文字以内）\",\n  \"problem_3\": \"（14文字以内）\",\n  \"step1_title\": \"（11文字以内）\",\n  \"step1_1\": \"（14文字以内）\",\n  \"step1_2\": \"（14文字以内）\",\n  \"step1_3\": \"（14文字以内）\",\n  \"step2_title\": \"（11文字以内）\",\n  \"step2_1\": \"（14文字以内）\",\n  \"step2_2\": \"（14文字以内）\",\n  \"step2_3\": \"（14文字以内）\",\n  \"step3_title\": \"（11文字以内）\",\n  \"step3_1\": \"（14文字以内）\",\n  \"step3_2\": \"（14文字以内）\",\n  \"step3_3\": \"（14文字以内）\",\n  \"cta\": \"保存して実践して！\",\n  \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n  \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n}\n\nJSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [96, 32],
+      "id": "gemini-d",
+      "name": "Gemini D (warning)"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール動画の台本ライターです。\n\n以下の投稿企画を「ランキング型」の60秒リール台本に変換してください。\n\n## 投稿企画\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n## ランキング型の構成\n- hook: 惹きつけワード（例：「2025年最新！」）\n- title_1〜3: ランキングテーマをインパクトある形で\n- problem_1〜3: 選択肢が多すぎて困っている状況\n- step1: 第3位（タイトル＋内容3行）\n- step2: 第2位（タイトル＋内容3行）\n- step3: 第1位（タイトル＋内容3行）\n- cta: 「コメントで教えて！」\n\n## 文字数制限（厳守）\n- hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n- problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n## 出力形式（JSON）\n{\n  \"post_type\": \"REEL\",\n  \"pattern\": \"ranking\",\n  \"narration_1\": \"（前半30秒のナレーション全文）\",\n  \"narration_2\": \"（後半30秒のナレーション全文）\",\n  \"hook\": \"（11文字以内）\",\n  \"title_1\": \"（11文字以内）\",\n  \"title_2\": \"（11文字以内）\",\n  \"title_3\": \"（11文字以内、不要なら空文字）\",\n  \"problem_1\": \"（14文字以内）\",\n  \"problem_2\": \"（14文字以内）\",\n  \"problem_3\": \"（14文字以内）\",\n  \"step1_title\": \"（11文字以内）\",\n  \"step1_1\": \"（14文字以内）\",\n  \"step1_2\": \"（14文字以内）\",\n  \"step1_3\": \"（14文字以内）\",\n  \"step2_title\": \"（11文字以内）\",\n  \"step2_1\": \"（14文字以内）\",\n  \"step2_2\": \"（14文字以内）\",\n  \"step2_3\": \"（14文字以内）\",\n  \"step3_title\": \"（11文字以内）\",\n  \"step3_1\": \"（14文字以内）\",\n  \"step3_2\": \"（14文字以内）\",\n  \"step3_3\": \"（14文字以内）\",\n  \"cta\": \"コメントで教えて！\",\n  \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n  \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n}\n\nJSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [96, 176],
+      "id": "gemini-e",
+      "name": "Gemini E (ranking)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Geminiの出力を取得\nlet text;\nconst input = $input.first().json;\n\n// Simplify Output ON/OFF両方に対応\nif (input.text) {\n  text = input.text;\n} else if (input.content && input.content.parts) {\n  text = input.content.parts[0].text;\n} else if (typeof input === 'string') {\n  text = input;\n} else {\n  return [{ json: input }];\n}\n\n// ```json と ``` を除去\nlet cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n\n// 末尾のカンマ除去\ncleanText = cleanText.replace(/,(\\s*[\\]}])/g, '$1');\n\ntry {\n  const parsed = JSON.parse(cleanText);\n  return [{ json: parsed }];\n} catch (e) {\n  return [{ json: { error: e.message, rawText: cleanText.substring(0, 500) } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [320, -144],
+      "id": "parse-json",
+      "name": "Parse JSON"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_POSTS_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_POSTS_SHEET_GID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "=POST-{{ new Date().getTime() }}",
+            "post_type": "={{ $json.post_type }}",
+            "status": "=DRAFT",
+            "caption": "={{ $json.caption }}",
+            "hashtags": "={{ $json.hashtags ? $json.hashtags.join(',') : '' }}",
+            "content_json": "={{ JSON.stringify($json) }}",
+            "created_at": "={{ new Date().toISOString() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "post_type", "displayName": "post_type", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "status", "displayName": "status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "caption", "displayName": "caption", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "hashtags", "displayName": "hashtags", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "media_ids", "displayName": "media_ids", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "scheduled_at", "displayName": "scheduled_at", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "published_at", "displayName": "published_at", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "ig_post_id", "displayName": "ig_post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "share_to_feed", "displayName": "share_to_feed", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_offset_ms", "displayName": "thumb_offset_ms", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "error_message", "displayName": "error_message", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "retry_count", "displayName": "retry_count", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "created_at", "displayName": "created_at", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "updated_at", "displayName": "updated_at", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "notes", "displayName": "notes", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "content_json", "displayName": "content_json", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [528, -144],
+      "id": "append-posts",
+      "name": "Append to posts"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SPREADSHEET_NAME",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_IDEAS_SHEET_GID",
+          "mode": "list",
+          "cachedResultName": "ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit#gid=YOUR_IDEAS_SHEET_GID"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "idea_id": "={{ $('Loop').item.json.idea_id }}",
+            "status": "ADOPTED"
+          },
+          "matchingColumns": ["idea_id"],
+          "schema": [
+            {"id": "idea_id", "displayName": "idea_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "status", "displayName": "status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [736, -144],
+      "id": "update-ideas",
+      "name": "Update ideas ADOPTED"
+    },
+    {
+      "parameters": {
+        "unit": "seconds",
+        "value": 5
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [944, -144],
+      "id": "wait",
+      "name": "Wait 5s",
+      "webhookId": "wait-webhook"
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [[{"node": "Get Ideas (status=NEW)", "type": "main", "index": 0}]]
+    },
+    "Get Ideas (status=NEW)": {
+      "main": [[{"node": "Limit 5 per Category", "type": "main", "index": 0}]]
+    },
+    "Limit 5 per Category": {
+      "main": [[{"node": "Loop", "type": "main", "index": 0}]]
+    },
+    "Loop": {
+      "main": [
+        [],
+        [{"node": "Switch", "type": "main", "index": 0}]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [{"node": "Gemini A (versus)", "type": "main", "index": 0}],
+        [{"node": "Gemini B (instant_hack)", "type": "main", "index": 0}],
+        [{"node": "Gemini C (secret_feature)", "type": "main", "index": 0}],
+        [{"node": "Gemini D (warning)", "type": "main", "index": 0}],
+        [{"node": "Gemini E (ranking)", "type": "main", "index": 0}]
+      ]
+    },
+    "Gemini A (versus)": {
+      "main": [[{"node": "Parse JSON", "type": "main", "index": 0}]]
+    },
+    "Gemini B (instant_hack)": {
+      "main": [[{"node": "Parse JSON", "type": "main", "index": 0}]]
+    },
+    "Gemini C (secret_feature)": {
+      "main": [[{"node": "Parse JSON", "type": "main", "index": 0}]]
+    },
+    "Gemini D (warning)": {
+      "main": [[{"node": "Parse JSON", "type": "main", "index": 0}]]
+    },
+    "Gemini E (ranking)": {
+      "main": [[{"node": "Parse JSON", "type": "main", "index": 0}]]
+    },
+    "Parse JSON": {
+      "main": [[{"node": "Append to posts", "type": "main", "index": 0}]]
+    },
+    "Append to posts": {
+      "main": [[{"node": "Update ideas ADOPTED", "type": "main", "index": 0}]]
+    },
+    "Update ideas ADOPTED": {
+      "main": [[{"node": "Wait 5s", "type": "main", "index": 0}]]
+    },
+    "Wait 5s": {
+      "main": [[{"node": "Loop", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "template-v1",
+  "tags": []
+}

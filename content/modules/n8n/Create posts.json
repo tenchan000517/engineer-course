@@ -1,0 +1,884 @@
+{
+  "name": "Create posts",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        -144
+      ],
+      "id": "89f7f8b8-3923-4b99-a75b-e816357847a6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2072779338,
+          "mode": "list",
+          "cachedResultName": "ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=2072779338"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "NEW"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -752,
+        -144
+      ],
+      "id": "d97e14d3-2a70-4739-9a27-8b37240626bc",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "A",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "be965368-5351-45ee-adc8-7b57824c4994"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category A"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e1498eae-1ecd-4331-9af9-25702591f8cf",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "B",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category B"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4b0e5136-3ee0-4a26-b78f-32a688e68660",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "C",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category C"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2df3bab1-88b0-474d-91ef-434385f23575",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "D",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category D"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a2ca69f2-0e73-48b9-b219-4907bf4f473f",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "E",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category E"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -544,
+        -192
+      ],
+      "id": "d16a217e-760f-4625-b194-3fe1e6e82093",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=  あなたはInstagramリール動画の台本ライターです。\n\n  以下の投稿企画を「裏技暴露型」の60秒リール台本に変換してください。\n\n  ## 投稿企画\n  タイトル: {{ $json.title }}\n  ツール: {{ $json.tools }}\n  リサーチポイント: {{ $json.research_points }}\n\n  ## 裏技暴露型の構成\n  - hook: 惹きつけワード（例：「99%が知らない！」）\n  - title_1〜3: 暴露する裏技・隠し機能をインパクトある形で\n  - problem_1〜3: 普通の使い方では損している状況\n  - step1: 裏技ステップ1（タイトル＋内容3行）\n  - step2: 裏技ステップ2（タイトル＋内容3行）\n  - step3: 裏技ステップ3（タイトル＋内容3行）\n  - cta: 「保存して試してみて！」\n\n  ## 文字数制限（厳守）\n  - hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n  - problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n  ## 出力形式（JSON）\n  {\n    \"post_type\": \"REEL\",\n    \"pattern\": \"secret_feature\",\n    \"narration_1\": \"（前半30秒のナレーション全文）\",\n    \"narration_2\": \"（後半30秒のナレーション全文）\",\n    \"hook\": \"（11文字以内）\",\n    \"title_1\": \"（11文字以内）\",\n    \"title_2\": \"（11文字以内）\",\n    \"title_3\": \"（11文字以内、不要なら空文字）\",\n    \"problem_1\": \"（14文字以内）\",\n    \"problem_2\": \"（14文字以内）\",\n    \"problem_3\": \"（14文字以内）\",\n    \"step1_title\": \"（11文字以内）\",\n    \"step1_1\": \"（14文字以内）\",\n    \"step1_2\": \"（14文字以内）\",\n    \"step1_3\": \"（14文字以内）\",\n    \"step2_title\": \"（11文字以内）\",\n    \"step2_1\": \"（14文字以内）\",\n    \"step2_2\": \"（14文字以内）\",\n    \"step2_3\": \"（14文字以内）\",\n    \"step3_title\": \"（11文字以内）\",\n    \"step3_1\": \"（14文字以内）\",\n    \"step3_2\": \"（14文字以内）\",\n    \"step3_3\": \"（14文字以内）\",\n    \"cta\": \"保存して試してみて！\",\n    \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n    \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n  }\n\n  JSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -144
+      ],
+      "id": "5c81eb37-0848-4d73-bf8c-167c5157a687",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "  // Geminiの出力を取得\n  let text;\n  const input = $input.first().json;\n\n  // Simplify Output ON/OFF両方に対応\n  if (input.content && input.content.parts) {\n    text = input.content.parts[0].text;\n  } else if (typeof input === 'string') {\n    text = input;\n  } else if (input.text) {\n    text = input.text;\n  } else {\n    // 最後の手段：JSONをそのまま返す\n    return [{ json: input }];\n  }\n\n  // ```json と ``` を除去\n  let cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n\n  // 末尾のカンマ除去\n  cleanText = cleanText.replace(/,(\\s*[\\]}])/g, '$1');\n\n  try {\n    const parsed = JSON.parse(cleanText);\n    return [{ json: parsed }];\n  } catch (e) {\n    // パース失敗時はエラー詳細を返す\n    return [{\n      json: {\n        error: e.message,\n        rawText: cleanText.substring(0, 500)\n      }\n    }];\n  }\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        -144
+      ],
+      "id": "8839690a-48ca-4c68-b998-33a0d098adf0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "=POST-{{ new Date().getTime() }}",
+            "post_type": "={{ $json.post_type }}",
+            "status": "=DRAFT",
+            "caption": "={{ $json.caption }}",
+            "hashtags": "={{ $json.hashtags.join(',') }}",
+            "content_json": "={{ JSON.stringify($json) }} ",
+            "created_at": "={{ new Date().toISOString() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_type",
+              "displayName": "post_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hashtags",
+              "displayName": "hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "media_ids",
+              "displayName": "media_ids",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "scheduled_at",
+              "displayName": "scheduled_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "published_at",
+              "displayName": "published_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ig_post_id",
+              "displayName": "ig_post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "share_to_feed",
+              "displayName": "share_to_feed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "thumb_offset_ms",
+              "displayName": "thumb_offset_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "retry_count",
+              "displayName": "retry_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content_json",
+              "displayName": "content_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -144
+      ],
+      "id": "a21471fa-d58f-4c6d-8a59-2f7f90a4d457",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2072779338,
+          "mode": "list",
+          "cachedResultName": "ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=2072779338"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "idea_id": "={{ $('Get row(s) in sheet').item.json.idea_id }}",
+            "status": "ADOPTED"
+          },
+          "matchingColumns": [
+            "idea_id"
+          ],
+          "schema": [
+            {
+              "id": "idea_id",
+              "displayName": "idea_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "month",
+              "displayName": "month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tools",
+              "displayName": "tools",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content_type",
+              "displayName": "content_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "research_points",
+              "displayName": "research_points",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "adopted_post_id",
+              "displayName": "adopted_post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        -144
+      ],
+      "id": "427755f8-73f3-4a55-aa15-50a04cd6dc75",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=  あなたはInstagramリール動画の台本ライターです。\n\n  以下の投稿企画を「VS対決型」の60秒リール台本に変換してください。\n\n  ## 投稿企画\n  タイトル: {{ $json.title }}\n  ツール: {{ $json.tools }}\n  リサーチポイント: {{ $json.research_points }}\n\n  ## VS対決型の構成\n  - hook: 惹きつけワード（例：「知らないと損！」）\n  - title_1〜3: 〇〇 VS △△ の対決テーマ\n  - problem_1〜3: 視聴者の悩み・混乱\n  - step1: 比較ポイント1（タイトル＋内容3行）\n  - step2: 比較ポイント2（タイトル＋内容3行）\n  - step3: 比較ポイント3（タイトル＋内容3行）\n  - cta: 「コメントで教えて！」\n\n  ## 文字数制限（厳守）\n  - hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n  - problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n  ## 出力形式（JSON）\n  {\n    \"post_type\": \"REEL\",\n    \"pattern\": \"versus\",\n    \"narration_1\": \"（前半30秒のナレーション全文）\",\n    \"narration_2\": \"（後半30秒のナレーション全文）\",\n    \"hook\": \"（11文字以内）\",\n    \"title_1\": \"（11文字以内）\",\n    \"title_2\": \"（11文字以内）\",\n    \"title_3\": \"（11文字以内、不要なら空文字）\",\n    \"problem_1\": \"（14文字以内）\",\n    \"problem_2\": \"（14文字以内）\",\n    \"problem_3\": \"（14文字以内）\",\n    \"step1_title\": \"（11文字以内）\",\n    \"step1_1\": \"（14文字以内）\",\n    \"step1_2\": \"（14文字以内）\",\n    \"step1_3\": \"（14文字以内）\",\n    \"step2_title\": \"（11文字以内）\",\n    \"step2_1\": \"（14文字以内）\",\n    \"step2_2\": \"（14文字以内）\",\n    \"step2_3\": \"（14文字以内）\",\n    \"step3_title\": \"（11文字以内）\",\n    \"step3_1\": \"（14文字以内）\",\n    \"step3_2\": \"（14文字以内）\",\n    \"step3_3\": \"（14文字以内）\",\n    \"cta\": \"コメントで教えて！\",\n    \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n    \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n  }\n\n  JSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -448
+      ],
+      "id": "176677c2-63f7-4cc2-93db-3ca1294b3eb9",
+      "name": "Message a model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=  あなたはInstagramリール動画の台本ライターです。\n\n  以下の投稿企画を「即効ハック型」の60秒リール台本に変換してください。\n\n  ## 投稿企画\n  タイトル: {{ $json.title }}\n  ツール: {{ $json.tools }}\n  リサーチポイント: {{ $json.research_points }}\n\n  ## 即効ハック型の構成\n  - hook: 惹きつけワード（例：「まだ手動でやってるの？」）\n  - title_1〜3: 解決できることをインパクトある形で\n  - problem_1〜3: 手作業の辛さ・非効率さ\n  - step1: 解決ステップ1（タイトル＋内容3行）\n  - step2: 解決ステップ2（タイトル＋内容3行）\n  - step3: 解決ステップ3（タイトル＋内容3行）\n  - cta: 「プロフのリンクから！」\n\n  ## 文字数制限（厳守）\n  - hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n  - problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n  ## 出力形式（JSON）\n  {\n    \"post_type\": \"REEL\",\n    \"pattern\": \"instant_hack\",\n    \"narration_1\": \"（前半30秒のナレーション全文）\",\n    \"narration_2\": \"（後半30秒のナレーション全文）\",\n    \"hook\": \"（11文字以内）\",\n    \"title_1\": \"（11文字以内）\",\n    \"title_2\": \"（11文字以内）\",\n    \"title_3\": \"（11文字以内、不要なら空文字）\",\n    \"problem_1\": \"（14文字以内）\",\n    \"problem_2\": \"（14文字以内）\",\n    \"problem_3\": \"（14文字以内）\",\n    \"step1_title\": \"（11文字以内）\",\n    \"step1_1\": \"（14文字以内）\",\n    \"step1_2\": \"（14文字以内）\",\n    \"step1_3\": \"（14文字以内）\",\n    \"step2_title\": \"（11文字以内）\",\n    \"step2_1\": \"（14文字以内）\",\n    \"step2_2\": \"（14文字以内）\",\n    \"step2_3\": \"（14文字以内）\",\n    \"step3_title\": \"（11文字以内）\",\n    \"step3_1\": \"（14文字以内）\",\n    \"step3_2\": \"（14文字以内）\",\n    \"step3_3\": \"（14文字以内）\",\n    \"cta\": \"プロフのリンクから！\",\n    \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n    \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n  }\n\n  JSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -304
+      ],
+      "id": "0ec61158-05f4-4b6f-922c-71b6fdca554e",
+      "name": "Message a model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=  あなたはInstagramリール動画の台本ライターです。\n\n  以下の投稿企画を「警告型」の60秒リール台本に変換してください。\n\n  ## 投稿企画\n  タイトル: {{ $json.title }}\n  ツール: {{ $json.tools }}\n  リサーチポイント: {{ $json.research_points }}\n\n  ## 警告型の構成\n  - hook: 惹きつけワード（例：「今すぐやめて！」）\n  - title_1〜3: 警告内容をインパクトある形で\n  - problem_1〜3: 放置するとどうなるか（リスク）\n  - step1: 対策ステップ1（タイトル＋内容3行）\n  - step2: 対策ステップ2（タイトル＋内容3行）\n  - step3: 対策ステップ3（タイトル＋内容3行）\n  - cta: 「保存して実践して！」\n\n  ## 文字数制限（厳守）\n  - hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n  - problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n  ## 出力形式（JSON）\n  {\n    \"post_type\": \"REEL\",\n    \"pattern\": \"warning\",\n    \"narration_1\": \"（前半30秒のナレーション全文）\",\n    \"narration_2\": \"（後半30秒のナレーション全文）\",\n    \"hook\": \"（11文字以内）\",\n    \"title_1\": \"（11文字以内）\",\n    \"title_2\": \"（11文字以内）\",\n    \"title_3\": \"（11文字以内、不要なら空文字）\",\n    \"problem_1\": \"（14文字以内）\",\n    \"problem_2\": \"（14文字以内）\",\n    \"problem_3\": \"（14文字以内）\",\n    \"step1_title\": \"（11文字以内）\",\n    \"step1_1\": \"（14文字以内）\",\n    \"step1_2\": \"（14文字以内）\",\n    \"step1_3\": \"（14文字以内）\",\n    \"step2_title\": \"（11文字以内）\",\n    \"step2_1\": \"（14文字以内）\",\n    \"step2_2\": \"（14文字以内）\",\n    \"step2_3\": \"（14文字以内）\",\n    \"step3_title\": \"（11文字以内）\",\n    \"step3_1\": \"（14文字以内）\",\n    \"step3_2\": \"（14文字以内）\",\n    \"step3_3\": \"（14文字以内）\",\n    \"cta\": \"保存して実践して！\",\n    \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n    \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n  }\n\n  JSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "8a6f5838-a608-45ab-8f3b-483416ca72af",
+      "name": "Message a model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=  あなたはInstagramリール動画の台本ライターです。\n\n  以下の投稿企画を「ランキング型」の60秒リール台本に変換してください。\n\n  ## 投稿企画\n  タイトル: {{ $json.title }}\n  ツール: {{ $json.tools }}\n  リサーチポイント: {{ $json.research_points }}\n\n  ## ランキング型の構成\n  - hook: 惹きつけワード（例：「2025年最新！」）\n  - title_1〜3: ランキングテーマをインパクトある形で\n  - problem_1〜3: 選択肢が多すぎて困っている状況\n  - step1: 第3位（タイトル＋内容3行）\n  - step2: 第2位（タイトル＋内容3行）\n  - step3: 第1位（タイトル＋内容3行）\n  - cta: 「コメントで教えて！」\n\n  ## 文字数制限（厳守）\n  - hook, title_1〜3, step1_title, step2_title, step3_title: 全角11文字以内\n  - problem_1〜3, step1_1〜3, step2_1〜3, step3_1〜3: 全角14文字以内\n\n  ## 出力形式（JSON）\n  {\n    \"post_type\": \"REEL\",\n    \"pattern\": \"ranking\",\n    \"narration_1\": \"（前半30秒のナレーション全文）\",\n    \"narration_2\": \"（後半30秒のナレーション全文）\",\n    \"hook\": \"（11文字以内）\",\n    \"title_1\": \"（11文字以内）\",\n    \"title_2\": \"（11文字以内）\",\n    \"title_3\": \"（11文字以内、不要なら空文字）\",\n    \"problem_1\": \"（14文字以内）\",\n    \"problem_2\": \"（14文字以内）\",\n    \"problem_3\": \"（14文字以内）\",\n    \"step1_title\": \"（11文字以内）\",\n    \"step1_1\": \"（14文字以内）\",\n    \"step1_2\": \"（14文字以内）\",\n    \"step1_3\": \"（14文字以内）\",\n    \"step2_title\": \"（11文字以内）\",\n    \"step2_1\": \"（14文字以内）\",\n    \"step2_2\": \"（14文字以内）\",\n    \"step2_3\": \"（14文字以内）\",\n    \"step3_title\": \"（11文字以内）\",\n    \"step3_1\": \"（14文字以内）\",\n    \"step3_2\": \"（14文字以内）\",\n    \"step3_3\": \"（14文字以内）\",\n    \"cta\": \"コメントで教えて！\",\n    \"caption\": \"（Instagram投稿用キャプション 300文字程度）\",\n    \"hashtags\": [\"ハッシュタグ1\", \"ハッシュタグ2\", \"...5個\"]\n  }\n\n  JSONのみ出力してください。絵文字の使用は禁止です。"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        144
+      ],
+      "id": "77295bdf-e874-4f76-a128-74c5ce864616",
+      "name": "Message a model4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model4": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3c59885d-91bf-4b44-9b97-ce848a3c01be",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"
+  },
+  "id": "TvBesrFMlnYuKkEe",
+  "tags": []
+}

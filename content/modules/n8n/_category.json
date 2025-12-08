@@ -13,5 +13,22 @@
     "level": "beginner",
     "topics": ["automation", "workflow", "integration"]
   },
-  "moduleCount": 4
+  "moduleCount": 4,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "n8n-instagram",
+      "title": "Instagram自動化",
+      "description": "n8nを使ってInstagramへの自動投稿システムを構築する",
+      "moduleCount": 11,
+      "level": "beginner"
+    },
+    {
+      "id": "n8n-advanced",
+      "title": "Instagram自動化 - 上級編",
+      "description": "AI音声生成・インサイト分析など高度な自動化を学ぶ",
+      "moduleCount": 1,
+      "level": "intermediate"
+    }
+  ]
 }

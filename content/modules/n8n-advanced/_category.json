@@ -1,0 +1,19 @@
+{
+  "id": "n8n-advanced",
+  "title": "Instagram自動化 - 上級編",
+  "description": "AI音声生成・インサイト分析など高度な自動化を学ぶ",
+  "icon": "workflow",
+  "color": "orange",
+  "order": 4,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["n8n", "fish-audio", "ffmpeg"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac", "linux", "docker"],
+    "level": "intermediate",
+    "topics": ["automation", "ai-voice", "analytics"]
+  },
+  "moduleCount": 1,
+  "isSubcourse": true,
+  "parentCategory": "n8n"
+}
