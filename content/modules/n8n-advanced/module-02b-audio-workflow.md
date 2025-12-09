@@ -105,11 +105,11 @@ Download fileの実行結果：
 ```json
 {
   "text": "{{ $('Loop Over Items').item.json.narration_1 }}",
-  "reference_id": "b756350f646543bdb0b7e8df76bae3fd"
+  "reference_id": "YOUR_VOICE_ID"
 }
 ```
 
-**注意**: reference_idは使用する音声のVoice IDです。自分の声を使う場合は、Fish Audioで取得したVoice IDに変更してください。
+**注意**: `YOUR_VOICE_ID`はModule 01で取得したFish AudioのVoice IDに置き換えてください。
 
 ### Step 3: Wait 5sノードを追加
 
@@ -145,7 +145,7 @@ API呼び出しの間隔を空けるためにWaitノードを追加します。
 ```json
 {
   "text": "{{ $('Loop Over Items').item.json.narration_2 }}",
-  "reference_id": "b756350f646543bdb0b7e8df76bae3fd"
+  "reference_id": "YOUR_VOICE_ID"
 }
 ```
 

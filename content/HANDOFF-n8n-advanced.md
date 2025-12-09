@@ -173,7 +173,7 @@ A: 回答
 | 01 AI音声生成の基本セットアップ | module-01-audio-setup.md | 完了 |
 | 02【前編】音声合成ワークフローの構築 | module-02a-audio-workflow.md | 完了 |
 | 02【中編】音声合成ワークフローの構築 | module-02b-audio-workflow.md | 完了 |
-| 02【後編】ループ完成・ステータス更新 | module-02c-audio-workflow.md | **実践待ち** |
+| 02【後編】全カテゴリ対応 | module-02c-audio-workflow.md | **完了** |
 
 ---
 
@@ -196,8 +196,15 @@ A: 回答
 
 **GASデプロイURL**:
 ```
-https://script.google.com/macros/s/AKfycbzKG2-JfMU9wcuF9r8jC5JJoAU-P26qiqmFnWURQyVgxxVdvGzeB8gsP3xJy9_3hqEp/exec
+https://script.google.com/macros/s/AKfycbyawBKuhvD34w60YGoFfyXsTe7OSUqKalR0MoagxIiNLMK85okHIGnggLuu06SiQHAN/exec
 ```
+
+**GAS関数一覧**:
+| 関数名 | 用途 |
+|--------|------|
+| doPost | メインエントリーポイント（action分岐） |
+| archiveAndCleanCanvaSheets | canva_A〜Eをアーカイブしてクリア |
+| updateAudioStatus | audio_statusを更新（postId, category, status） |
 
 ### 既存ワークフロー
 
@@ -485,6 +492,7 @@ ffmpeg -i video.mp4 -i narration_1.mp3 -i narration_2.mp3 \
 - ffmpegインストール済み（`docker exec n8n ffmpeg -version` で確認可能）
 - Fish Audio Credential設定済み（Header Auth: `Fish Audio API`）
 - テストワークフロー「Fish Audio テスト」で音声生成成功確認済み
+- 音声合成ワークフロー全カテゴリ対応版: 動作確認済み
 
 **講座用設定**:
 - Voice ID（元気な女性）: `b756350f646543bdb0b7e8df76bae3fd`
@@ -492,51 +500,101 @@ ffmpeg -i video.mp4 -i narration_1.mp3 -i narration_2.mp3 \
 
 **完了したモジュール**:
 - Module 01: AI音声生成の基本セットアップ（`module-01-audio-setup.md`）
-  - ffmpeg追加手順
-  - Fish Audioアカウント・APIキー・Voice ID取得
-  - n8n Credential設定
-  - 音声生成テスト
+- Module 02【前編】: 音声合成ワークフロー構築（`module-02a-audio-workflow.md`）
+- Module 02【中編】: 音声合成ワークフロー構築（`module-02b-audio-workflow.md`）
+- Module 02【後編】: 全カテゴリ対応（`module-02c-audio-workflow.md`）
 
-### 音声合成ワークフロー実装状況（2025-12-08 19:10時点）
+### 音声合成ワークフロー実装状況（2025-12-08 更新）
 
-**完了したステップ**:
-1. canva_Aシートからデータ取得（Get canva_A）- OK
-2. audio_statusが空の行をフィルタ（Filter Pending）- OK
-3. フォルダ名を動的生成（Set Folder Names）- OK
-4. カテゴリフォルダを検索（Search Category Folder）- OK
-5. アーカイブフォルダを検索・作成（Search Archive Folder / If Archive Exists / Create Archive Folder）- OK
-6. ループ用データ準備（Prepare Loop Data）- OK
-7. 1件ずつループ処理（Loop Over Items）- OK
-8. 動画ファイル検索（Search Video File）- OK
-9. 動画存在チェック（If Video Exists）- OK
+**ワークフローJSON**: `content/modules/n8n-advanced/音声合成.json`
 
-**次に実装するステップ**:
-10. 動画ファイルをダウンロード
-11. Fish Audio APIで音声生成（narration_1, narration_2）
-12. ffmpegで動画と音声を合成
-13. 合成済み動画をアーカイブフォルダにアップロード
-14. シートのaudio_statusを更新
+**実装完了**: 全カテゴリ対応版（canva_A〜E）
 
-**現在のワークフローJSON**: `C:\Users\tench\Downloads\音声合成 (1).json`
+---
 
-**重要な修正点（トラブルシューティング用）**:
+#### ワークフロー全体構造
+
+```
+[Manual Trigger]
+    ↓
+[Sheet List] - 5つのシート情報を生成（A〜E）
+    ↓
+[Loop Sheets] - シートごとにループ
+    ↓ (loop出力)
+[Get Sheet Data] - 各シートからデータ取得
+    ↓
+[Add Category] - categoryカラムを付与
+    ↓ (Loop Sheetsに戻る)
+
+[Loop Sheets完了後]
+    ↓
+[Filter NORMAL] - audio_status=NORMALでフィルタ
+    ↓
+[Set Folder Names] - categoryからフォルダ名を動的生成
+    ↓
+[Loop Over Items] - 各アイテムをループ
+    ↓
+[Search Category Folder] - カテゴリフォルダ検索
+    ↓
+[Search Archive Folder] - アーカイブフォルダ検索
+    ↓
+[If Archive Exists] - なければ作成
+    ↓
+[Prepare Item Data] - フォルダIDを付与
+    ↓
+[Search Video File] - post_idで動画検索
+    ↓
+[If Video Exists]
+    ├── true → 音声生成・合成フロー
+    └── false → Loop Over Itemsに戻る
+    ↓
+[Download file] → [Generate Audio 1] → [Wait 5s] → [Generate Audio 2]
+    ↓
+[Save Video] → [Save Audio 1] → [Save Audio 2]
+    ↓
+[Execute Command] - ffmpeg合成
+    ↓
+[Read Output] - 合成済み動画読み込み
+    ↓
+[Move Original to Archive] / [Wait 5s1] → [Upload New Video]
+    ↓
+[Update audio_status] - GAS呼び出しでDONEに更新
+    ↓
+[Loop Over Itemsに戻る]
+```
+
+---
+
+#### audio_statusの仕様
+
+| 状態 | 意味 |
+|------|------|
+| NORMAL | Canva用シート振り分けで設定。音声合成対象 |
+| DONE | 音声合成完了。投稿可能 |
+| （空） | 旧データ。音声合成対象外 |
+
+**設定タイミング**:
+- `NORMAL`: Canva用シート振り分けワークフローでcanva_A〜Eに書き込む際に設定
+- `DONE`: 音声合成ワークフローでUpload New Video成功後にGAS経由で更新
+
+---
+
+#### 重要な修正点（トラブルシューティング用）
 
 1. **Google Drive検索で部分一致問題**
    - Search Category Folderで「202512Instagram投稿A」を検索すると「202512Instagram投稿A_archive」も返る
-   - 解決: Prepare Loop Dataで正確な名前でフィルタする
+   - 解決: Prepare Item Dataで正確な名前でフィルタする
    ```javascript
-   const categoryFolder = $('Search Category Folder').all()
-     .find(item => item.json.name === folderNames.folder_name);
+   const categoryFolder = categoryFolders.find(item => item.json.name === currentItem.folder_name);
    ```
 
-2. **フォルダ検索はループの外で1回だけ**
-   - 同じフォルダを毎回検索するのは無駄
-   - Set Folder Namesで1件だけ返し、フォルダ検索を1回だけ実行
-   - Prepare Loop DataでFilter Pendingの全データを復元してcategory_folder_idを付与
-
-3. **Google DriveノードのFolder ID指定でエラー**
+2. **Google DriveノードのFolder ID指定でエラー**
    - 「File not found: .」エラーが発生することがある
    - ExpressionでIDを渡す場合、前のノードのデータが正しく参照できているか確認
+
+3. **GASでのステータス更新**
+   - Google Sheetsノードでは動的にシートを選択できない
+   - GAS（updateAudioStatus関数）を使用してcategoryに応じたシートを更新
 
 **講座用スクショ（配置済み）**:
 
@@ -577,7 +635,7 @@ Module 02【中編】で使用した画像（`public/n8n-advanced/`に配置済�
 
 ### 次にやること
 
-**AI音声生成トピックは未完了** - 以下の残タスクあり
+**AI音声生成トピック**: Module 02（前・中・後編）完了
 
 ---
 
@@ -586,36 +644,19 @@ Module 02【中編】で使用した画像（`public/n8n-advanced/`に配置済�
 - [x] 講座構成の修正: module-02bを【中編】にリネーム
 - [x] Save Video用スクショを講座に追加（`save-video-setup.png`）
 - [x] 受講者用ワークフローJSONの作成（`audio-workflow-template.json`）
+- [x] ループ処理の完成（Upload後にLoop Over Itemsに戻す）
+- [x] audio_statusの更新（GAS経由でDONEに更新）
+- [x] 全カテゴリ対応（canva_A〜E）
+- [x] Canva用シート振り分けワークフローにaudio_status: NORMAL追加
+- [x] 【後編】講座の作成（`module-02c-audio-workflow.md`）
 
 ---
 
-#### 残タスク1: Save Audio 1/Save Audio 2のスクショ撮影
+#### 残タスク: 受講者用テンプレートJSONの更新
 
-**問題**: Save Audio 1/Save Audio 2の設定・結果スクショが未撮影
+現在の`audio-workflow-template.json`は中編までの構造。後編の全カテゴリ対応版に更新が必要。
 
-**対応**: 次回実践時に撮影して講座に追加
-
----
-
-#### 残タスク2: 【後編】で実装する機能（実践待ち）
-
-**【後編】で追加する機能**:
-
-1. **ループ処理の完成**
-   - 現在はLoop Over Itemsで1件だけ処理して終わり
-   - Upload New Video後、Loop Over Itemsのloopブランチに戻す接続を追加
-   - API呼び出しのレート制限対策（Wait 5sは追加済みだが、追加のWaitが必要かも）
-
-2. **audio_statusの更新**
-   - Upload New Video成功後、Google Sheets: Update rowでaudio_statusを「DONE」に更新
-   - 対象シート: canva_A（将来的にはcanva_A〜E）
-   - 更新対象行の特定: row_numberを使用
-
-3. **全カテゴリ対応**
-   - 現在はcanva_Aのみ対応
-   - canva_A〜Eすべてを1回の実行で処理したい
-   - Google Drive内の動画で、該当ステータス（audio_status空）のものをすべて処理する
-   - 実装方法はユーザーと相談して決める（勝手に決めない）
+**対応**: 次回セッションでテンプレートJSONを更新
 
 ---
 
@@ -640,4 +681,6 @@ Module 02【中編】で使用した画像（`public/n8n-advanced/`に配置済�
 
 ---
 
-**最終更新**: 2025-12-08（残タスク対応: 講座構成修正、スクショ追加、ワークフローJSON作成完了）
+---
+
+**最終更新**: 2025-12-09（Module 02 全編完了、音声合成ワークフロー動作確認済み）
