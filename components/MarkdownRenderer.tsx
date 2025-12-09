@@ -1,12 +1,55 @@
 'use client';
 
+import React, { useState, isValidElement, ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import { CheckCircle, CheckSquare } from 'lucide-react';
+import { CheckCircle, CheckSquare, Copy, Check } from 'lucide-react';
 
 interface MarkdownRendererProps {
   content: string;
+}
+
+// コードブロックからテキストを抽出するヘルパー関数
+function extractTextFromChildren(children: ReactNode): string {
+  if (typeof children === 'string') {
+    return children;
+  }
+  if (Array.isArray(children)) {
+    return children.map(extractTextFromChildren).join('');
+  }
+  if (isValidElement(children)) {
+    const props = children.props as { children?: ReactNode };
+    return extractTextFromChildren(props.children);
+  }
+  return '';
+}
+
+// コピーボタン付きのコードブロックコンポーネント
+function CodeBlock({ children, ...props }: React.HTMLAttributes<HTMLPreElement> & { children?: React.ReactNode }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    const text = extractTextFromChildren(children);
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative group">
+      <button
+        onClick={handleCopy}
+        className="absolute top-2 right-2 p-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+        aria-label="コードをコピー"
+      >
+        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+      </button>
+      <pre className="my-4 rounded-lg overflow-hidden overflow-x-auto max-w-full bg-gray-900 p-4" {...props}>
+        {children}
+      </pre>
+    </div>
+  );
 }
 
 export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
@@ -77,9 +120,7 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
             ) : (
               <code className="block text-gray-100" {...props} />
             ),
-          pre: ({ node, ...props }) => (
-            <pre className="my-4 rounded-lg overflow-hidden overflow-x-auto max-w-full bg-gray-900 p-4" {...props} />
-          ),
+          pre: ({ node, ...props }) => <CodeBlock {...props} />,
           blockquote: ({ node, ...props }) => (
             <blockquote
               className="border-l-4 border-blue-500 pl-3 md:pl-4 py-2 my-4 bg-blue-50 text-gray-700 italic break-words"
