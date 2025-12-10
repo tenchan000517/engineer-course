@@ -1,7 +1,9 @@
 # 【後編】音声合成ワークフローの構築 - 全カテゴリ対応
 
 **所要時間**: 45分
-**難易度**: 中級
+**難易度**: ⭐⭐⭐☆☆
+
+このモジュールの最後に[ワークフローJSONダウンロード](#ワークフローjsonダウンロード)があります。
 
 ---
 
@@ -22,6 +24,24 @@
 - Codeノードでデータにカテゴリ情報を付与できる
 - HTTP RequestノードでGASを呼び出してステータス更新できる
 - 外側ループと内側ループのネスト構造を理解できる
+
+---
+
+## 目次
+
+- [セクション1: 全カテゴリ対応の設計](#セクション1-全カテゴリ対応の設計)
+- [セクション2: シートリストの生成](#セクション2-シートリストの生成)
+- [セクション3: シートごとのループ処理](#セクション3-シートごとのループ処理)
+- [セクション4: 処理対象の有無で分岐](#セクション4-処理対象の有無で分岐)
+- [セクション5: フォルダ名の動的生成](#セクション5-フォルダ名の動的生成)
+- [セクション6: Prepare Loop Dataの修正](#セクション6-prepare-loop-dataの修正)
+- [セクション7: ループの接続を完成](#セクション7-ループの接続を完成)
+- [セクション8: audio_statusの更新](#セクション8-audio_statusの更新)
+- [セクション9: 完成したワークフロー](#セクション9-完成したワークフロー)
+- [トラブルシューティング](#トラブルシューティング)
+- [まとめ](#まとめ)
+- [ワークフローJSONダウンロード](#ワークフローjsonダウンロード)
+- [よくある質問](#よくある質問)
 
 ---
 
@@ -544,27 +564,23 @@ const sheetInfo = $('Loop Sheets').first().json;
 
 ---
 
-## ワークフローのダウンロード
+## ワークフローJSONダウンロード
 
-このモジュールで作成した全カテゴリ対応版ワークフローのテンプレートをダウンロードできます：
+以下のJSONファイルをダウンロードしてn8nにインポートできます。
 
-[音声合成ワークフロー（全カテゴリ対応版）](/n8n-advanced/audio-workflow-all-categories-template.json)
+[audio-workflow-advanced.json](/n8n-advanced/download/audio-workflow-advanced.json)
 
-**使用方法**:
-1. ファイルをダウンロード
-2. n8nで「Import from File」からインポート
-3. 以下のプレースホルダーを自分の値に置換：
+**インポート後に変更が必要な箇所**:
 
-| プレースホルダー | 説明 | 例 |
-|-----------------|------|-----|
-| `YOUR_SPREADSHEET_ID` | Google SheetsのスプレッドシートID | `1jnsUM1e...` |
-| `YOUR_CANVA_A_GID` 〜 `YOUR_CANVA_E_GID` | 各シートのgID | `1459009746` |
-| `YOUR_PARENT_FOLDER_ID` | Google Driveの親フォルダID | `1EuAjad...` |
-| `YOUR_VOICE_ID` | Fish AudioのVoice ID | `b756350f...` |
-| `YOUR_GAS_DEPLOY_URL` | GASのデプロイURL | `https://script.google.com/macros/s/...` |
-| `YOUR_CREDENTIAL_ID` | 各Credentialを再設定 | （n8nで選択） |
+| プレースホルダー | 変更内容 |
+|----------------|---------|
+| `YOUR_SPREADSHEET_ID` | あなたのスプレッドシートID |
+| `YOUR_CANVA_A_GID` 〜 `YOUR_CANVA_E_GID` | 各シートのgID（Sheet ListノードのCodeを編集） |
+| `YOUR_PARENT_FOLDER_ID` | Google Driveの親フォルダID |
+| `YOUR_VOICE_ID` | Fish AudioのVoice ID |
+| `YOUR_GAS_DEPLOY_URL` | GASのデプロイURL |
 
-4. 各ノードのCredentialを自分のアカウントで再設定
+また、Google Sheets、Google Drive、Fish Audio APIのクレデンシャルを設定してください。
 
 ---
 

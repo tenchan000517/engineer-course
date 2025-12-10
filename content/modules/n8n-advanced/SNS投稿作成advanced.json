@@ -1,0 +1,877 @@
+{
+  "name": "SNS投稿作成advanced",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        256
+      ],
+      "id": "c6ae206a-97a1-4049-a8db-2ac92e69f6fb",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2072779338,
+          "mode": "list",
+          "cachedResultName": "ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=2072779338"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "NEW"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -848,
+        256
+      ],
+      "id": "7b4f9e6c-399d-473b-b3d7-7faa07cd424f",
+      "name": "Get Ideas (status=NEW)",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// カテゴリごとに5件ずつに制限\nconst items = $input.all();\nconst categoryCount = { A: 0, B: 0, C: 0, D: 0, E: 0 };\nconst result = [];\n\nfor (const item of items) {\n  const cat = item.json.category;\n  if (categoryCount[cat] !== undefined && categoryCount[cat] < 5) {\n    result.push(item);\n    categoryCount[cat]++;\n  }\n}\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        256
+      ],
+      "id": "f2b5eded-b696-47cb-8b13-24597755cf80",
+      "name": "Limit 5 per Category"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -432,
+        256
+      ],
+      "id": "aa84b2c6-de4f-40dc-b357-1c642b2f48f0",
+      "name": "Loop"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "A",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "cond-a"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category A"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-b",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "B",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category B"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-c",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "C",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category C"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-d",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "D",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category D"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cond-e",
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "E",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category E"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -224,
+        256
+      ],
+      "id": "94359cfd-9855-4920-b96e-5348c06a796c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=  あなたはInstagramリール投稿コンテンツを作成するプロフェッショナルです。\n  以下の入力データを元に、60秒の比較動画用コンテンツを生成してください。\n\n  # 入力データ\n  タイトル: {{ $json.title }}\n  比較ツール: {{ $json.tools }}\n  リサーチポイント: {{ $json.research_points }}\n\n  # 最重要指示（絶対厳守）\n\n  1. 入力データの「タイトル」「比較ツール」は一切変更せず、そのまま使用すること\n  2. ツール名やモデル名が不明・最新でも、入力されたものをそのまま出力に使うこと\n  3. 入力データを「古い」「存在しない」「間違い」と判断して別の名前に置き換えることは絶対禁止\n  4. Web検索やリサーチは行わないこと。入力データのみを使用すること\n  5. ベンチマークスコアや具体的な数値は生成禁止。機能の特徴のみを説明すること\n\n  # 禁止事項（厳守）\n  - 入力データのツール名を変更・修正すること\n  - 想像や推測で数値・スコアを生成すること\n  - 絵文字の使用（一切禁止）\n  - 抽象的な表現（「便利」「凄い」「魔法」など）\n  - 過激な表現（「〜を殺す」「〜は終わり」など）\n\n  # ナレーション制約\n  1. 合計300〜350文字（読み上げ60秒相当）\n  2. 冒頭5秒で視聴者の関心を引くフック\n  3. 両ツールの具体的な機能名を含める（入力のresearch_pointsを活用）\n  4. 「こういう人はA、こういう人はB」と明確に線引き\n  5. CTAは「コメント」「保存」への誘導のみ（プロフリンク禁止）\n\n  # スライド制約\n  - 各セットは3行、各行は全角14文字以内（厳守）\n  - 英数字は半角2文字=全角1文字で換算\n  - 3行は対になる要素か同じ属性で揃える\n  - ツール名は入力データのまま正確に記載\n\n  # サムネイル制約\n  - thumb_main: 8文字以内（疑問形または煽り）\n  - thumb_sub: 6文字以内×3行（改行区切り）\n\n  # キャプション制約\n  - 絵文字禁止\n  - 親しみやすい文体（〜ですよね、〜なんです）\n  - 見出し（▶）で3セクションに分ける\n  - 箇条書き（①②③）でポイント整理\n\n  # 出力形式（JSON）\n  以下のJSON形式で出力してください。他の文字は含めないでください。\n\n  {\n    \"narration_1\": \"（0:00-0:30のナレーション）\",\n    \"narration_2\": \"（0:30-1:00のナレーション）\",\n    \"thumb_main\": \"（8文字以内）\",\n    \"thumb_sub\": \"（6文字以内）\\n（6文字以内）\\n（6文字以内）\",\n    \"set_1\": \"（1行目）\\n（2行目）\\n（3行目）\",\n    \"set_2\": \"（1行目）\\n（2行目）\\n（3行目）\",\n    \"set_3\": \"（1行目）\\n（2行目）\\n（3行目）\",\n    \"set_4\": \"（1行目）\\n（2行目）\\n（3行目）\",\n    \"set_5\": \"（1行目）\\n（2行目）\\n（3行目）\",\n    \"set_6\": \"（1行目）\\n（2行目）\\n（3行目）\",\n    \"main_tool\": \"（入力の比較ツールをそのまま記載）\",\n    \"caption\": \"（キャプション全文）\",\n    \"hashtags\": [\"#タグ1\", \"#タグ2\", \"#タグ3\", \"#タグ4\", \"#タグ5\"]\n  }\n\n  # 時系列対応（スライドとナレーションの同期）\n  - Set 1 (0:00-0:05): フック - 比較テーマの提示\n  - Set 2 (0:05-0:15): ツールAの強み（入力のresearch_pointsを活用）\n  - Set 3 (0:15-0:25): ツールBの強み（入力のresearch_pointsを活用）\n  - Set 4 (0:25-0:35): 比較ポイント\n  - Set 5 (0:35-0:45): 使い分け提案（具体的なユースケース）\n  - Set 6 (0:45-0:55): 結論（明確な線引き）\n  - CTA (0:55-1:00): 固定画像（生成不要）\n\n  # キャプションテンプレート\n  [共感の一言]\n\n  @ten_urushibata ← 他の投稿はこちら\n  ━━━━━━━━━━━━━━━━━━━━\n\n  ▶ [見出し1]\n  [解説]\n\n  ▶ [見出し2]\n  ① [ポイント1と具体的な解説]\n  ② [ポイント2と具体的な解説]\n  ③ [ポイント3と具体的な解説]\n\n  ▶ [見出し3]\n  [まとめ]\n\n  ━━━━━━━━━━━━━━━━━━━━\n  「自分には何もない」から\n  「自分にはこれがある」が見つかるコミュニティ\n\n  最初は誰でも初心者。\n  ここで見つけた「得意」が、人生を変えるきっかけになる。\n\n  一人で頑張るより、みんなで挑戦する方が圧倒的に早く成長できる。\n\n  プロフィール欄のURLからお気軽にご参加ください！\n\n  @ten_urushibata\n\n  ━━━━━━━━━━━━━━━━━━━━\n\n  いいね・コメント・シェアありがとうございます！\n  保存して後で見返すと便利です\n\n  天ちゃん|0から始めるエンジニア生活\n\n  \\ AIを活用して、自分らしい人生を /\n  ▶︎ 0からでもできる。AIとの付き合い方\n  ▶︎ 仕事も暮らしも、AIで豊かに\n  ▶︎ 漫画と図解でわかりやすく発信\n  Voicy「0から始めるエンジニア生活」\n\n  ━━━━━━━━━━━━━━━━━━━━\n\n  [ハッシュタグ5個]"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c051d02a-8d62-43e0-8df4-6930a80666d3",
+      "name": "Gemini A (versus)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール投稿コンテンツを作成するプロフェッショナルです。\n以下の入力データを元に、60秒の時短・効率化動画用コンテンツを生成してください。\n\n# 入力データ\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n# 最重要指示（絶対厳守）\n\n1. 入力データの「タイトル」「ツール」は一切変更せず、そのまま使用すること\n2. ツール名やモデル名が不明・最新でも、入力されたものをそのまま出力に使うこと\n3. 入力データを「古い」「存在しない」「間違い」と判断して別の名前に置き換えることは絶対禁止\n4. Web検索やリサーチは行わないこと。入力データのみを使用すること\n5. ベンチマークスコアや具体的な数値は生成禁止。機能の特徴のみを説明すること\n\n# 禁止事項（厳守）\n- 入力データのツール名を変更・修正すること\n- 想像や推測で数値・スコアを生成すること\n- 絵文字の使用（一切禁止）\n- 抽象的な表現（「便利」「凄い」「魔法」など）\n- 過激な表現（「〜を殺す」「〜は終わり」など）\n\n# ナレーション制約\n1. 合計300〜350文字（読み上げ60秒相当）\n2. 冒頭5秒で「まだ手作業でやってるの？」等の課題提起\n3. ツールの具体的な機能名を含める（入力のresearch_pointsを活用）\n4. 「これを使えば○○が一瞬で終わる」という時短メリットを明示\n5. CTAは「コメント」「保存」への誘導のみ（プロフリンク禁止）\n\n# スライド制約\n- 各セットは3行、各行は全角14文字以内（厳守）\n- 英数字は半角2文字=全角1文字で換算\n- 3行は対になる要素か同じ属性で揃える\n- ツール名は入力データのまま正確に記載\n\n# サムネイル制約\n- thumb_main: 8文字以内（疑問形または煽り）\n- thumb_sub: 6文字以内×3行（改行区切り）\n\n# キャプション制約\n- 絵文字禁止\n- 親しみやすい文体（〜ですよね、〜なんです）\n- 見出し（▶）で3セクションに分ける\n- 箇条書き（①②③）でポイント整理\n\n# 出力形式（JSON）\n以下のJSON形式で出力してください。他の文字は含めないでください。\n\n{\n  \"narration_1\": \"（0:00-0:30のナレーション）\",\n  \"narration_2\": \"（0:30-1:00のナレーション）\",\n  \"thumb_main\": \"（8文字以内）\",\n  \"thumb_sub\": \"（6文字以内）\\n（6文字以内）\\n（6文字以内）\",\n  \"set_1\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_2\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_3\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_4\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_5\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_6\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"main_tool\": \"（入力のツールをそのまま記載）\",\n  \"caption\": \"（キャプション全文）\",\n  \"hashtags\": [\"#タグ1\", \"#タグ2\", \"#タグ3\", \"#タグ4\", \"#タグ5\"]\n}\n\n# 時系列対応（スライドとナレーションの同期）\n- Set 1 (0:00-0:05): フック - 手作業の無駄を指摘\n- Set 2 (0:05-0:15): 課題提起 - 視聴者が抱える悩み\n- Set 3 (0:15-0:25): 解決策 - ツールの紹介\n- Set 4 (0:25-0:35): 仕組み・機能 - なぜ時短できるか\n- Set 5 (0:35-0:45): ベネフィット - 具体的なメリット\n- Set 6 (0:45-0:55): 結論 - 使うべき理由\n- CTA (0:55-1:00): 固定画像（生成不要）\n\n# キャプションテンプレート\n[共感の一言]\n\n@ten_urushibata ← 他の投稿はこちら\n━━━━━━━━━━━━━━━━━━━━\n\n▶ [見出し1]\n[解説]\n\n▶ [見出し2]\n① [ポイント1と具体的な解説]\n② [ポイント2と具体的な解説]\n③ [ポイント3と具体的な解説]\n\n▶ [見出し3]\n[まとめ]\n\n━━━━━━━━━━━━━━━━━━━━\n「自分には何もない」から\n「自分にはこれがある」が見つかるコミュニティ\n\n最初は誰でも初心者。\nここで見つけた「得意」が、人生を変えるきっかけになる。\n\n一人で頑張るより、みんなで挑戦する方が圧倒的に早く成長できる。\n\nプロフィール欄のURLからお気軽にご参加ください！\n\n@ten_urushibata\n\n━━━━━━━━━━━━━━━━━━━━\n\nいいね・コメント・シェアありがとうございます！\n保存して後で見返すと便利です\n\n天ちゃん|0から始めるエンジニア生活\n\n\\ AIを活用して、自分らしい人生を /\n▶︎ 0からでもできる。AIとの付き合い方\n▶︎ 仕事も暮らしも、AIで豊かに\n▶︎ 漫画と図解でわかりやすく発信\nVoicy「0から始めるエンジニア生活」\n\n━━━━━━━━━━━━━━━━━━━━\n\n[ハッシュタグ5個]"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        0,
+        144
+      ],
+      "id": "e72de35c-f5cc-430c-984a-efe28a5767ed",
+      "name": "Gemini B (instant_hack)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール投稿コンテンツを作成するプロフェッショナルです。\n以下の入力データを元に、60秒の新機能・裏技紹介動画用コンテンツを生成してください。\n\n# 入力データ\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n# 最重要指示（絶対厳守）\n\n1. 入力データの「タイトル」「ツール」は一切変更せず、そのまま使用すること\n2. ツール名やモデル名が不明・最新でも、入力されたものをそのまま出力に使うこと\n3. 入力データを「古い」「存在しない」「間違い」と判断して別の名前に置き換えることは絶対禁止\n4. Web検索やリサーチは行わないこと。入力データのみを使用すること\n5. ベンチマークスコアや具体的な数値は生成禁止。機能の特徴のみを説明すること\n\n# 禁止事項（厳守）\n- 入力データのツール名を変更・修正すること\n- 想像や推測で数値・スコアを生成すること\n- 絵文字の使用（一切禁止）\n- 抽象的な表現（「便利」「凄い」「魔法」など）\n- 過激な表現（「〜を殺す」「〜は終わり」など）\n\n# ナレーション制約\n1. 合計300〜350文字（読み上げ60秒相当）\n2. 冒頭5秒で「まだ○○してるの？それ古いです」等の常識否定\n3. ツールの具体的な機能名を含める（入力のresearch_pointsを活用）\n4. 「AIが勝手に○○する」等のインパクトある描写\n5. CTAは「コメント」「保存」への誘導のみ（プロフリンク禁止）\n\n# スライド制約\n- 各セットは3行、各行は全角14文字以内（厳守）\n- 英数字は半角2文字=全角1文字で換算\n- 3行は対になる要素か同じ属性で揃える\n- ツール名は入力データのまま正確に記載\n\n# サムネイル制約\n- thumb_main: 8文字以内（疑問形または煽り）\n- thumb_sub: 6文字以内×3行（改行区切り）\n\n# キャプション制約\n- 絵文字禁止\n- 親しみやすい文体（〜ですよね、〜なんです）\n- 見出し（▶）で3セクションに分ける\n- 箇条書き（①②③）でポイント整理\n\n# 出力形式（JSON）\n以下のJSON形式で出力してください。他の文字は含めないでください。\n\n{\n  \"narration_1\": \"（0:00-0:30のナレーション）\",\n  \"narration_2\": \"（0:30-1:00のナレーション）\",\n  \"thumb_main\": \"（8文字以内）\",\n  \"thumb_sub\": \"（6文字以内）\\n（6文字以内）\\n（6文字以内）\",\n  \"set_1\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_2\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_3\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_4\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_5\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_6\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"main_tool\": \"（入力のツールをそのまま記載）\",\n  \"caption\": \"（キャプション全文）\",\n  \"hashtags\": [\"#タグ1\", \"#タグ2\", \"#タグ3\", \"#タグ4\", \"#タグ5\"]\n}\n\n# 時系列対応（スライドとナレーションの同期）\n- Set 1 (0:00-0:05): フック - 従来の方法を否定\n- Set 2 (0:05-0:15): 従来との違い - 新機能の概要\n- Set 3 (0:15-0:25): 動作描写1 - 具体的な動き\n- Set 4 (0:25-0:35): 動作描写2 - さらなる機能\n- Set 5 (0:35-0:45): インパクト - 何が変わるか\n- Set 6 (0:45-0:55): 結論 - 使うべき理由\n- CTA (0:55-1:00): 固定画像（生成不要）\n\n# キャプションテンプレート\n[共感の一言]\n\n@ten_urushibata ← 他の投稿はこちら\n━━━━━━━━━━━━━━━━━━━━\n\n▶ [見出し1]\n[解説]\n\n▶ [見出し2]\n① [ポイント1と具体的な解説]\n② [ポイント2と具体的な解説]\n③ [ポイント3と具体的な解説]\n\n▶ [見出し3]\n[まとめ]\n\n━━━━━━━━━━━━━━━━━━━━\n「自分には何もない」から\n「自分にはこれがある」が見つかるコミュニティ\n\n最初は誰でも初心者。\nここで見つけた「得意」が、人生を変えるきっかけになる。\n\n一人で頑張るより、みんなで挑戦する方が圧倒的に早く成長できる。\n\nプロフィール欄のURLからお気軽にご参加ください！\n\n@ten_urushibata\n\n━━━━━━━━━━━━━━━━━━━━\n\nいいね・コメント・シェアありがとうございます！\n保存して後で見返すと便利です\n\n天ちゃん|0から始めるエンジニア生活\n\n\\ AIを活用して、自分らしい人生を /\n▶︎ 0からでもできる。AIとの付き合い方\n▶︎ 仕事も暮らしも、AIで豊かに\n▶︎ 漫画と図解でわかりやすく発信\nVoicy「0から始めるエンジニア生活」\n\n━━━━━━━━━━━━━━━━━━━━\n\n[ハッシュタグ5個]"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        0,
+        288
+      ],
+      "id": "2dac992a-d12f-4ed5-83a1-5544cc25cdcb",
+      "name": "Gemini C (secret_feature)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール投稿コンテンツを作成するプロフェッショナルです。\n以下の入力データを元に、60秒の警告・注意喚起動画用コンテンツを生成してください。\n\n# 入力データ\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n# 最重要指示（絶対厳守）\n\n1. 入力データの「タイトル」「ツール」は一切変更せず、そのまま使用すること\n2. ツール名やモデル名が不明・最新でも、入力されたものをそのまま出力に使うこと\n3. 入力データを「古い」「存在しない」「間違い」と判断して別の名前に置き換えることは絶対禁止\n4. Web検索やリサーチは行わないこと。入力データのみを使用すること\n5. ベンチマークスコアや具体的な数値は生成禁止。機能の特徴のみを説明すること\n\n# 禁止事項（厳守）\n- 入力データのツール名を変更・修正すること\n- 想像や推測で数値・スコアを生成すること\n- 絵文字の使用（一切禁止）\n- 抽象的な表現（「便利」「凄い」「魔法」など）\n- 過激な表現（「〜を殺す」「〜は終わり」など）\n\n# ナレーション制約\n1. 合計300〜350文字（読み上げ60秒相当）\n2. 冒頭5秒で「警告します」「このままだとヤバいです」等の注意喚起\n3. ツールの具体的なリスクを説明（入力のresearch_pointsを活用）\n4. 単なる批判ではなく「賢い使い方」も提示\n5. CTAは「コメント」「保存」への誘導のみ（プロフリンク禁止）\n\n# スライド制約\n- 各セットは3行、各行は全角14文字以内（厳守）\n- 英数字は半角2文字=全角1文字で換算\n- 3行は対になる要素か同じ属性で揃える\n- ツール名は入力データのまま正確に記載\n\n# サムネイル制約\n- thumb_main: 8文字以内（疑問形または煽り）\n- thumb_sub: 6文字以内×3行（改行区切り）\n\n# キャプション制約\n- 絵文字禁止\n- 親しみやすい文体（〜ですよね、〜なんです）\n- 見出し（▶）で3セクションに分ける\n- 箇条書き（①②③）でポイント整理\n\n# 出力形式（JSON）\n以下のJSON形式で出力してください。他の文字は含めないでください。\n\n{\n  \"narration_1\": \"（0:00-0:30のナレーション）\",\n  \"narration_2\": \"（0:30-1:00のナレーション）\",\n  \"thumb_main\": \"（8文字以内）\",\n  \"thumb_sub\": \"（6文字以内）\\n（6文字以内）\\n（6文字以内）\",\n  \"set_1\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_2\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_3\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_4\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_5\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_6\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"main_tool\": \"（入力のツールをそのまま記載）\",\n  \"caption\": \"（キャプション全文）\",\n  \"hashtags\": [\"#タグ1\", \"#タグ2\", \"#タグ3\", \"#タグ4\", \"#タグ5\"]\n}\n\n# 時系列対応（スライドとナレーションの同期）\n- Set 1 (0:00-0:05): フック - 警告の提示\n- Set 2 (0:05-0:15): リスク1 - 具体的な落とし穴\n- Set 3 (0:15-0:25): リスク2 - さらなるリスク\n- Set 4 (0:25-0:35): リスク3 - 見落としがちな点\n- Set 5 (0:35-0:45): 対策 - 賢い使い方\n- Set 6 (0:45-0:55): 結論 - 心構え\n- CTA (0:55-1:00): 固定画像（生成不要）\n\n# キャプションテンプレート\n[共感の一言]\n\n@ten_urushibata ← 他の投稿はこちら\n━━━━━━━━━━━━━━━━━━━━\n\n▶ [見出し1]\n[解説]\n\n▶ [見出し2]\n① [ポイント1と具体的な解説]\n② [ポイント2と具体的な解説]\n③ [ポイント3と具体的な解説]\n\n▶ [見出し3]\n[まとめ]\n\n━━━━━━━━━━━━━━━━━━━━\n「自分には何もない」から\n「自分にはこれがある」が見つかるコミュニティ\n\n最初は誰でも初心者。\nここで見つけた「得意」が、人生を変えるきっかけになる。\n\n一人で頑張るより、みんなで挑戦する方が圧倒的に早く成長できる。\n\nプロフィール欄のURLからお気軽にご参加ください！\n\n@ten_urushibata\n\n━━━━━━━━━━━━━━━━━━━━\n\nいいね・コメント・シェアありがとうございます！\n保存して後で見返すと便利です\n\n天ちゃん|0から始めるエンジニア生活\n\n\\ AIを活用して、自分らしい人生を /\n▶︎ 0からでもできる。AIとの付き合い方\n▶︎ 仕事も暮らしも、AIで豊かに\n▶︎ 漫画と図解でわかりやすく発信\nVoicy「0から始めるエンジニア生活」\n\n━━━━━━━━━━━━━━━━━━━━\n\n[ハッシュタグ5個]"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        0,
+        432
+      ],
+      "id": "1ce934a7-a4f1-4b82-936b-5c475b92755c",
+      "name": "Gemini D (warning)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=あなたはInstagramリール投稿コンテンツを作成するプロフェッショナルです。\n以下の入力データを元に、60秒のランキング動画用コンテンツを生成してください。\n\n# 入力データ\nタイトル: {{ $json.title }}\nツール: {{ $json.tools }}\nリサーチポイント: {{ $json.research_points }}\n\n# 最重要指示（絶対厳守）\n\n1. 入力データの「タイトル」「ツール」は一切変更せず、そのまま使用すること\n2. ツール名やモデル名が不明・最新でも、入力されたものをそのまま出力に使うこと\n3. 入力データを「古い」「存在しない」「間違い」と判断して別の名前に置き換えることは絶対禁止\n4. Web検索やリサーチは行わないこと。入力データのみを使用すること\n5. ベンチマークスコアや具体的な数値は生成禁止。機能の特徴のみを説明すること\n\n# 禁止事項（厳守）\n- 入力データのツール名を変更・修正すること\n- 想像や推測で数値・スコアを生成すること\n- 絵文字の使用（一切禁止）\n- 抽象的な表現（「便利」「凄い」「魔法」など）\n- 過激な表現（「〜を殺す」「〜は終わり」など）\n\n# ナレーション制約\n1. 合計300〜350文字（読み上げ60秒相当）\n2. 冒頭5秒で「今月の神ツールTOP5」等の期待感を高めるフック\n3. 5位から1位へカウントダウン形式\n4. 各ツールは「名前」+「最強のメリット一言」のみ。ダラダラ説明しない\n5. 1位に最も時間を割く（約13秒）\n6. CTAは「コメント」「保存」への誘導のみ（プロフリンク禁止）\n\n# スライド制約\n- 各セットは3行、各行は全角14文字以内（厳守）\n- 英数字は半角2文字=全角1文字で換算\n- Set 2〜6は「順位 / ツール名 / 特徴」の構造\n- ツール名は入力データのまま正確に記載\n\n# サムネイル制約\n- thumb_main: 8文字以内（疑問形または煽り）\n- thumb_sub: 6文字以内×3行（改行区切り）\n\n# キャプション制約\n- 絵文字禁止\n- 親しみやすい文体（〜ですよね、〜なんです）\n- 見出し（▶）で3セクションに分ける\n- 箇条書き（①②③）でポイント整理\n\n# 出力形式（JSON）\n以下のJSON形式で出力してください。他の文字は含めないでください。\n\n{\n  \"narration_1\": \"（0:00-0:30のナレーション）\",\n  \"narration_2\": \"（0:30-1:00のナレーション）\",\n  \"thumb_main\": \"（8文字以内）\",\n  \"thumb_sub\": \"（6文字以内）\\n（6文字以内）\\n（6文字以内）\",\n  \"set_1\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_2\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_3\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_4\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_5\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"set_6\": \"（1行目）\\n（2行目）\\n（3行目）\",\n  \"main_tool\": \"（入力のツールをそのまま記載）\",\n  \"caption\": \"（キャプション全文）\",\n  \"hashtags\": [\"#タグ1\", \"#タグ2\", \"#タグ3\", \"#タグ4\", \"#タグ5\"]\n}\n\n# 時系列対応（スライドとナレーションの同期）※カテゴリE特別構造\n- Set 1 (0:00-0:05): フック - ランキングテーマの提示\n- Set 2 (0:05-0:12): 第5位 - ツール名と特徴\n- Set 3 (0:12-0:20): 第4位 - ツール名と特徴\n- Set 4 (0:20-0:28): 第3位 - ツール名と特徴\n- Set 5 (0:28-0:37): 第2位 - ツール名と特徴\n- Set 6 (0:37-0:50): 第1位 - ツール名と特徴（長め）\n- CTA (0:50-1:00): 固定画像（生成不要）\n\n# キャプションテンプレート\n[共感の一言]\n\n@ten_urushibata ← 他の投稿はこちら\n━━━━━━━━━━━━━━━━━━━━\n\n▶ [見出し1]\n[解説]\n\n▶ [見出し2]\n① [ポイント1と具体的な解説]\n② [ポイント2と具体的な解説]\n③ [ポイント3と具体的な解説]\n\n▶ [見出し3]\n[まとめ]\n\n━━━━━━━━━━━━━━━━━━━━\n「自分には何もない」から\n「自分にはこれがある」が見つかるコミュニティ\n\n最初は誰でも初心者。\nここで見つけた「得意」が、人生を変えるきっかけになる。\n\n一人で頑張るより、みんなで挑戦する方が圧倒的に早く成長できる。\n\nプロフィール欄のURLからお気軽にご参加ください！\n\n@ten_urushibata\n\n━━━━━━━━━━━━━━━━━━━━\n\nいいね・コメント・シェアありがとうございます！\n保存して後で見返すと便利です\n\n天ちゃん|0から始めるエンジニア生活\n\n\\ AIを活用して、自分らしい人生を /\n▶︎ 0からでもできる。AIとの付き合い方\n▶︎ 仕事も暮らしも、AIで豊かに\n▶︎ 漫画と図解でわかりやすく発信\nVoicy「0から始めるエンジニア生活」\n\n━━━━━━━━━━━━━━━━━━━━\n\n[ハッシュタグ5個]"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        0,
+        576
+      ],
+      "id": "08f96036-1f46-4ab7-a687-556c70424c83",
+      "name": "Gemini E (ranking)",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "rdz0MVIRIHU5NIjD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Geminiの出力を取得\nlet text;\nconst input = $input.first().json;\n\n// Simplify Output ON/OFF両方に対応\nif (input.text) {\n  text = input.text;\n} else if (input.content && input.content.parts) {\n  text = input.content.parts[0].text;\n} else if (typeof input === 'string') {\n  text = input;\n} else {\n  return [{ json: input }];\n}\n\n// ```json と ``` を除去\nlet cleanText = text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n\n// 末尾のカンマ除去\ncleanText = cleanText.replace(/,(\\s*[\\]}])/g, '$1');\n\ntry {\n  const parsed = JSON.parse(cleanText);\n  return [{ json: parsed }];\n} catch (e) {\n  return [{ json: { error: e.message, rawText: cleanText.substring(0, 500) } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        288
+      ],
+      "id": "8a616809-0249-4cfb-92b1-8cd25f98d4ff",
+      "name": "Parse JSON"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "=POST-{{ new Date().getTime() }}",
+            "post_type": "={{ $json.post_type }}",
+            "status": "=DRAFT",
+            "caption": "={{ $json.caption }}",
+            "hashtags": "={{ $json.hashtags ? $json.hashtags.join(',') : '' }}",
+            "content_json": "={{ JSON.stringify($json) }}",
+            "created_at": "={{ new Date().toISOString() }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_type",
+              "displayName": "post_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hashtags",
+              "displayName": "hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "media_ids",
+              "displayName": "media_ids",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "scheduled_at",
+              "displayName": "scheduled_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "published_at",
+              "displayName": "published_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ig_post_id",
+              "displayName": "ig_post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "share_to_feed",
+              "displayName": "share_to_feed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "thumb_offset_ms",
+              "displayName": "thumb_offset_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "retry_count",
+              "displayName": "retry_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content_json",
+              "displayName": "content_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        544,
+        288
+      ],
+      "id": "bd5209e6-fc02-4e13-b12b-60b55c93c6bb",
+      "name": "Append to posts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2072779338,
+          "mode": "list",
+          "cachedResultName": "ideas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=2072779338"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "idea_id": "={{ $('Loop').item.json.idea_id }}",
+            "status": "ADOPTED"
+          },
+          "matchingColumns": [
+            "idea_id"
+          ],
+          "schema": [
+            {
+              "id": "idea_id",
+              "displayName": "idea_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        752,
+        288
+      ],
+      "id": "95f3a938-8098-44a5-a7e7-a21adb1c7a91",
+      "name": "Update ideas ADOPTED",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        288
+      ],
+      "id": "d2793c9d-2ab1-4568-b05c-7e20d07b4bb1",
+      "name": "Wait 5s",
+      "webhookId": "wait-webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Get Ideas (status=NEW)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Ideas (status=NEW)": {
+      "main": [
+        [
+          {
+            "node": "Limit 5 per Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit 5 per Category": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Gemini A (versus)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gemini B (instant_hack)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gemini C (secret_feature)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gemini D (warning)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gemini E (ranking)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini A (versus)": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini B (instant_hack)": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini C (secret_feature)": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini D (warning)": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini E (ranking)": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSON": {
+      "main": [
+        [
+          {
+            "node": "Append to posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append to posts": {
+      "main": [
+        [
+          {
+            "node": "Update ideas ADOPTED",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update ideas ADOPTED": {
+      "main": [
+        [
+          {
+            "node": "Wait 5s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5s": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "18ff56e6-6b70-41f8-a849-1a09b8018451",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"
+  },
+  "id": "InM7e1BNxAQvv3HO",
+  "tags": []
+}

@@ -635,28 +635,35 @@ Module 02【中編】で使用した画像（`public/n8n-advanced/`に配置済�
 
 ### 次にやること
 
-**AI音声生成トピック**: Module 02（前・中・後編）完了
+**投稿内容の精度アップトピック**: 未着手 → 開始
 
 ---
 
-#### 完了済みタスク
+#### AI音声生成トピック（完了）
 
-- [x] 講座構成の修正: module-02bを【中編】にリネーム
-- [x] Save Video用スクショを講座に追加（`save-video-setup.png`）
-- [x] 受講者用ワークフローJSONの作成（`audio-workflow-template.json`）
-- [x] ループ処理の完成（Upload後にLoop Over Itemsに戻す）
-- [x] audio_statusの更新（GAS経由でDONEに更新）
-- [x] 全カテゴリ対応（canva_A〜E）
-- [x] Canva用シート振り分けワークフローにaudio_status: NORMAL追加
-- [x] 【後編】講座の作成（`module-02c-audio-workflow.md`）
+- [x] Module 01: AI音声生成の基本セットアップ
+- [x] Module 02【前編】: 音声合成ワークフローの構築
+- [x] Module 02【中編】: 音声合成ワークフローの構築
+- [x] Module 02【後編】: 全カテゴリ対応
+- [x] 受講者用テンプレートJSON（中編用: `audio-workflow-template.json`）
+- [x] 受講者用テンプレートJSON（後編用: `audio-workflow-all-categories-template.json`）
 
 ---
 
-#### 残タスク: 受講者用テンプレートJSONの更新
+#### 投稿内容の精度アップ - やること
 
-現在の`audio-workflow-template.json`は中編までの構造。後編の全カテゴリ対応版に更新が必要。
+1. **現状分析**
+   - 現在のGeminiプロンプトを確認
+   - 実際に生成された投稿内容を確認
+   - 課題を特定
 
-**対応**: 次回セッションでテンプレートJSONを更新
+2. **改善**
+   - プロンプトエンジニアリングの改善
+   - 必要に応じてワークフロー修正
+
+3. **講座作成**
+   - Module構成を決定
+   - 講座を作成
 
 ---
 

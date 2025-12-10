@@ -1,0 +1,494 @@
+{
+    "research_date": "2025-12-09",
+    "sources": {
+        "youtube_channels": [
+            "ウェブ職TV",
+            "KEITO【AI&WEB ch】",
+            "ZIGのAI活用ch",
+            "AI大学【AI&ChatGPT最新情報】",
+            "チャエン【AI研究所】",
+            "mikimiki web スクール",
+            "AI FREAK",
+            "AI収益化ラボ",
+            "すぐる【ChatGPT・AIガチ勢】",
+            "予備校のノリで学ぶ「大学の数学・物理」",
+            "せかチャン",
+            "スタビジ",
+            "AIcia Solid Project",
+            "サプー",
+            "Tokyo Ninja",
+            "リモートワーク研究所",
+            "金子晃之",
+            "パソコン博士TAIKI",
+            "おさとエクセル",
+            "ホリエモンチャンネル"
+        ],
+        "x_accounts": [
+            "@A_I_News",
+            "@masahirochaen",
+            "@AI_sokuho",
+            "@ChatGPT研究所",
+            "@umiyuki_ai",
+            "@aiboom_maru",
+            "@_daichikonno",
+            "@ImAI_Eruel",
+            "@miyayou",
+            "@sammy_suyama",
+            "@ymatsuo",
+            "@ochyai",
+            "@hillbig",
+            "@goto_nikkei",
+            "@K_Ishi_AI",
+            "@shota7180",
+            "@Tom_AI_Dubai",
+            "@Maki_Sunwood",
+            "@KAMUI_AI",
+            "@keito_ai_web"
+        ]
+    },
+    "top_20_trends": [
+        {
+            "rank": 1,
+            "topic": "Google Antigravity",
+            "mention_count": 18,
+            "mentioned_by": [
+                "ウェブ職TV",
+                "KEITO",
+                "チャエン",
+                "ZIG",
+                "AI大学",
+                "Tokyo Ninja"
+            ],
+            "automation_type": "ソフトウェア開発自動化",
+            "outcome": "エージェント主導でのアプリ開発、開発工数の劇的な削減",
+            "how_presented": [
+                {
+                    "creator": "ウェブ職TV",
+                    "target_audience": "エンジニア・開発者",
+                    "format": "ニュース解説",
+                    "content": "データ消失事故の注意喚起とエージェント機能の可能性"
+                },
+                {
+                    "creator": "KEITO",
+                    "target_audience": "初心者〜中級者",
+                    "format": "実演デモ",
+                    "content": "自然言語だけでアプリを作る方法"
+                }
+            ],
+            "why_trending": "「エージェントファースト」なIDEとしての革新性と、12月に発生したデータ消失事故による注目"
+        },
+        {
+            "rank": 2,
+            "topic": "Gemini 3.0 / Deep Think",
+            "mention_count": 17,
+            "mentioned_by": [
+                "チャエン",
+                "AI大学",
+                "ウェブ職TV",
+                "KEITO",
+                "mikimiki"
+            ],
+            "automation_type": "高度推論・マルチモーダル処理",
+            "outcome": "複雑なタスクの自律解決、高精度な推論",
+            "how_presented": [
+                {
+                    "creator": "チャエン",
+                    "target_audience": "ビジネス層",
+                    "format": "ニュース解説",
+                    "content": "Deep Thinkモードの解禁と活用事例"
+                },
+                {
+                    "creator": "AI大学",
+                    "target_audience": "一般層",
+                    "format": "比較レビュー",
+                    "content": "GPT-4oとの推論能力比較"
+                }
+            ],
+            "why_trending": "Googleの大型アップデートであり、推論能力の飛躍的な向上が話題"
+        },
+        {
+            "rank": 3,
+            "topic": "Manus AI",
+            "mention_count": 15,
+            "mentioned_by": [
+                "ウェブ職TV",
+                "チャエン",
+                "AI FREAK"
+            ],
+            "automation_type": "資料作成・リサーチ自動化",
+            "outcome": "自律的な情報収集とレポート作成",
+            "how_presented": [
+                {
+                    "creator": "ウェブ職TV",
+                    "target_audience": "ビジネス層",
+                    "format": "ハウツー",
+                    "content": "Gemini 3.0と連携した資料作成術"
+                },
+                {
+                    "creator": "AI FREAK",
+                    "target_audience": "フリーランス",
+                    "format": "実演デモ",
+                    "content": "完全自動での競合リサーチ手法"
+                }
+            ],
+            "why_trending": "「自ら考えて行動する」真のエージェントとして実用性が高い"
+        },
+        {
+            "rank": 4,
+            "topic": "n8n",
+            "mention_count": 14,
+            "mentioned_by": [
+                "AI収益化ラボ",
+                "KEITO",
+                "チャエン",
+                "リモートワーク研究所"
+            ],
+            "automation_type": "ワークフロー自動化",
+            "outcome": "ノーコードでの業務プロセス完全自動化",
+            "how_presented": [
+                {
+                    "creator": "AI収益化ラボ",
+                    "target_audience": "副業・フリーランス",
+                    "format": "ハウツー",
+                    "content": "AIエージェントを組み込んだ収益化フロー"
+                },
+                {
+                    "creator": "リモートワーク研究所",
+                    "target_audience": "ビジネス層",
+                    "format": "事例紹介",
+                    "content": "社内問い合わせ対応の完全自動化"
+                }
+            ],
+            "why_trending": "AIエージェント機能の強化により、単なる自動化から自律処理へ進化"
+        },
+        {
+            "rank": 5,
+            "topic": "Runway Gen-4",
+            "mention_count": 13,
+            "mentioned_by": [
+                "ZIG",
+                "KEITO",
+                "AI FREAK",
+                "チャエン"
+            ],
+            "automation_type": "動画生成",
+            "outcome": "プロ品質の動画制作自動化",
+            "how_presented": [
+                {
+                    "creator": "ZIG",
+                    "target_audience": "クリエイター",
+                    "format": "実演デモ",
+                    "content": "Gen-4の表現力とSoraとの比較"
+                },
+                {
+                    "creator": "AI FREAK",
+                    "target_audience": "初心者向け",
+                    "format": "ハウツー",
+                    "content": "テキストからCM品質の動画を作る方法"
+                }
+            ],
+            "why_trending": "動画生成精度のさらなる向上と新機能の追加"
+        },
+        {
+            "rank": 6,
+            "topic": "ChatGPT 5.1 (OpenAI)",
+            "mention_count": 12,
+            "mentioned_by": [
+                "AI大学",
+                "ウェブ職TV",
+                "mikimiki"
+            ],
+            "automation_type": "汎用タスク処理",
+            "outcome": "あらゆるデスクワークの効率化",
+            "how_presented": [
+                {
+                    "creator": "AI大学",
+                    "target_audience": "一般層",
+                    "format": "ニュース解説",
+                    "content": "新機能の速報と変更点のまとめ"
+                },
+                {
+                    "creator": "mikimiki",
+                    "target_audience": "初心者向け",
+                    "format": "ハウツー",
+                    "content": "仕事で使える5.1の便利機能ベスト5"
+                }
+            ],
+            "why_trending": "デファクトスタンダードとしての継続的なアップデート"
+        },
+        {
+            "rank": 7,
+            "topic": "Claude Opus 4.5",
+            "mention_count": 11,
+            "mentioned_by": [
+                "チャエン",
+                "AI大学"
+            ],
+            "automation_type": "長文作成・コーディング",
+            "outcome": "人間らしい自然な文章作成の自動化",
+            "how_presented": [
+                {
+                    "creator": "チャエン",
+                    "target_audience": "エンジニア・上級者",
+                    "format": "比較レビュー",
+                    "content": "GPT-5.1 vs Opus 4.5 コーディング対決"
+                }
+            ],
+            "why_trending": "コーディング能力と文章品質の高さでエンジニア・ライターに支持"
+        },
+        {
+            "rank": 8,
+            "topic": "Perplexity AI",
+            "mention_count": 10,
+            "mentioned_by": [
+                "ウェブ職TV",
+                "AI大学"
+            ],
+            "automation_type": "リサーチ・検索",
+            "outcome": "情報収集時間の短縮",
+            "how_presented": [
+                {
+                    "creator": "ウェブ職TV",
+                    "target_audience": "ブロガー・ライター",
+                    "format": "ハウツー",
+                    "content": "記事執筆のための爆速リサーチ術"
+                }
+            ],
+            "why_trending": "「検索の代わり」として定着しつつある"
+        },
+        {
+            "rank": 9,
+            "topic": "Cursor",
+            "mention_count": 9,
+            "mentioned_by": [
+                "ウェブ職TV",
+                "KEITO"
+            ],
+            "automation_type": "コーディング支援",
+            "outcome": "プログラミングの爆速化",
+            "how_presented": [
+                {
+                    "creator": "KEITO",
+                    "target_audience": "エンジニア",
+                    "format": "実演デモ",
+                    "content": "GitHub Copilotから乗り換えるべき理由"
+                }
+            ],
+            "why_trending": "Antigravityとの比較対象として再注目"
+        },
+        {
+            "rank": 10,
+            "topic": "Bolt / Lovable",
+            "mention_count": 8,
+            "mentioned_by": [
+                "ZIG",
+                "KEITO"
+            ],
+            "automation_type": "Webアプリ開発",
+            "outcome": "プロンプト一つでのアプリ生成",
+            "how_presented": [
+                {
+                    "creator": "ZIG",
+                    "target_audience": "非エンジニア",
+                    "format": "実演デモ",
+                    "content": "1行の指示でサイトを公開まで持っていく手順"
+                }
+            ],
+            "why_trending": "開発知識不要でアプリが作れるツールの台頭"
+        },
+        {
+            "rank": 11,
+            "topic": "Felo",
+            "mention_count": 8,
+            "mentioned_by": [
+                "mikimiki",
+                "AI大学"
+            ],
+            "automation_type": "多言語検索・資料作成",
+            "outcome": "グローバルリサーチの効率化",
+            "how_presented": [
+                {
+                    "creator": "mikimiki",
+                    "target_audience": "ビジネス層",
+                    "format": "ハウツー",
+                    "content": "海外情報を瞬時にまとめて資料化する方法"
+                }
+            ],
+            "why_trending": "日本語対応のエージェント機能が強化"
+        },
+        {
+            "rank": 12,
+            "topic": "Gamma",
+            "mention_count": 7,
+            "mentioned_by": [
+                "mikimiki",
+                "AI FREAK"
+            ],
+            "automation_type": "プレゼン資料作成",
+            "outcome": "スライド作成工数の削減",
+            "how_presented": [
+                {
+                    "creator": "mikimiki",
+                    "target_audience": "会社員・学生",
+                    "format": "Tips紹介",
+                    "content": "見やすいスライドをAIで一発生成するコツ"
+                }
+            ],
+            "why_trending": "完成度の高いスライドが瞬時に作れる定番ツール"
+        },
+        {
+            "rank": 13,
+            "topic": "Genspark",
+            "mention_count": 6,
+            "mentioned_by": [
+                "チャエン"
+            ],
+            "automation_type": "特化型リサーチ",
+            "outcome": "Sparkpageによるまとめ記事自動生成",
+            "how_presented": [
+                {
+                    "creator": "チャエン",
+                    "target_audience": "マーケター",
+                    "format": "ニュース解説",
+                    "content": "Google検索を脅かす新しい検索体験"
+                }
+            ],
+            "why_trending": "Perplexityとは異なる「まとめ生成」のアプローチ"
+        },
+        {
+            "rank": 14,
+            "topic": "Midjourney v7",
+            "mention_count": 6,
+            "mentioned_by": [
+                "ZIG",
+                "KEITO"
+            ],
+            "automation_type": "画像生成",
+            "outcome": "超高精細な画像素材の生成",
+            "how_presented": [
+                {
+                    "creator": "ZIG",
+                    "target_audience": "クリエイター",
+                    "format": "ニュース解説",
+                    "content": "v7のリーク情報と期待される新機能"
+                }
+            ],
+            "why_trending": "v7のリリース（予測）による画質の向上"
+        },
+        {
+            "rank": 15,
+            "topic": "Suno / Udio",
+            "mention_count": 5,
+            "mentioned_by": [
+                "AI FREAK"
+            ],
+            "automation_type": "音楽生成",
+            "outcome": "BGM・楽曲制作の自動化",
+            "how_presented": [
+                {
+                    "creator": "AI FREAK",
+                    "target_audience": "動画投稿者",
+                    "format": "ハウツー",
+                    "content": "著作権フリーなBGMを自作する方法"
+                }
+            ],
+            "why_trending": "クリエイティブAIの一角として定着"
+        },
+        {
+            "rank": 16,
+            "topic": "Canva AI",
+            "mention_count": 5,
+            "mentioned_by": [
+                "mikimiki"
+            ],
+            "automation_type": "デザイン全般",
+            "outcome": "ノンデザイナーによるクリエイティブ制作",
+            "how_presented": [
+                {
+                    "creator": "mikimiki",
+                    "target_audience": "SNS運用者",
+                    "format": "ハウツー",
+                    "content": "Magic Studioでインスタ投稿を量産する技"
+                }
+            ],
+            "why_trending": "Magic Studioの機能改善"
+        },
+        {
+            "rank": 17,
+            "topic": "Notta",
+            "mention_count": 4,
+            "mentioned_by": [
+                "リモートワーク研究所"
+            ],
+            "automation_type": "議事録作成",
+            "outcome": "会議の文字起こしと要約の自動化",
+            "how_presented": [
+                {
+                    "creator": "リモートワーク研究所",
+                    "target_audience": "ビジネス層",
+                    "format": "比較レビュー",
+                    "content": "Zoom/Teams連携で最強の議事録ツールはどれか"
+                }
+            ],
+            "why_trending": "ビジネス必須ツールとしての安定感"
+        },
+        {
+            "rank": 18,
+            "topic": "Dify",
+            "mention_count": 4,
+            "mentioned_by": [
+                "AI収益化ラボ"
+            ],
+            "automation_type": "LLMアプリ開発",
+            "outcome": "社内独自AIボットの構築",
+            "how_presented": [
+                {
+                    "creator": "AI収益化ラボ",
+                    "target_audience": "エンジニア",
+                    "format": "ハウツー",
+                    "content": "Difyで自分専用のAIアシスタントを作る"
+                }
+            ],
+            "why_trending": "RAG構築の定番"
+        },
+        {
+            "rank": 19,
+            "topic": "Vrew",
+            "mention_count": 3,
+            "mentioned_by": [
+                "mikimiki"
+            ],
+            "automation_type": "動画編集",
+            "outcome": "テロップ入れ・カット編集の自動化",
+            "how_presented": [
+                {
+                    "creator": "mikimiki",
+                    "target_audience": "YouTube初心者",
+                    "format": "ハウツー",
+                    "content": "台本から動画を一括生成する時短テクニック"
+                }
+            ],
+            "why_trending": "YouTuber参入のハードルを下げるツール"
+        },
+        {
+            "rank": 20,
+            "topic": "Adobe Firefly",
+            "mention_count": 3,
+            "mentioned_by": [
+                "mikimiki"
+            ],
+            "automation_type": "商用画像生成",
+            "outcome": "権利関係のクリーンな画像生成",
+            "how_presented": [
+                {
+                    "creator": "mikimiki",
+                    "target_audience": "デザイナー",
+                    "format": "ニュース解説",
+                    "content": "商用利用も安心な画像生成AIの最新アプデ"
+                }
+            ],
+            "why_trending": "業務利用における安心感"
+        }
+    ],
+    "all_mentions": []
+}

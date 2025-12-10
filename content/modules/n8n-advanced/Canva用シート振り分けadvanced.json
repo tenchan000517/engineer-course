@@ -1,0 +1,570 @@
+{
+  "name": "Canva用シート振り分けadvanced",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "75956e0e-f8fa-476f-9e3e-c1b69c39785a",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-1584, -96]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://script.google.com/macros/s/AKfycbzFJBf4-EIipCzltMsmwXkKoUqksPztHUWjJP7CDCDGsdA8Ps1bUT_FzIbYPe2w9ASn/exec",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"action\":\"archiveAndCleanCanvaSheets\"}",
+        "options": {}
+      },
+      "id": "ad631a97-c76f-4c5a-ab9a-1e9185b7a6eb",
+      "name": "Archive & Clean Canva Sheets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1376, -96]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1340398352"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "DRAFT"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fbdc0996-5efc-4871-9bb3-a7edf1a48ebb",
+      "name": "Get DRAFT Posts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-1168, -96],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\nfor (const item of $input.all()) {\n  const postId = item.json.post_id;\n  const contentJsonStr = item.json.content_json;\n\n  if (!contentJsonStr) continue;\n\n  try {\n    const json = JSON.parse(contentJsonStr);\n    const pattern = json.pattern || '';\n\n    let category = '';\n    switch (pattern) {\n      case 'versus': category = 'A'; break;\n      case 'instant_hack': category = 'B'; break;\n      case 'secret_feature': category = 'C'; break;\n      case 'warning': category = 'D'; break;\n      case 'ranking': category = 'E'; break;\n      default: category = 'C';\n    }\n\n    results.push({\n      json: {\n        post_id: postId,\n        category: category,\n        narration_1: json.narration_1 || '',\n        narration_2: json.narration_2 || '',\n        thumb_main: json.thumb_main || '',\n        thumb_sub: json.thumb_sub || '',\n        set_1: json.set_1 || '',\n        set_2: json.set_2 || '',\n        set_3: json.set_3 || '',\n        set_4: json.set_4 || '',\n        set_5: json.set_5 || '',\n        set_6: json.set_6 || '',\n        audio_status: 'NORMAL',\n        main_tool: json.main_tool || ''\n      }\n    });\n  } catch (e) {\n    // skip invalid JSON\n  }\n}\n\nreturn results;"
+      },
+      "id": "206131f8-e14d-48cf-86ec-7849519166c5",
+      "name": "Parse JSON & Category",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-944, -96]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "A",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category A"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "B",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category B"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "C",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category C"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "D",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category D"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.category }}",
+                    "rightValue": "E",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Category E"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f3dcceb4-98d9-4b8d-a856-1bda913389bc",
+      "name": "Switch Category",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [-720, -96]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1459009746,
+          "mode": "list",
+          "cachedResultName": "canva_A",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1459009746"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "thumb_main": "={{ $json.thumb_main }}",
+            "thumb_sub": "={{ $json.thumb_sub }}",
+            "set_1": "={{ $json.set_1 }}",
+            "set_2": "={{ $json.set_2 }}",
+            "set_3": "={{ $json.set_3 }}",
+            "set_4": "={{ $json.set_4 }}",
+            "set_5": "={{ $json.set_5 }}",
+            "set_6": "={{ $json.set_6 }}",
+            "audio_status": "={{ $json.audio_status }}",
+            "main_tool": "={{ $json.main_tool }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_main", "displayName": "thumb_main", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_sub", "displayName": "thumb_sub", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_1", "displayName": "set_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_2", "displayName": "set_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_3", "displayName": "set_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_4", "displayName": "set_4", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_5", "displayName": "set_5", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_6", "displayName": "set_6", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "audio_status", "displayName": "audio_status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "main_tool", "displayName": "main_tool", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "784cd27b-8082-47d4-a534-b0434c54cdce",
+      "name": "Append to canva_A",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-480, -304],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1989446321,
+          "mode": "list",
+          "cachedResultName": "canva_B",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1989446321"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "thumb_main": "={{ $json.thumb_main }}",
+            "thumb_sub": "={{ $json.thumb_sub }}",
+            "set_1": "={{ $json.set_1 }}",
+            "set_2": "={{ $json.set_2 }}",
+            "set_3": "={{ $json.set_3 }}",
+            "set_4": "={{ $json.set_4 }}",
+            "set_5": "={{ $json.set_5 }}",
+            "set_6": "={{ $json.set_6 }}",
+            "audio_status": "={{ $json.audio_status }}",
+            "main_tool": "={{ $json.main_tool }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_main", "displayName": "thumb_main", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_sub", "displayName": "thumb_sub", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_1", "displayName": "set_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_2", "displayName": "set_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_3", "displayName": "set_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_4", "displayName": "set_4", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_5", "displayName": "set_5", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_6", "displayName": "set_6", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "audio_status", "displayName": "audio_status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "main_tool", "displayName": "main_tool", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1399419a-c950-476a-a8ca-7d18bd4e3f53",
+      "name": "Append to canva_B",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-480, -176],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 10904001,
+          "mode": "list",
+          "cachedResultName": "canva_C",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=10904001"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "thumb_main": "={{ $json.thumb_main }}",
+            "thumb_sub": "={{ $json.thumb_sub }}",
+            "set_1": "={{ $json.set_1 }}",
+            "set_2": "={{ $json.set_2 }}",
+            "set_3": "={{ $json.set_3 }}",
+            "set_4": "={{ $json.set_4 }}",
+            "set_5": "={{ $json.set_5 }}",
+            "set_6": "={{ $json.set_6 }}",
+            "audio_status": "={{ $json.audio_status }}",
+            "main_tool": "={{ $json.main_tool }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_main", "displayName": "thumb_main", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_sub", "displayName": "thumb_sub", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_1", "displayName": "set_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_2", "displayName": "set_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_3", "displayName": "set_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_4", "displayName": "set_4", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_5", "displayName": "set_5", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_6", "displayName": "set_6", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "audio_status", "displayName": "audio_status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "main_tool", "displayName": "main_tool", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ac52fbcd-9cad-4dce-bb14-92d92ecc4286",
+      "name": "Append to canva_C",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-480, -64],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 920483375,
+          "mode": "list",
+          "cachedResultName": "canva_D",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=920483375"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "thumb_main": "={{ $json.thumb_main }}",
+            "thumb_sub": "={{ $json.thumb_sub }}",
+            "set_1": "={{ $json.set_1 }}",
+            "set_2": "={{ $json.set_2 }}",
+            "set_3": "={{ $json.set_3 }}",
+            "set_4": "={{ $json.set_4 }}",
+            "set_5": "={{ $json.set_5 }}",
+            "set_6": "={{ $json.set_6 }}",
+            "audio_status": "={{ $json.audio_status }}",
+            "main_tool": "={{ $json.main_tool }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_main", "displayName": "thumb_main", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_sub", "displayName": "thumb_sub", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_1", "displayName": "set_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_2", "displayName": "set_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_3", "displayName": "set_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_4", "displayName": "set_4", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_5", "displayName": "set_5", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_6", "displayName": "set_6", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "audio_status", "displayName": "audio_status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "main_tool", "displayName": "main_tool", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "e435da8e-216e-4bd0-aa1c-26e1db0fd898",
+      "name": "Append to canva_D",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-480, 64],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1645982552,
+          "mode": "list",
+          "cachedResultName": "canva_E",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ/edit#gid=1645982552"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "narration_1": "={{ $json.narration_1 }}",
+            "narration_2": "={{ $json.narration_2 }}",
+            "thumb_main": "={{ $json.thumb_main }}",
+            "thumb_sub": "={{ $json.thumb_sub }}",
+            "set_1": "={{ $json.set_1 }}",
+            "set_2": "={{ $json.set_2 }}",
+            "set_3": "={{ $json.set_3 }}",
+            "set_4": "={{ $json.set_4 }}",
+            "set_5": "={{ $json.set_5 }}",
+            "set_6": "={{ $json.set_6 }}",
+            "audio_status": "={{ $json.audio_status }}",
+            "main_tool": "={{ $json.main_tool }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "post_id", "displayName": "post_id", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_1", "displayName": "narration_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "narration_2", "displayName": "narration_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_main", "displayName": "thumb_main", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "thumb_sub", "displayName": "thumb_sub", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_1", "displayName": "set_1", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_2", "displayName": "set_2", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_3", "displayName": "set_3", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_4", "displayName": "set_4", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_5", "displayName": "set_5", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "set_6", "displayName": "set_6", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "audio_status", "displayName": "audio_status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "main_tool", "displayName": "main_tool", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d35b1878-e5c9-4bd2-b163-704330089997",
+      "name": "Append to canva_E",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-480, 176],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{"node": "Archive & Clean Canva Sheets", "type": "main", "index": 0}]]
+    },
+    "Archive & Clean Canva Sheets": {
+      "main": [[{"node": "Get DRAFT Posts", "type": "main", "index": 0}]]
+    },
+    "Get DRAFT Posts": {
+      "main": [[{"node": "Parse JSON & Category", "type": "main", "index": 0}]]
+    },
+    "Parse JSON & Category": {
+      "main": [[{"node": "Switch Category", "type": "main", "index": 0}]]
+    },
+    "Switch Category": {
+      "main": [
+        [{"node": "Append to canva_A", "type": "main", "index": 0}],
+        [{"node": "Append to canva_B", "type": "main", "index": 0}],
+        [{"node": "Append to canva_C", "type": "main", "index": 0}],
+        [{"node": "Append to canva_D", "type": "main", "index": 0}],
+        [{"node": "Append to canva_E", "type": "main", "index": 0}]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "v3-new-13-columns",
+  "meta": {"instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"},
+  "id": "SGmF6NY9r1jvLq3q",
+  "tags": []
+}

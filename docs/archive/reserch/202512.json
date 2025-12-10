@@ -1,0 +1,1227 @@
+{
+    "month": "2025-12",
+    "categories": {
+        "small": [
+            {
+                "title": "【頂上決戦】Google最強エディタ vs Cursor、どっちが神か結論出た",
+                "tools": [
+                    "Google Antigravity",
+                    "Cursor"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "Manager View vs Composer",
+                    "コード生成精度比較",
+                    "Artifacts機能"
+                ]
+            },
+            {
+                "title": "放置でアプリ完成！？Antigravityの新機能が異次元すぎた",
+                "tools": [
+                    "Google Antigravity"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "複数エージェント並列処理",
+                    "非同期タスク速度",
+                    "ブラウザ操作自律性"
+                ]
+            },
+            {
+                "title": "【閲覧注意】Antigravityを使う前に絶対知っておくべき3つの罠",
+                "tools": [
+                    "Google Antigravity"
+                ],
+                "content_type": "警告",
+                "category": "D",
+                "research_points": [
+                    "権限設定の落とし穴",
+                    "APIコスト試算",
+                    "生成コードの安全性"
+                ]
+            },
+            {
+                "title": "「勝手に仕事が終わってる」Antigravityの放置開発術",
+                "tools": [
+                    "Google Antigravity"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "Artifacts活用フロー",
+                    "要件定義の自動化",
+                    "初心者ミス回避"
+                ]
+            },
+            {
+                "title": "Google vs Bolt.new！爆速でアプリを作るならこっち",
+                "tools": [
+                    "Google Antigravity",
+                    "Bolt"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "IDE vs ブラウザ",
+                    "デプロイ速度",
+                    "複雑性限界"
+                ]
+            },
+            {
+                "title": "【保存版】Google Antigravityの「Artifacts」完全攻略ガイド",
+                "tools": [
+                    "Google Antigravity"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "Artifacts種類",
+                    "検証可能成果物",
+                    "共有方法"
+                ]
+            },
+            {
+                "title": "AIとペアプロしたら生産性が10倍になった話",
+                "tools": [
+                    "Google Antigravity"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "指示のコツ",
+                    "エラー修正フロー",
+                    "介入タイミング"
+                ]
+            },
+            {
+                "title": "Antigravity導入で開発費はいくら下がる？ガチ検証",
+                "tools": [
+                    "Google Antigravity"
+                ],
+                "content_type": "検証",
+                "category": "C",
+                "research_points": [
+                    "工数削減率事例",
+                    "コスト対人件費",
+                    "学習コスト"
+                ]
+            },
+            {
+                "title": "AIエージェントを「教育」する！？Antigravityの裏技テク",
+                "tools": [
+                    "Google Antigravity"
+                ],
+                "content_type": "テクニック",
+                "category": "C",
+                "research_points": [
+                    "フィードバックループ",
+                    "記憶機能活用",
+                    "ルール学習"
+                ]
+            },
+            {
+                "title": "知らないと損！Antigravityの隠しショートカット5選",
+                "tools": [
+                    "Google Antigravity"
+                ],
+                "content_type": "Tips",
+                "category": "B",
+                "research_points": [
+                    "隠しコマンド",
+                    "強制終了法",
+                    "キーバインド"
+                ]
+            },
+            {
+                "title": "Gemini 3.0「Deep Think」の推論力がもはや人間超え...",
+                "tools": [
+                    "Gemini 3.0"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "Deep Think vs Pro",
+                    "数学論理テスト",
+                    "処理ベンチマーク"
+                ]
+            },
+            {
+                "title": "【最強決定戦】Gemini 3.0 vs o1、賢いのはどっち？",
+                "tools": [
+                    "Gemini 3.0",
+                    "ChatGPT 5.1"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "Deep Think vs o1",
+                    "日本語処理能力",
+                    "コスパ"
+                ]
+            },
+            {
+                "title": "コーディング最強は誰だ？Gemini 3.0 vs Claude 4.5",
+                "tools": [
+                    "Gemini 3.0",
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "SWE-benchスコア",
+                    "リファクタリング精度",
+                    "自律性"
+                ]
+            },
+            {
+                "title": "手書きメモが一瞬でアプリに！Gemini 3.0の画像認識がヤバい",
+                "tools": [
+                    "Gemini 3.0"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "手書きメモコード化",
+                    "スクショUI生成",
+                    "動画解析"
+                ]
+            },
+            {
+                "title": "Excelはもう不要？Gemini 3.0でデータ分析が全自動化",
+                "tools": [
+                    "Gemini 3.0"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "CSVグラフ化",
+                    "トレンド分析",
+                    "インサイト抽出"
+                ]
+            },
+            {
+                "title": "仕事が早すぎて引く...Gemini × Workspace連携術",
+                "tools": [
+                    "Gemini 3.0"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "Docs自動執筆",
+                    "Gmail返信提案",
+                    "Drive検索"
+                ]
+            },
+            {
+                "title": "Python独学ならGemini 3.0一択！最強の学習ロードマップ",
+                "tools": [
+                    "Gemini 3.0"
+                ],
+                "content_type": "教育",
+                "category": "E",
+                "research_points": [
+                    "コード解説",
+                    "練習問題生成",
+                    "教育プロンプト"
+                ]
+            },
+            {
+                "title": "翻訳精度ガチ比較！Gemini 3.0 vs GPT-5.1",
+                "tools": [
+                    "Gemini 3.0",
+                    "ChatGPT 5.1"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "自然な日本語",
+                    "専門用語",
+                    "ニュアンス"
+                ]
+            },
+            {
+                "title": "【保存版】Deep Thinkモード、ここぞという時の使い所5選",
+                "tools": [
+                    "Gemini 3.0"
+                ],
+                "content_type": "まとめ",
+                "category": "E",
+                "research_points": [
+                    "複雑な計画立案",
+                    "デバッグ",
+                    "数学証明"
+                ]
+            },
+            {
+                "title": "Manus AI × n8nで実現する「元手ゼロの自動化」",
+                "tools": [
+                    "Manus AI",
+                    "n8n"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "ワークフロー自動生成",
+                    "自律連携フロー",
+                    "人間介在点"
+                ]
+            },
+            {
+                "title": "「プロンプト入力して寝るだけ」Manus AIで残業ゼロ生活",
+                "tools": [
+                    "Manus AI"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "業務自動化事例",
+                    "GAIA実績",
+                    "導入環境"
+                ]
+            },
+            {
+                "title": "待ち時間ゼロ！Manus AIの「非同期処理」が快適すぎる",
+                "tools": [
+                    "Manus AI"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "非同期処理メリット",
+                    "待ち時間活用",
+                    "エラーリカバリ"
+                ]
+            },
+            {
+                "title": "【神ツール】市場調査も競合分析も、全部Manus AIに丸投げ",
+                "tools": [
+                    "Manus AI"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "CSV可視化",
+                    "市場調査",
+                    "レポート作成"
+                ]
+            },
+            {
+                "title": "競合の動きが丸裸に！？Manus AIの自動リサーチ術",
+                "tools": [
+                    "Manus AI"
+                ],
+                "content_type": "使いこなし",
+                "category": "B",
+                "research_points": [
+                    "キーワード監視",
+                    "価格トラッキング",
+                    "ニュース要約"
+                ]
+            },
+            {
+                "title": "Webスクレイピング革命！Manus AIならCAPTCHAも突破可能",
+                "tools": [
+                    "Manus AI"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "動的サイト解析",
+                    "CAPTCHA突破",
+                    "データ整形"
+                ]
+            },
+            {
+                "title": "Manus AI vs AutoGPT、実務で使えるのはどっち？",
+                "tools": [
+                    "Manus AI"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "安定性比較",
+                    "セットアップ難易度",
+                    "実用性"
+                ]
+            },
+            {
+                "title": "ぶっちゃけ高い？Manus AIのコスパを徹底検証してみた",
+                "tools": [
+                    "Manus AI"
+                ],
+                "content_type": "検証",
+                "category": "D",
+                "research_points": [
+                    "初期費用",
+                    "運用コスト",
+                    "費用対効果"
+                ]
+            },
+            {
+                "title": "n8nが「AIの脳みそ」に進化した件について",
+                "tools": [
+                    "n8n"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "Intelligent Orchestration",
+                    "複数エージェント束ね",
+                    "Ver.2025.12"
+                ]
+            },
+            {
+                "title": "顧客対応を完全放置！n8n × AIでCRMを自動化する方法",
+                "tools": [
+                    "n8n"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "メール自動返信",
+                    "リードスコア",
+                    "Salesforce連携"
+                ]
+            },
+            {
+                "title": "脱クラウド貧乏！n8nをセルフホストしてコスト削減",
+                "tools": [
+                    "n8n"
+                ],
+                "content_type": "解説",
+                "category": "B",
+                "research_points": [
+                    "Docker手順",
+                    "機能差",
+                    "セキュリティ"
+                ]
+            },
+            {
+                "title": "神連携！GmailとSlackをつないだら仕事が消えた",
+                "tools": [
+                    "n8n"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "重要メール通知",
+                    "ラベル自動化",
+                    "Drive保存"
+                ]
+            },
+            {
+                "title": "【上級者向け】n8nのエラー処理、これだけはやっとけ",
+                "tools": [
+                    "n8n"
+                ],
+                "content_type": "テクニック",
+                "category": "C",
+                "research_points": [
+                    "リトライ設定",
+                    "エラー通知",
+                    "ログ解析"
+                ]
+            },
+            {
+                "title": "Webhookって何？n8nで外部ツールを操る基礎知識",
+                "tools": [
+                    "n8n"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "基本概念",
+                    "トリガー設定",
+                    "トークン管理"
+                ]
+            },
+            {
+                "title": "エンジニア視点で比較！n8n vs Zapier、乗り換えるべき？",
+                "tools": [
+                    "n8n"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "柔軟性比較",
+                    "コード実行",
+                    "コスト"
+                ]
+            },
+            {
+                "title": "n8nの新機能「AI Agentノード」が便利すぎて震える",
+                "tools": [
+                    "n8n"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "Agent構築",
+                    "ツール定義",
+                    "メモリ管理"
+                ]
+            },
+            {
+                "title": "Runway Gen-4.5登場！動画生成AIの進化が止まらない",
+                "tools": [
+                    "Runway Gen-4"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "一貫性維持テスト",
+                    "生成速度",
+                    "ライセンス"
+                ]
+            },
+            {
+                "title": "CM制作が変わる...Runway Gen-4のカメラ制御がプロ仕様",
+                "tools": [
+                    "Runway Gen-4"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "カメラ制御",
+                    "リップシンク",
+                    "アップスケール"
+                ]
+            },
+            {
+                "title": "個人でアニメ制作？Runway Gen-4ならここまでできる",
+                "tools": [
+                    "Runway Gen-4"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "アニメ調モデル",
+                    "チラつき抑制",
+                    "着色テスト"
+                ]
+            },
+            {
+                "title": "思い出の写真が動き出す！Runway「Motion Brush」の使い方",
+                "tools": [
+                    "Runway Gen-4"
+                ],
+                "content_type": "使い方",
+                "category": "C",
+                "research_points": [
+                    "Motion Brush",
+                    "写真アニメ化",
+                    "エフェクト"
+                ]
+            },
+            {
+                "title": "生成動画をプロ品質に！Runway編集テクニック公開",
+                "tools": [
+                    "Runway Gen-4"
+                ],
+                "content_type": "テクニック",
+                "category": "B",
+                "research_points": [
+                    "Premiere連携",
+                    "解像度向上",
+                    "修正テク"
+                ]
+            },
+            {
+                "title": "Sora vs Runway Gen-4！動画生成AIの覇者は？",
+                "tools": [
+                    "Runway Gen-4"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "Sora動向",
+                    "品質比較",
+                    "コスト"
+                ]
+            },
+            {
+                "title": "スマホで映画制作！Runwayモバイル版の神機能",
+                "tools": [
+                    "Runway Gen-4"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "モバイルアプリ機能",
+                    "編集フロー",
+                    "書き出し設定"
+                ]
+            },
+            {
+                "title": "爆速すぎて会話にならない！？GPT-5.1「Instant」の実力",
+                "tools": [
+                    "ChatGPT 5.1"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "応答速度実測",
+                    "精度限界",
+                    "音声会話"
+                ]
+            },
+            {
+                "title": "検索AI戦争！Deep Research vs Perplexity、使い分けるなら？",
+                "tools": [
+                    "ChatGPT 5.1",
+                    "Perplexity AI"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "Deep Research",
+                    "ソース提示",
+                    "広告有無"
+                ]
+            },
+            {
+                "title": "英会話教室はもう不要？GPT-5.1との会話がリアルすぎ",
+                "tools": [
+                    "ChatGPT 5.1"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "発音矯正",
+                    "ロールプレイ",
+                    "遅延"
+                ]
+            },
+            {
+                "title": "開発者必見！GPT-5.1 APIの新機能を使い倒す",
+                "tools": [
+                    "ChatGPT 5.1"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "Structured Outputs",
+                    "キャッシング",
+                    "Function Calling"
+                ]
+            },
+            {
+                "title": "「好み」を覚えてくれる！Memory機能でChatを自分専用に",
+                "tools": [
+                    "ChatGPT 5.1"
+                ],
+                "content_type": "テクニック",
+                "category": "B",
+                "research_points": [
+                    "設定保存",
+                    "コンテキスト維持",
+                    "記憶管理"
+                ]
+            },
+            {
+                "title": "【総合評価】GPT-5.1 vs Claude 4.5、メインで使うべきは？",
+                "tools": [
+                    "ChatGPT 5.1",
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "マルチモーダル",
+                    "論理推論",
+                    "使いやすさ"
+                ]
+            },
+            {
+                "title": "Canvas機能が超進化！ドキュメント作成が捗りすぎる",
+                "tools": [
+                    "ChatGPT 5.1"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "文章校正",
+                    "コードレビュー",
+                    "共同編集"
+                ]
+            },
+            {
+                "title": "自律型AIの完成形！Claude Opus 4.5が凄すぎる",
+                "tools": [
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "自律コーディング",
+                    "ブラウザ操作",
+                    "トークン効率"
+                ]
+            },
+            {
+                "title": "文章の「人間らしさ」ならClaude 4.5一択な理由",
+                "tools": [
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "使いこなし",
+                "category": "B",
+                "research_points": [
+                    "人間らしい文章",
+                    "SEO記事",
+                    "一貫性"
+                ]
+            },
+            {
+                "title": "PM業務もAIへ！Claudeでプロジェクト管理を自動化",
+                "tools": [
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "使い方",
+                "category": "C",
+                "research_points": [
+                    "タスク分解",
+                    "ガントチャート",
+                    "進捗要約"
+                ]
+            },
+            {
+                "title": "Claudeに小説を書かせたらプロ顔負けだった件",
+                "tools": [
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "検証",
+                "category": "E",
+                "research_points": [
+                    "文体模写",
+                    "伏線回収",
+                    "記憶力"
+                ]
+            },
+            {
+                "title": "開発者はどっち？Antigravity vs Claude 4.5",
+                "tools": [
+                    "Google Antigravity",
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "IDE vs チャット",
+                    "生成速度",
+                    "デバッグ"
+                ]
+            },
+            {
+                "title": "【保存版】Claudeをもっと便利に！Artifacts活用術",
+                "tools": [
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "プレビュー機能",
+                    "コード共有",
+                    "スライド生成"
+                ]
+            },
+            {
+                "title": "ググる時代は終了？Perplexityの検索体験が変わった",
+                "tools": [
+                    "Perplexity AI"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "Deep Research",
+                    "ショッピング",
+                    "信頼性"
+                ]
+            },
+            {
+                "title": "買い物失敗ゼロへ！Perplexityのショッピング機能が神",
+                "tools": [
+                    "Perplexity AI"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "比較表生成",
+                    "最安値検索",
+                    "レビュー要約"
+                ]
+            },
+            {
+                "title": "まとめ記事を一瞬で！Perplexity「Pages」がブロガー泣かせ",
+                "tools": [
+                    "Perplexity AI"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "記事まとめ",
+                    "共有",
+                    "SEO"
+                ]
+            },
+            {
+                "title": "論文検索ならGoogleよりPerplexity！その理由を解説",
+                "tools": [
+                    "Perplexity AI"
+                ],
+                "content_type": "検証",
+                "category": "A",
+                "research_points": [
+                    "学術モード",
+                    "PDF解析",
+                    "レコメンド"
+                ]
+            },
+            {
+                "title": "Google検索 vs Perplexity、完全比較してみた",
+                "tools": [
+                    "Perplexity AI"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "検索精度",
+                    "広告ノイズ",
+                    "速報性"
+                ]
+            },
+            {
+                "title": "月20ドル払う価値はある？Perplexity Proをガチレビュー",
+                "tools": [
+                    "Perplexity AI"
+                ],
+                "content_type": "検証",
+                "category": "D",
+                "research_points": [
+                    "モデル切り替え",
+                    "API利用",
+                    "検索回数"
+                ]
+            },
+            {
+                "title": "Cursor新機能「Composer」はこう使え！生産性爆上がり術",
+                "tools": [
+                    "Cursor"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "複数ファイル編集",
+                    "自然言語指示",
+                    "Antigravity併用"
+                ]
+            },
+            {
+                "title": "Cursor × Claudeが最強の開発環境である理由",
+                "tools": [
+                    "Cursor",
+                    "Claude Opus 4.5"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "API設定",
+                    "Cursor Rules",
+                    "コスト"
+                ]
+            },
+            {
+                "title": "情報漏洩が怖い？CursorとローカルLLMを安全につなぐ方法",
+                "tools": [
+                    "Cursor"
+                ],
+                "content_type": "テクニック",
+                "category": "B",
+                "research_points": [
+                    "Ollama接続",
+                    "プライバシー",
+                    "Llama 3"
+                ]
+            },
+            {
+                "title": "【絶対に入れろ】Cursorのおすすめ拡張機能ベスト5",
+                "tools": [
+                    "Cursor"
+                ],
+                "content_type": "まとめ",
+                "category": "E",
+                "research_points": [
+                    "必須プラグイン",
+                    "生産性",
+                    "ショートカット"
+                ]
+            },
+            {
+                "title": "【警告】Cursor初心者が陥る「依存症」の恐怖",
+                "tools": [
+                    "Cursor"
+                ],
+                "content_type": "警告",
+                "category": "D",
+                "research_points": [
+                    "依存しすぎ",
+                    "コード品質低下",
+                    "デバッグ力低下"
+                ]
+            },
+            {
+                "title": "ノーコード頂上決戦！Bolt vs Lovable、選ぶべきは？",
+                "tools": [
+                    "Bolt",
+                    "Lovable"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "Reactアプリ品質",
+                    "カスタマイズ性",
+                    "API連携"
+                ]
+            },
+            {
+                "title": "【魔法】Bolt.newなら「5分」でアプリ公開まで完結",
+                "tools": [
+                    "Bolt"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "プロンプト技術",
+                    "エラー対処",
+                    "デプロイ"
+                ]
+            },
+            {
+                "title": "DB連携も一瞬！Boltで本格アプリを作ってみた",
+                "tools": [
+                    "Bolt"
+                ],
+                "content_type": "検証",
+                "category": "A",
+                "research_points": [
+                    "Supabase連携",
+                    "CRUD",
+                    "認証実装"
+                ]
+            },
+            {
+                "title": "Boltで既存サイトをクローンできるって本当？検証してみた",
+                "tools": [
+                    "Bolt"
+                ],
+                "content_type": "検証",
+                "category": "D",
+                "research_points": [
+                    "著作権",
+                    "コード可読性",
+                    "再現度"
+                ]
+            },
+            {
+                "title": "日本語検索AIの隠し玉「Felo」が超有能だった",
+                "tools": [
+                    "Felo"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "クロスランゲージ",
+                    "スライド生成",
+                    "アプリUX"
+                ]
+            },
+            {
+                "title": "【時短】Feloを使えば論文リサーチが一瞬で終わる",
+                "tools": [
+                    "Felo"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "学術検索",
+                    "信頼性チェック",
+                    "マインドマップ"
+                ]
+            },
+            {
+                "title": "海外ニュースを日本語で瞬時に！情報の時差ゼロへ",
+                "tools": [
+                    "Felo"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "リアルタイム翻訳",
+                    "バイアスチェック",
+                    "通知"
+                ]
+            },
+            {
+                "title": "プレゼン資料のネタ探し、Feloに頼めば解決",
+                "tools": [
+                    "Felo"
+                ],
+                "content_type": "活用",
+                "category": "B",
+                "research_points": [
+                    "図表化",
+                    "データ引用",
+                    "ストーリー提案"
+                ]
+            },
+            {
+                "title": "スライド作成はAIに丸投げ！Gammaが便利すぎる",
+                "tools": [
+                    "Gamma"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "Web変換",
+                    "日本語フォント",
+                    "チーム編集"
+                ]
+            },
+            {
+                "title": "GammaならWebサイトも作れる！？本気で検証",
+                "tools": [
+                    "Gamma"
+                ],
+                "content_type": "検証",
+                "category": "C",
+                "research_points": [
+                    "LP生成",
+                    "レスポンシブ",
+                    "ドメイン"
+                ]
+            },
+            {
+                "title": "デザインセンス不要！Gammaで資料を一瞬で整えるコツ",
+                "tools": [
+                    "Gamma"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "テーマ変更",
+                    "画像配置",
+                    "スマホ確認"
+                ]
+            },
+            {
+                "title": "検索結果が「記事」になる！Gensparkの新体験",
+                "tools": [
+                    "Genspark"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "Sparkpage",
+                    "並列検索",
+                    "出典明記"
+                ]
+            },
+            {
+                "title": "面倒な旅行計画、Gensparkに全部お任せしてみた",
+                "tools": [
+                    "Genspark"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "フライト統合",
+                    "地図連携",
+                    "旅程出力"
+                ]
+            },
+            {
+                "title": "独学が捗る！Gensparkで専門知識をマスター",
+                "tools": [
+                    "Genspark"
+                ],
+                "content_type": "教育",
+                "category": "B",
+                "research_points": [
+                    "知識まとめ",
+                    "深掘り",
+                    "ロードマップ"
+                ]
+            },
+            {
+                "title": "Midjourney v7の3D機能が凄すぎて実写と見分けがつかない",
+                "tools": [
+                    "Midjourney v7"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "3Dモデル",
+                    "テクスチャ",
+                    "Webエディタ"
+                ]
+            },
+            {
+                "title": "キャラの顔を固定できる！Style Reference活用術",
+                "tools": [
+                    "Midjourney v7"
+                ],
+                "content_type": "テクニック",
+                "category": "C",
+                "research_points": [
+                    "Style Reference",
+                    "一貫性",
+                    "パラメータ"
+                ]
+            },
+            {
+                "title": "プロンプト不要の時代へ。画像で指示するMidjourney",
+                "tools": [
+                    "Midjourney v7"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "Image Prompt",
+                    "自然言語",
+                    "UI"
+                ]
+            },
+            {
+                "title": "音楽生成AI決戦！Suno vs Udio、神曲作れるのは？",
+                "tools": [
+                    "Suno / Udio"
+                ],
+                "content_type": "比較",
+                "category": "A",
+                "research_points": [
+                    "日本語歌詞",
+                    "生成速度",
+                    "ステム分離"
+                ]
+            },
+            {
+                "title": "【副業】Sunoで作ったBGMでYouTube収益化は可能？",
+                "tools": [
+                    "Suno / Udio"
+                ],
+                "content_type": "副業",
+                "category": "B",
+                "research_points": [
+                    "著作権フリー",
+                    "ループ素材",
+                    "商用利用"
+                ]
+            },
+            {
+                "title": "Canva AIが進化！動画編集もマジック生成で一瞬",
+                "tools": [
+                    "Canva AI"
+                ],
+                "content_type": "使いこなし",
+                "category": "B",
+                "research_points": [
+                    "動画編集",
+                    "ブランドボイス",
+                    "不具合解消"
+                ]
+            },
+            {
+                "title": "インスタ運用革命！Canvaのリール一括作成テク",
+                "tools": [
+                    "Canva AI"
+                ],
+                "content_type": "テクニック",
+                "category": "B",
+                "research_points": [
+                    "CSV一括",
+                    "デザイン崩れ防止",
+                    "テキスト自動化"
+                ]
+            },
+            {
+                "title": "議事録はもう書かない。Nottaで会議を自動化",
+                "tools": [
+                    "Notta"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "リアルタイム要約",
+                    "話者分離",
+                    "翻訳"
+                ]
+            },
+            {
+                "title": "文字起こし後の「次の一手」。Notta活用術",
+                "tools": [
+                    "Notta"
+                ],
+                "content_type": "時短",
+                "category": "B",
+                "research_points": [
+                    "Notion連携",
+                    "タスク抽出",
+                    "メール送信"
+                ]
+            },
+            {
+                "title": "自分専用AIエージェント！Difyで作る最強Bot",
+                "tools": [
+                    "Dify"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "RAG構築",
+                    "ワークフロー",
+                    "API"
+                ]
+            },
+            {
+                "title": "サイトにAIチャットを埋め込む！Difyなら5分で完了",
+                "tools": [
+                    "Dify"
+                ],
+                "content_type": "使い方",
+                "category": "B",
+                "research_points": [
+                    "コード生成",
+                    "UI調整",
+                    "精度調整"
+                ]
+            },
+            {
+                "title": "【TikTok攻略】Vrewでショート動画を量産する秘訣",
+                "tools": [
+                    "Vrew"
+                ],
+                "content_type": "Tips",
+                "category": "B",
+                "research_points": [
+                    "テンプレート",
+                    "画像自動",
+                    "テロップ"
+                ]
+            },
+            {
+                "title": "魔法の消しゴム！Adobe Fireflyの「生成塗りつぶし」活用術",
+                "tools": [
+                    "Adobe Firefly"
+                ],
+                "content_type": "解説",
+                "category": "C",
+                "research_points": [
+                    "不要消去",
+                    "背景拡張",
+                    "高解像度"
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,479 @@
+{
+    "research_date": "2025-12-09",
+    "sources": {
+        "youtube_channels": [
+            "Matthew Berman",
+            "MattVidPro AI",
+            "Wes Roth",
+            "David Ondrej",
+            "Krish Naik",
+            "Curious Refuge",
+            "All About AI",
+            "Analytics Vidhya",
+            "Abhishek Thakur",
+            "Matt Wolfe",
+            "Skill Leap AI",
+            "Two Minute Papers",
+            "Tina Huang",
+            "The AI Grid",
+            "AI Explained",
+            "Nate Herk",
+            "Alex Finn",
+            "Brian Casel",
+            "Tiff In Tech",
+            "The AI Advantage"
+        ],
+        "x_accounts": [
+            "Lex Fridman",
+            "Sam Altman",
+            "Allie K. Miller",
+            "Yann LeCun",
+            "Robert Scoble",
+            "Rowan Cheung",
+            "Antonio Grasso",
+            "Ronald van Loon",
+            "Aravind Srinivas",
+            "Bojan Tunguz",
+            "Linus Ekenstam",
+            "Varun Mayya",
+            "Erik Brynjolfsson",
+            "Mckay Wrigley",
+            "Gary Marcus",
+            "Pedro Domingos",
+            "Nathan Lands",
+            "Karen Hao",
+            "Greg Brockman",
+            "Andrej Karpathy"
+        ],
+        "subreddits": [
+            "r/AI_Agents",
+            "r/automation",
+            "r/n8n",
+            "r/Automate",
+            "r/PromptEngineering",
+            "r/LLMOps",
+            "r/artificial",
+            "r/OpenAI",
+            "r/MachineLearning",
+            "r/datascience"
+        ]
+    },
+    "top_20_trends": [
+        {
+            "rank": 1,
+            "topic": "OpenAI \"Code Red\" & O3/GPT-5.1",
+            "mention_count": 8,
+            "mentioned_by": [
+                "Sam Altman",
+                "Matt Wolfe",
+                "Nathan Lands",
+                "Wes Roth",
+                "David Ondrej",
+                "Gary Marcus",
+                "Bojan Tunguz",
+                "MattVidPro AI"
+            ],
+            "automation_type": "Strategic Shift / Model Capability",
+            "outcome": "Improved reliability and reasoning; halt on non-essential projects to beat competition",
+            "why_trending": "OpenAI's strategic pivot in response to strong competition from Google and Anthropic."
+        },
+        {
+            "rank": 2,
+            "topic": "Claude Opus 4.5",
+            "mention_count": 7,
+            "mentioned_by": [
+                "Mckay Wrigley",
+                "The AI Advantage",
+                "Brian Casel",
+                "All About AI",
+                "Bojan Tunguz",
+                "Nathan Lands",
+                "r/PromptEngineering"
+            ],
+            "automation_type": "Advanced Reasoning Model",
+            "outcome": "Superior coding and agentic capabilities",
+            "why_trending": "Seen as a major leap in agentic AI capabilities, potentially surpassing GPT-4 class models."
+        },
+        {
+            "rank": 3,
+            "topic": "Google Gemini 3 / Titan",
+            "mention_count": 6,
+            "mentioned_by": [
+                "Nathan Lands",
+                "Brian Casel",
+                "Bojan Tunguz",
+                "All About AI",
+                "Sam Altman",
+                "The AI Advantage"
+            ],
+            "automation_type": "Multimodal Model",
+            "outcome": "State-of-the-art performance challenging OpenAI",
+            "why_trending": "Google's aggressive release cycle and claimed superiority over existing models."
+        },
+        {
+            "rank": 4,
+            "topic": "AI Agents (General & Year of Agents)",
+            "mention_count": 6,
+            "mentioned_by": [
+                "Mckay Wrigley",
+                "Tina Huang",
+                "David Ondrej",
+                "r/AI_Agents",
+                "Allie K. Miller",
+                "Krish Naik"
+            ],
+            "automation_type": "Agentic Workflows",
+            "outcome": "Autonomous task execution and complex workflows",
+            "why_trending": "2025 is widely cited as the 'Year of Agents' where AI moves from chat to action."
+        },
+        {
+            "rank": 5,
+            "topic": "n8n (Automation Workflows)",
+            "mention_count": 5,
+            "mentioned_by": [
+                "Nate Herk",
+                "r/n8n",
+                "r/automation",
+                "Matthew Berman",
+                "r/AI_Agents"
+            ],
+            "automation_type": "No-Code/Low-Code Automation",
+            "outcome": "Custom AI agent pipelines and social media automation",
+            "why_trending": "Release of n8n 2.0 and increasing popularity for building custom AI agents."
+        },
+        {
+            "rank": 6,
+            "topic": "Runway Gen 4.5 / Video Generation",
+            "mention_count": 4,
+            "mentioned_by": [
+                "All About AI",
+                "Nathan Lands",
+                "Curious Refuge",
+                "MattVidPro AI"
+            ],
+            "automation_type": "Video Generation",
+            "outcome": "High-fidelity, physics-compliant video creation",
+            "why_trending": "Major leap in video consistency and realism."
+        },
+        {
+            "rank": 7,
+            "topic": "Google Antigravity",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Brian Casel",
+                "User Request Context"
+            ],
+            "automation_type": "Development Tool (Unclear)",
+            "outcome": "New paradigm in AI-assisted development (implied)",
+            "why_trending": "Buzzwords and creator reviews suggesting a new Google tool release."
+        },
+        {
+            "rank": 8,
+            "topic": "Perplexity AI (+ Ronaldo partnership)",
+            "mention_count": 3,
+            "mentioned_by": [
+                "Aravind Srinivas",
+                "r/AI_Agents",
+                "Rowan Cheung"
+            ],
+            "automation_type": "Search / Information Retrieval",
+            "outcome": "Mainstream adoption of AI search",
+            "why_trending": "High-profile partnership with Cristiano Ronaldo boosting visibility."
+        },
+        {
+            "rank": 9,
+            "topic": "DeepSeek / Offline SLMs",
+            "mention_count": 3,
+            "mentioned_by": [
+                "The AI Advantage",
+                "r/artificial",
+                "r/PromptEngineering"
+            ],
+            "automation_type": "Local Inference",
+            "outcome": "Private, offline AI capabilities on consumer hardware",
+            "why_trending": "Growing interest in privacy and reduced inference costs."
+        },
+        {
+            "rank": 10,
+            "topic": "Agentic Commerce (Instacart/Stripe)",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Greg Brockman",
+                "r/automation"
+            ],
+            "automation_type": "E-commerce Automation",
+            "outcome": "AI agents handling purchasing and payments autonomously",
+            "why_trending": "Major integration announcement by OpenAI/Stripe."
+        },
+        {
+            "rank": 11,
+            "topic": "Tensor Logic",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Pedro Domingos",
+                "r/MachineLearning"
+            ],
+            "automation_type": "AI Programming Paradigm",
+            "outcome": "Unifying AI paradigms beyond deep learning",
+            "why_trending": "New theoretical framework proposed by influential researcher."
+        },
+        {
+            "rank": 12,
+            "topic": "Meta AI Glasses",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Rowan Cheung",
+                "Tiff In Tech"
+            ],
+            "automation_type": "Wearable AI",
+            "outcome": "Multimodal AI assistance in daily life",
+            "why_trending": "Evolution of hardware form factors for AI."
+        },
+        {
+            "rank": 13,
+            "topic": "Salesforce / Corporate AI Disruption",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Pedro Domingos",
+                "r/datascience"
+            ],
+            "automation_type": "Enterprise Automation",
+            "outcome": "Disruption of traditional SaaS models by AI",
+            "why_trending": "High-profile prediction of Salesforce being disrupted."
+        },
+        {
+            "rank": 14,
+            "topic": "Cursor Composer",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Brian Casel",
+                "Mckay Wrigley"
+            ],
+            "automation_type": "Coding Automation",
+            "outcome": "AI-driven software development",
+            "why_trending": "Rapid adoption by developers for boosting productivity."
+        },
+        {
+            "rank": 15,
+            "topic": "Abacus.ai / ChatLLM",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Ronald van Loon",
+                "r/LLMOps"
+            ],
+            "automation_type": "Enterprise AI Ops",
+            "outcome": "Collaborative intelligence and team automation",
+            "why_trending": "Focus on team-based AI agents."
+        },
+        {
+            "rank": 16,
+            "topic": "AlphaFold 3 / Physics AI",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Two Minute Papers",
+                "All About AI"
+            ],
+            "automation_type": "Scientific Discovery",
+            "outcome": "Breakthroughs in biology and physics simulations",
+            "why_trending": "Continued dominance of AI in scientific headlines."
+        },
+        {
+            "rank": 17,
+            "topic": "AI Ethics & \"Resisting the Empire\"",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Karen Hao",
+                "Gary Marcus"
+            ],
+            "automation_type": "Societal Impact Discussion",
+            "outcome": "Critical view of AI monopoly and power",
+            "why_trending": "Counter-narrative to the hype cycle."
+        },
+        {
+            "rank": 18,
+            "topic": "Sora 2",
+            "mention_count": 1,
+            "mentioned_by": [
+                "MattVidPro AI"
+            ],
+            "automation_type": "Video Generation",
+            "outcome": "Advanced video ads and content",
+            "why_trending": "Anticipated update to OpenAI's video model."
+        },
+        {
+            "rank": 19,
+            "topic": "Grok 4 / 4.20",
+            "mention_count": 2,
+            "mentioned_by": [
+                "Wes Roth",
+                "Robert Scoble"
+            ],
+            "automation_type": "LLM / Chatbot",
+            "outcome": "Competitive open/closed model from xAI",
+            "why_trending": "Rapid iteration from Elon Musk's xAI."
+        },
+        {
+            "rank": 20,
+            "topic": "LangGraph / LangChain",
+            "mention_count": 2,
+            "mentioned_by": [
+                "r/AI_Agents",
+                "r/LLMOps"
+            ],
+            "automation_type": "Agent Orchestration",
+            "outcome": "Structured agent building",
+            "why_trending": "Standard tooling for building complex agents."
+        }
+    ],
+    "all_mentions": [
+        {
+            "source": "YouTube",
+            "creator": "Matthew Berman",
+            "title": "Executive AI Briefing",
+            "post_date": "2025-12-04",
+            "ai_tools": [
+                "General AI"
+            ],
+            "automation_type": "News",
+            "outcome": "Information"
+        },
+        {
+            "source": "YouTube",
+            "creator": "MattVidPro AI",
+            "title": "AI Video Ads (Sora 2, VEO 3.1)",
+            "post_date": "2025-12-04",
+            "ai_tools": [
+                "Sora 2",
+                "VEO 3.1"
+            ],
+            "automation_type": "Video Creation",
+            "outcome": "Ad Generation"
+        },
+        {
+            "source": "YouTube",
+            "creator": "Wes Roth",
+            "title": "Google killed OpenAI (Garlic model)",
+            "post_date": "2025-12-02",
+            "ai_tools": [
+                "Google TPU",
+                "OpenAI Garlic"
+            ],
+            "automation_type": "Model Inference",
+            "outcome": "Performance"
+        },
+        {
+            "source": "YouTube",
+            "creator": "David Ondrej",
+            "title": "I Built an AI Startup Using ONLY AI Agents",
+            "post_date": "2025-12-01",
+            "ai_tools": [
+                "OpenAI O3",
+                "Agents"
+            ],
+            "automation_type": "Startup Building",
+            "outcome": "Automated Business"
+        },
+        {
+            "source": "YouTube",
+            "creator": "All About AI",
+            "title": "Runway Gen 4.5",
+            "post_date": "2025-12-05",
+            "ai_tools": [
+                "Runway Gen 4.5"
+            ],
+            "automation_type": "Video Gen",
+            "outcome": "Creative Content"
+        },
+        {
+            "source": "YouTube",
+            "creator": "Nate Herk",
+            "title": "Auto Publish Social Media Posts Using n8n",
+            "post_date": "2025-12-03",
+            "ai_tools": [
+                "n8n"
+            ],
+            "automation_type": "Social Media Auto",
+            "outcome": "Publishing"
+        },
+        {
+            "source": "YouTube",
+            "creator": "Brian Casel",
+            "title": "I want to like Google Antigravity",
+            "post_date": "2025-12-08",
+            "ai_tools": [
+                "Google Antigravity"
+            ],
+            "automation_type": "Development",
+            "outcome": "App Building"
+        },
+        {
+            "source": "X",
+            "creator": "Sam Altman",
+            "title": "Code Red Internal Memo",
+            "post_date": "2025-12-02",
+            "ai_tools": [
+                "OpenAI"
+            ],
+            "automation_type": "Strategic",
+            "outcome": "Focus Shift"
+        },
+        {
+            "source": "X",
+            "creator": "Mckay Wrigley",
+            "title": "Claude Opus 4.5",
+            "post_date": "2025-12-06",
+            "ai_tools": [
+                "Claude Opus 4.5"
+            ],
+            "automation_type": "Agentic",
+            "outcome": "Complex Tasks"
+        },
+        {
+            "source": "X",
+            "creator": "Nathan Lands",
+            "title": "OpenAI Code Red vs Gemini 3",
+            "post_date": "2025-12-05",
+            "ai_tools": [
+                "Gemini 3"
+            ],
+            "automation_type": "Model Comp",
+            "outcome": "Comparison"
+        },
+        {
+            "source": "X",
+            "creator": "Greg Brockman",
+            "title": "Agentic Commerce",
+            "post_date": "2025-12-08",
+            "ai_tools": [
+                "OpenAI",
+                "Instacart",
+                "Stripe"
+            ],
+            "automation_type": "Commerce",
+            "outcome": "Buying Agents"
+        },
+        {
+            "source": "Reddit",
+            "creator": "r/n8n",
+            "title": "n8n 2.0 release",
+            "post_date": "2025-12-08",
+            "ai_tools": [
+                "n8n 2.0"
+            ],
+            "automation_type": "Workflow",
+            "outcome": "Better Automation"
+        },
+        {
+            "source": "Reddit",
+            "creator": "r/AI_Agents",
+            "title": "15 Best AI Agent Builders",
+            "post_date": "2025-12-02",
+            "ai_tools": [
+                "Zapier",
+                "LangChain"
+            ],
+            "automation_type": "Building",
+            "outcome": "Agent Creation"
+        }
+    ]
+}

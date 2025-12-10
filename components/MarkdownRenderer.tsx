@@ -4,6 +4,7 @@ import React, { useState, isValidElement, ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
+import rehypeSlug from 'rehype-slug';
 import { CheckCircle, CheckSquare, Copy, Check } from 'lucide-react';
 
 interface MarkdownRendererProps {
@@ -57,7 +58,7 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
     <div className="prose prose-lg max-w-none break-words overflow-x-hidden w-full min-w-0">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
+        rehypePlugins={[rehypeRaw, rehypeSlug]}
         components={{
           h1: ({ node, ...props }) => (
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mt-8 mb-4 break-words" {...props} />
