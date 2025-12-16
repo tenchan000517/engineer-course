@@ -1,0 +1,730 @@
+{
+  "name": "Stories Test",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3072,
+        304
+      ],
+      "id": "06594cad-fac8-4cca-824c-440f9a0349fe",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "PUBLISHED"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2832,
+        304
+      ],
+      "id": "b06efecc-6f4d-4c9c-b889-bf0a725514c4",
+      "name": "Get PUBLISHED Posts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst sorted = items.sort((a, b) => new Date(b.json.published_at) - new Date(a.json.published_at));\nconst item = sorted[0];\nconst contentJson = JSON.parse(item.json.content_json || '{}');\nconst pattern = contentJson.pattern || '';\nconst patternToCategory = {'versus': 'A', 'instant_hack': 'B', 'secret_feature': 'C', 'warning': 'D', 'ranking': 'E'};\nconst category = patternToCategory[pattern] || 'A';\nconst publishedAt = new Date(item.json.published_at);\nconst yearMonthDay = publishedAt.getFullYear().toString() + String(publishedAt.getMonth() + 1).padStart(2, '0') + String(publishedAt.getDate()).padStart(2, '0');\nconst folderName = `${yearMonthDay}投稿${category}`;\nreturn [{json: {...item.json, category, folder_name: folderName, pattern}}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2592,
+        304
+      ],
+      "id": "36b2b87b-138f-4ed6-863f-3838f4662d9f",
+      "name": "Get Category from Pattern"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.folder_name }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1EuAjadkn81zRxfPs1Im-jXoM5zsN2mfo",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2352,
+        304
+      ],
+      "id": "f0c46fdc-cedd-4a24-a536-d2e6ca4941de",
+      "name": "Search Category Folder",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TfNZ8jSb3HyhfHWF",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $('Get Category from Pattern').item.json.post_id }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2112,
+        304
+      ],
+      "id": "51ed9123-fa95-47f8-a7a9-2b1939eaac28",
+      "name": "Search Video File",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TfNZ8jSb3HyhfHWF",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"https://drive.google.com/uc?export=download&id={{ $json.id }}\" -ss 00:00:01 -frames:v 1 -q:v 2 /tmp/thumbnail.jpg 2>&1 && ffmpeg -y -i /tmp/thumbnail.jpg -vf \"scale=810:-1,pad=1080:1920:(ow-iw)/2:600:white,drawtext=text='新しい動画を投稿しました！':fontfile=/usr/share/fonts/noto/NotoSansCJK-Regular.ttc:fontsize=72:fontcolor=black:x=(w-text_w)/2:y=120\" /tmp/story.jpg 2>&1"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1872,
+        304
+      ],
+      "id": "90fdec2d-f72b-479a-a405-c5059e41f1a0",
+      "name": "Extract and Create Story Image"
+    },
+    {
+      "parameters": {
+        "command": "base64 /tmp/story.jpg | tr -d '\\n'"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        304
+      ],
+      "id": "8848e0f7-4f05-488d-9705-bfa204397099",
+      "name": "Read Story Image"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/doaf4wodr/image/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "=data:image/jpeg;base64,{{ $json.stdout }}"
+            },
+            {
+              "name": "upload_preset",
+              "value": "instagram_reel"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1392,
+        304
+      ],
+      "id": "2feeaf34-dd0d-42b1-a99e-814669740f72",
+      "name": "Upload to Cloudinary"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.instagram.com/v20.0/me",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "user_id,username"
+            },
+            {
+              "name": "access_token",
+              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1152,
+        304
+      ],
+      "id": "12973437-9390-4e24-a447-696835998cc1",
+      "name": "Get User ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v20.0/{{ $json.user_id }}/media",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "media_type",
+              "value": "STORIES"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $('Upload to Cloudinary').item.json.secure_url }}"
+            },
+            {
+              "name": "access_token",
+              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -912,
+        304
+      ],
+      "id": "280f9536-4be1-4574-a676-c3c79bd18eee",
+      "name": "Create Story Container"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -672,
+        304
+      ],
+      "id": "85910806-6a4f-4801-b107-194ac8102f06",
+      "name": "Wait 10s",
+      "webhookId": "wait-story"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.instagram.com/{{ $('Create Story Container').item.json.id }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "status_code"
+            },
+            {
+              "name": "access_token",
+              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -432,
+        304
+      ],
+      "id": "9511c4fb-724e-45d2-8a97-8952c6b21f97",
+      "name": "Check Status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "status-check",
+              "leftValue": "={{ $json.status_code }}",
+              "rightValue": "FINISHED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -192,
+        304
+      ],
+      "id": "10a6e45d-0582-415a-a226-ab518b78b60b",
+      "name": "If Finished"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v20.0/{{ $('Get User ID').item.json.user_id }}/media_publish",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $('Create Story Container').item.json.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        48,
+        192
+      ],
+      "id": "20eb9e12-770f-498b-b592-d0b658b895be",
+      "name": "Publish Story"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "mode": "list",
+          "cachedResultName": "n8n-test"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1340398352,
+          "mode": "list",
+          "cachedResultName": "posts"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $('Get Category from Pattern').item.json.post_id }}",
+            "status": "STORY_POSTED"
+          },
+          "matchingColumns": [
+            "post_id"
+          ],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_type",
+              "displayName": "post_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hashtags",
+              "displayName": "hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "media_ids",
+              "displayName": "media_ids",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scheduled_at",
+              "displayName": "scheduled_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "published_at",
+              "displayName": "published_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ig_post_id",
+              "displayName": "ig_post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "share_to_feed",
+              "displayName": "share_to_feed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "thumb_offset_ms",
+              "displayName": "thumb_offset_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "error_message",
+              "displayName": "error_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "retry_count",
+              "displayName": "retry_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "content_json",
+              "displayName": "content_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        192
+      ],
+      "id": "4b6bc078-43b7-41eb-b3a1-95eed4890183",
+      "name": "Update Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get PUBLISHED Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PUBLISHED Posts": {
+      "main": [
+        [
+          {
+            "node": "Get Category from Pattern",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Category from Pattern": {
+      "main": [
+        [
+          {
+            "node": "Search Category Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Category Folder": {
+      "main": [
+        [
+          {
+            "node": "Search Video File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Video File": {
+      "main": [
+        [
+          {
+            "node": "Extract and Create Story Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract and Create Story Image": {
+      "main": [
+        [
+          {
+            "node": "Read Story Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Story Image": {
+      "main": [
+        [
+          {
+            "node": "Upload to Cloudinary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Cloudinary": {
+      "main": [
+        [
+          {
+            "node": "Get User ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User ID": {
+      "main": [
+        [
+          {
+            "node": "Create Story Container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Story Container": {
+      "main": [
+        [
+          {
+            "node": "Wait 10s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 10s": {
+      "main": [
+        [
+          {
+            "node": "Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status": {
+      "main": [
+        [
+          {
+            "node": "If Finished",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Finished": {
+      "main": [
+        [
+          {
+            "node": "Publish Story",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 10s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish Story": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5d0044e8-3343-44a6-86fd-9d54051a76ef",
+  "meta": {
+    "instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"
+  },
+  "id": "PhKI5mf8vizKgoSF",
+  "tags": []
+}
