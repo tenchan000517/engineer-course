@@ -1,0 +1,19 @@
+{
+  "id": "n8n-transcription",
+  "title": "n8n 音声文字起こし自動化",
+  "description": "Whisper.cppを使った音声ファイルの自動文字起こしワークフロー",
+  "icon": "mic",
+  "color": "purple",
+  "order": 5,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["n8n", "whisper", "docker"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac", "linux", "docker"],
+    "level": "intermediate",
+    "topics": ["automation", "transcription", "ai"]
+  },
+  "moduleCount": 3,
+  "isSubcourse": true,
+  "parentCategory": "n8n"
+}
