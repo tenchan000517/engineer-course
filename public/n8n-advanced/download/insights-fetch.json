@@ -1,0 +1,362 @@
+{
+  "name": "Insights Fetch",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24,
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        300
+      ],
+      "id": "schedule-trigger-insights",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "posts",
+          "mode": "list",
+          "cachedResultName": "posts"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "STORY_POSTED"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -560,
+        300
+      ],
+      "id": "get-story-posted-posts",
+      "name": "Get STORY_POSTED Posts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst now = new Date();\nconst threshold = 48 * 60 * 60 * 1000; // 48時間（ミリ秒）\n\nreturn items.filter(item => {\n  const publishedAt = new Date(item.json.published_at);\n  return (now - publishedAt) >= threshold;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        300
+      ],
+      "id": "filter-48h-old",
+      "name": "Filter 48h Old Posts"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -80,
+        300
+      ],
+      "id": "loop-each-post",
+      "name": "Loop Each Post"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.instagram.com/{{ $json.ig_post_id }}/insights",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "metric",
+              "value": "impressions,reach,likes,comments,saved,shares,plays"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        160,
+        300
+      ],
+      "id": "get-insights-instagram",
+      "name": "Get Insights from Instagram"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.instagram.com/me",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "followers_count"
+            },
+            {
+              "name": "access_token",
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        400,
+        300
+      ],
+      "id": "get-follower-count",
+      "name": "Get Follower Count"
+    },
+    {
+      "parameters": {
+        "jsCode": "const insights = $('Get Insights from Instagram').item.json.data || [];\nconst followerCount = $('Get Follower Count').item.json.followers_count || 0;\nconst post = $('Loop Each Post').item.json;\n\n// インサイトデータをオブジェクトに変換\nconst metricsMap = {};\nfor (const metric of insights) {\n  metricsMap[metric.name] = metric.values[0].value;\n}\n\n// エンゲージメント率を計算（いいね+コメント+保存）/ リーチ * 100\nconst engagement = (metricsMap.likes || 0) + (metricsMap.comments || 0) + (metricsMap.saved || 0);\nconst engagementRate = metricsMap.reach > 0\n  ? ((engagement / metricsMap.reach) * 100).toFixed(2)\n  : 0;\n\nreturn [{\n  json: {\n    post_id: post.post_id,\n    ig_post_id: post.ig_post_id,\n    fetched_at: new Date().toISOString(),\n    impressions: metricsMap.impressions || 0,\n    reach: metricsMap.reach || 0,\n    likes: metricsMap.likes || 0,\n    comments: metricsMap.comments || 0,\n    saved: metricsMap.saved || 0,\n    shares: metricsMap.shares || 0,\n    plays: metricsMap.plays || 0,\n    follower_count: followerCount,\n    engagement_rate: engagementRate\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        300
+      ],
+      "id": "parse-insights-data",
+      "name": "Parse Insights Data"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "insights",
+          "mode": "list",
+          "cachedResultName": "insights"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        880,
+        300
+      ],
+      "id": "append-insights-sheet",
+      "name": "Append to Insights Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "posts",
+          "mode": "list",
+          "cachedResultName": "posts"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $('Loop Each Post').item.json.post_id }}",
+            "status": "INSIGHTS_FETCHED"
+          },
+          "matchingColumns": [
+            "post_id"
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        300
+      ],
+      "id": "update-posts-status",
+      "name": "Update Posts Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        300
+      ],
+      "id": "done-node",
+      "name": "Done"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get STORY_POSTED Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get STORY_POSTED Posts": {
+      "main": [
+        [
+          {
+            "node": "Filter 48h Old Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter 48h Old Posts": {
+      "main": [
+        [
+          {
+            "node": "Loop Each Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Each Post": {
+      "main": [
+        [
+          {
+            "node": "Get Insights from Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Insights from Instagram": {
+      "main": [
+        [
+          {
+            "node": "Get Follower Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Follower Count": {
+      "main": [
+        [
+          {
+            "node": "Parse Insights Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Insights Data": {
+      "main": [
+        [
+          {
+            "node": "Append to Insights Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append to Insights Sheet": {
+      "main": [
+        [
+          {
+            "node": "Update Posts Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Posts Status": {
+      "main": [
+        [
+          {
+            "node": "Loop Each Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "instanceId": ""
+  },
+  "id": "",
+  "tags": []
+}

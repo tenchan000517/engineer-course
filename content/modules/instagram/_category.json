@@ -1,0 +1,27 @@
+{
+  "id": "instagram",
+  "title": "Instagram運用講座",
+  "description": "Instagramを効果的に運用し、集客・マーケティングを自動化する",
+  "icon": "instagram",
+  "color": "pink",
+  "order": 10,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["instagram", "meta-api"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "beginner",
+    "topics": ["sns", "marketing", "automation", "dm"]
+  },
+  "moduleCount": 2,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "instagram-dm-automation",
+      "title": "コメント→DM自動配布",
+      "description": "Meta公式APIを使ってコメントからDMを自動送信する仕組みを構築",
+      "moduleCount": 2,
+      "level": "beginner"
+    }
+  ]
+}

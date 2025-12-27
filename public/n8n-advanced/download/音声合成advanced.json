@@ -1,0 +1,540 @@
+{
+  "name": "音声合成advanced_v2",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-3200, 736],
+      "id": "0bde61b2-ee15-428d-b2b1-688fe99e97c9",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 5つのシートからデータを取得するためのシート情報\nconst sheets = [\n  { name: 'canva_A', category: 'A', gid: YOUR_CANVA_A_GID },\n  { name: 'canva_B', category: 'B', gid: YOUR_CANVA_B_GID },\n  { name: 'canva_C', category: 'C', gid: YOUR_CANVA_C_GID },\n  { name: 'canva_D', category: 'D', gid: YOUR_CANVA_D_GID },\n  { name: 'canva_E', category: 'E', gid: YOUR_CANVA_E_GID }\n];\n\n// シート情報を出力（後続のノードで使用）\nreturn sheets.map(s => ({ json: s }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-2992, 736],
+      "id": "35183fe6-884f-409d-9fc7-4fa24c307914",
+      "name": "Sheet List"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [-2784, 736],
+      "id": "daf2fb0b-cecb-46cf-a56f-946e6a76451a",
+      "name": "Loop Sheets"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $json.gid }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [-2576, 736],
+      "id": "83b98bb1-c469-4c2b-9a0b-ff9d3e1a1430",
+      "name": "Get Sheet Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 現在のシート情報を取得\nconst sheetInfo = $('Loop Sheets').first().json;\nconst category = sheetInfo.category;\n\n// シートデータを取得してcategoryを付与\nconst items = $input.all();\n\n// audio_status === 'NORMAL' でフィルタしつつcategoryを付与\nconst filtered = items.filter(item => {\n  const status = item.json.audio_status;\n  return status === 'NORMAL';\n});\n\nreturn filtered.map(item => ({\n  json: {\n    ...item.json,\n    category: category\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-2368, 736],
+      "id": "227c4691-d817-4c47-8d1c-99e9ea431dfd",
+      "name": "Filter NORMAL and Add Category"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-items-check",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-2160, 736],
+      "id": "ded78db9-a413-4b00-9ceb-190d8131dfff",
+      "name": "If Has Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "// フィルタ済みデータを取得\nconst items = $('Filter NORMAL and Add Category').all();\n\nif (items.length === 0) {\n  return [];\n}\n\n// 最初のアイテムからcategoryを取得\nconst category = items[0].json.category;\n\n// 年月日を生成\nconst now = new Date();\nconst yearMonthDay = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');\n\n// フォルダ名を生成（1件だけ返す - フォルダ検索用）\nconst folderName = `${yearMonthDay}投稿${category}`;\nconst archiveFolderName = `${yearMonthDay}投稿${category}_archive`;\n\nreturn [{\n  json: {\n    folder_name: folderName,\n    archive_folder_name: archiveFolderName,\n    category: category\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1952, 592],
+      "id": "318392b2-1c08-4d3c-880b-a30d00f50db4",
+      "name": "Set Folder Names"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.folder_name }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "YOUR_PARENT_FOLDER_ID",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-1744, 592],
+      "id": "836a263f-abd5-4c98-8964-d51bed189847",
+      "name": "Search Category Folder",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $('Set Folder Names').first().json.archive_folder_name }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "YOUR_PARENT_FOLDER_ID",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-1536, 592],
+      "id": "c7bfd132-3009-4915-a3fb-cface21ad442",
+      "name": "Search Archive Folder",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "archive-check",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-1328, 592],
+      "id": "ae4a093c-400c-4a84-b22b-2894a7caea43",
+      "name": "If Archive Exists"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Set Folder Names').first().json.archive_folder_name }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "YOUR_PARENT_FOLDER_ID",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-1120, 464],
+      "id": "73b60ecf-b3bf-41c9-b8b9-a90e312fbb1c",
+      "name": "Create Archive Folder"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter NORMAL and Add Categoryから元データを取得\nconst originalItems = $('Filter NORMAL and Add Category').all();\n// Set Folder Namesからフォルダ名を取得\nconst folderNames = $('Set Folder Names').first().json;\n// Search Category Folderから正確な名前でフィルタ\nconst categoryFolder = $('Search Category Folder').all()\n  .find(item => item.json.name === folderNames.folder_name);\nconst categoryFolderId = categoryFolder ? categoryFolder.json.id : null;\n\n// Search Archive Folderからアーカイブフォルダを取得（作成された場合も考慮）\nlet archiveFolderId = null;\nconst archiveFolders = $('Search Archive Folder').all();\nconst archiveFolder = archiveFolders.find(item => item.json.name === folderNames.archive_folder_name);\nif (archiveFolder) {\n  archiveFolderId = archiveFolder.json.id;\n} else {\n  // Create Archive Folderから取得を試みる\n  try {\n    const created = $('Create Archive Folder').first();\n    if (created && created.json.id) {\n      archiveFolderId = created.json.id;\n    }\n  } catch (e) {\n    // 作成されていない場合は無視\n  }\n}\n\nreturn originalItems.map(item => ({\n  json: {\n    ...item.json,\n    folder_name: folderNames.folder_name,\n    archive_folder_name: folderNames.archive_folder_name,\n    category_folder_id: categoryFolderId,\n    archive_folder_id: archiveFolderId\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-912, 608],
+      "id": "e9a80b24-9337-4e50-bd4d-0c453472fbb0",
+      "name": "Prepare Loop Data"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [-2944, 992],
+      "id": "71c8f2a2-bec1-4923-b54a-aad158c9abe9",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.post_id }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.category_folder_id }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-2736, 1008],
+      "id": "382f788b-cf32-4e0a-8180-da51ac238303",
+      "name": "Search Video File",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "video-check",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-2528, 1008],
+      "id": "994837b5-a270-46b8-adfa-8441f457990b",
+      "name": "If Video Exists"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Search Video File').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-2320, 992],
+      "id": "f343aaa3-69c4-4d4d-bae0-c590cc1503d9",
+      "name": "Download file"
+    },
+    {
+      "parameters": {
+        "jsCode": "// narration_1とnarration_2を改行で連結\nconst item = $('Loop Over Items').item.json;\nconst narration1 = item.narration_1 || '';\nconst narration2 = item.narration_2 || '';\nconst mergedNarration = narration1 + '\\n' + narration2;\n\nreturn [{\n  json: {\n    ...item,\n    narration: mergedNarration\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-2112, 992],
+      "id": "c745dffc-7979-4a55-8348-9f906bce216b",
+      "name": "Merge Narrations"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.fish.audio/v1/tts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $('Merge Narrations').item.json.narration, reference_id: 'YOUR_VOICE_ID' }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-1904, 992],
+      "id": "325040e0-fe24-4e16-b51e-dbf9b645a4d8",
+      "name": "Generate Audio"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/tmp/video.mp4",
+        "dataPropertyName": "={{ $('Download file').first().binary.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [-1696, 992],
+      "id": "b742a961-f0a7-481b-b70c-57bc41b4bd73",
+      "name": "Save Video"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/tmp/audio.mp3",
+        "dataPropertyName": "={{ $('Generate Audio').first().binary.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [-1488, 992],
+      "id": "80d0a894-19a3-442c-b458-185018fd0dfd",
+      "name": "Save Audio"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i /tmp/video.mp4 -i /tmp/audio.mp3 -filter_complex '[1:a]adelay=3000|3000[aout]' -map 0:v -map '[aout]' -c:v copy -c:a aac /tmp/output.mp4"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [-1280, 992],
+      "id": "123aba9a-2221-44e4-8ade-d36d563dc515",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/tmp/output.mp4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [-1072, 992],
+      "id": "613ce4e9-2bde-43d1-bdab-114eb628e2c7",
+      "name": "Read Output"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Search Video File').first().json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Loop Over Items').item.json.archive_folder_id }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-864, 1136],
+      "id": "267c2841-3331-4776-a8b2-3a683a1ba244",
+      "name": "Move Original to Archive"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Search Video File').first().json.name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Loop Over Items').item.json.category_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-656, 992],
+      "id": "3eafbf15-c4cc-4638-8659-0c8bc00976ec",
+      "name": "Upload New Video"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-864, 992],
+      "id": "198a489d-3260-4dde-9784-874f60cbddb6",
+      "name": "Wait 5s1",
+      "webhookId": "7a045cb7-415d-4429-b699-2253b6113b7e"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "YOUR_GAS_DEPLOY_URL",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"action\": \"updateAudioStatus\",\n  \"postId\": \"{{ $('Loop Over Items').item.json.post_id }}\",\n  \"category\": \"{{ $('Loop Over Items').item.json.category }}\",\n  \"status\": \"DONE\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [-448, 992],
+      "id": "ab3c4527-aa3b-4ad3-a814-3117fa7ff8b5",
+      "name": "Update audio_status"
+    },
+    {
+      "parameters": {
+        "jsCode": "// このノードはLoop Sheetsに戻すためのダミー\n// If Has Itemsのfalseブランチから来た場合に使用\nreturn [{ json: { continue: true } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1984, 800],
+      "id": "b5e30ce0-6bf6-41cd-917c-8116e36a5988",
+      "name": "Skip to Next Sheet"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{"node": "Sheet List", "type": "main", "index": 0}]]
+    },
+    "Sheet List": {
+      "main": [[{"node": "Loop Sheets", "type": "main", "index": 0}]]
+    },
+    "Loop Sheets": {
+      "main": [[], [{"node": "Get Sheet Data", "type": "main", "index": 0}]]
+    },
+    "Get Sheet Data": {
+      "main": [[{"node": "Filter NORMAL and Add Category", "type": "main", "index": 0}]]
+    },
+    "Filter NORMAL and Add Category": {
+      "main": [[{"node": "If Has Items", "type": "main", "index": 0}]]
+    },
+    "If Has Items": {
+      "main": [
+        [{"node": "Set Folder Names", "type": "main", "index": 0}],
+        [{"node": "Skip to Next Sheet", "type": "main", "index": 0}]
+      ]
+    },
+    "Skip to Next Sheet": {
+      "main": [[{"node": "Loop Sheets", "type": "main", "index": 0}]]
+    },
+    "Set Folder Names": {
+      "main": [[{"node": "Search Category Folder", "type": "main", "index": 0}]]
+    },
+    "Search Category Folder": {
+      "main": [[{"node": "Search Archive Folder", "type": "main", "index": 0}]]
+    },
+    "Search Archive Folder": {
+      "main": [[{"node": "If Archive Exists", "type": "main", "index": 0}]]
+    },
+    "If Archive Exists": {
+      "main": [
+        [{"node": "Create Archive Folder", "type": "main", "index": 0}],
+        [{"node": "Prepare Loop Data", "type": "main", "index": 0}]
+      ]
+    },
+    "Create Archive Folder": {
+      "main": [[{"node": "Prepare Loop Data", "type": "main", "index": 0}]]
+    },
+    "Prepare Loop Data": {
+      "main": [[{"node": "Loop Over Items", "type": "main", "index": 0}]]
+    },
+    "Loop Over Items": {
+      "main": [
+        [{"node": "Loop Sheets", "type": "main", "index": 0}],
+        [{"node": "Search Video File", "type": "main", "index": 0}]
+      ]
+    },
+    "Search Video File": {
+      "main": [[{"node": "If Video Exists", "type": "main", "index": 0}]]
+    },
+    "If Video Exists": {
+      "main": [
+        [{"node": "Download file", "type": "main", "index": 0}],
+        [{"node": "Loop Over Items", "type": "main", "index": 0}]
+      ]
+    },
+    "Download file": {
+      "main": [[{"node": "Merge Narrations", "type": "main", "index": 0}]]
+    },
+    "Merge Narrations": {
+      "main": [[{"node": "Generate Audio", "type": "main", "index": 0}]]
+    },
+    "Generate Audio": {
+      "main": [[{"node": "Save Video", "type": "main", "index": 0}]]
+    },
+    "Save Video": {
+      "main": [[{"node": "Save Audio", "type": "main", "index": 0}]]
+    },
+    "Save Audio": {
+      "main": [[{"node": "Execute Command", "type": "main", "index": 0}]]
+    },
+    "Execute Command": {
+      "main": [[{"node": "Read Output", "type": "main", "index": 0}]]
+    },
+    "Read Output": {
+      "main": [
+        [
+          {"node": "Move Original to Archive", "type": "main", "index": 0},
+          {"node": "Wait 5s1", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Wait 5s1": {
+      "main": [[{"node": "Upload New Video", "type": "main", "index": 0}]]
+    },
+    "Upload New Video": {
+      "main": [[{"node": "Update audio_status", "type": "main", "index": 0}]]
+    },
+    "Update audio_status": {
+      "main": [[{"node": "Loop Over Items", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,825 @@
+{
+  "name": "雑誌インタビュー文字起こし",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "文字起こし実行",
+        "formDescription": "対象号を入力して文字起こしを実行します",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "月号",
+              "placeholder": "202601",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -4240,
+        256
+      ],
+      "id": "e02e3e7d-3448-40b8-a7a8-e06bce3a72ce",
+      "name": "Form Trigger",
+      "webhookId": "transcription-form-v4"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $json['月号'] }}",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -4000,
+        256
+      ],
+      "id": "ba35fd0e-d5a6-45f8-b887-f984dae262a1",
+      "name": "Get Sheet Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// シートデータからインタビュー系カテゴリの情報を抽出\n// シート行番号も保持（ステータス更新用）\nconst rows = $input.all();\nconst monthCode = $('Form Trigger').first().json['月号'];\nconst categories = [];\n\n// カテゴリ設定（自分のシートに合わせて変更してください）\nconst interviewCatIndices = [0, 2, 3, 4, 6];\nconst catNames = ['A', 'H', 'I', 'K', 'C'];\nconst catLabels = ['A. メインインタビュー', 'H. STAR①', 'I. STAR②', 'K. ハイスクール企画', 'C. 新規企業'];\n\ninterviewCatIndices.forEach((catIdx, i) => {\n  const checkRowIdx = catIdx * 2;\n  const urlRowIdx = catIdx * 2 + 1;\n  \n  if (urlRowIdx >= rows.length) return;\n  \n  const checkRow = rows[checkRowIdx].json;\n  const urlRow = rows[urlRowIdx].json;\n  \n  // 列名は自分のシートに合わせて変更してください\n  const recordingUrl = urlRow['録音データ'] || '';\n  const transcriptionUrl = urlRow['文字起こしステータス'] || '';\n  const manuscriptUrl = urlRow['原稿ステータス'] || '';\n  \n  const extractId = (url) => {\n    if (!url) return null;\n    const match = url.match(/folders\\/([a-zA-Z0-9_-]+)/);\n    return match ? match[1] : null;\n  };\n  \n  const recordingFolderId = extractId(recordingUrl);\n  const transcriptionFolderId = extractId(transcriptionUrl);\n  const manuscriptFolderId = extractId(manuscriptUrl);\n  \n  const sheetRowNumber = catIdx * 2 + 2;\n  \n  if (recordingFolderId && transcriptionFolderId) {\n    categories.push({\n      json: {\n        category: catNames[i],\n        categoryLabel: catLabels[i],\n        recordingFolderId: recordingFolderId,\n        transcriptionFolderId: transcriptionFolderId,\n        manuscriptFolderId: manuscriptFolderId,\n        targetName: checkRow['対象名'] || '',\n        currentStatus: checkRow['文字起こしステータス'] || '未処理',\n        sheetRowNumber: sheetRowNumber,\n        monthCode: monthCode\n      }\n    });\n  }\n});\n\nreturn categories;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3760,
+        256
+      ],
+      "id": "c1168cd0-36a7-4a5f-9184-71865e09df8a",
+      "name": "Extract Folder IDs from URLs"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-data",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3520,
+        256
+      ],
+      "id": "75c5a028-d87a-45c7-a176-c80f03a73a41",
+      "name": "If Has Data"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3280,
+        256
+      ],
+      "id": "6ce6ff3f-2133-42ec-a54a-cd50e059cbbd",
+      "name": "Loop Categories"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.recordingFolderId }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3040,
+        256
+      ],
+      "id": "0497cc45-cf07-4f63-a841-4ff3bc33af84",
+      "name": "Get Audio Files",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 音声ファイルのフィルタ + ファイル名生成\nconst categoryInfo = $('Loop Categories').first().json;\nconst files = $input.all();\n\nconst audioExtensions = ['.m4a', '.mp3', '.wav', '.mp4', '.webm', '.ogg'];\n\nconst audioFiles = files.filter(item => {\n  const name = (item.json.name || '').toLowerCase();\n  return audioExtensions.some(ext => name.endsWith(ext));\n});\n\nconsole.log(`[v4] カテゴリ ${categoryInfo.category}: 音声ファイル ${audioFiles.length}件`);\n\nif (audioFiles.length === 0) {\n  return [];\n}\n\nconst audioFile = audioFiles[0].json;\nconst baseName = audioFile.name.replace(/\\.[^/.]+$/, '');\nconst txtFileName = baseName + '.txt';\n\nconsole.log(`[v4] 処理対象: ${audioFile.name} → ${txtFileName}`);\n\nreturn [{\n  json: {\n    id: audioFile.id,\n    name: audioFile.name,\n    mimeType: audioFile.mimeType,\n    category: categoryInfo.category,\n    categoryLabel: categoryInfo.categoryLabel,\n    transcriptionFolderId: categoryInfo.transcriptionFolderId,\n    manuscriptFolderId: categoryInfo.manuscriptFolderId,\n    sheetRowNumber: categoryInfo.sheetRowNumber,\n    monthCode: categoryInfo.monthCode,\n    baseName: baseName,\n    txtFileName: txtFileName\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2800,
+        256
+      ],
+      "id": "450b0b17-1c18-42b5-b7be-11d8b956ca5d",
+      "name": "Filter and Prepare"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-audio",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2560,
+        256
+      ],
+      "id": "ba7ae7be-4e6f-4d2b-b468-4d66d02118c3",
+      "name": "If Has Audio"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.txtFileName }}",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.transcriptionFolderId }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2320,
+        256
+      ],
+      "id": "24392737-6768-4d22-963a-948b7d07612a",
+      "name": "Check Existing",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 存在チェック\nconst fileInfo = $('If Has Audio').first().json;\nconst searchResults = $input.all();\n\nconst exactMatch = searchResults.find(r => r.json.name === fileInfo.txtFileName);\n\nconsole.log(`[v4] Check: ${fileInfo.category} - ${fileInfo.txtFileName}`);\nconsole.log(`[v4] 検索結果: ${searchResults.length}件, 一致: ${!!exactMatch}`);\n\nreturn [{\n  json: {\n    ...fileInfo,\n    alreadyExists: exactMatch ? true : false\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2080,
+        256
+      ],
+      "id": "6c2258ae-6f7f-4370-8c7d-92f24064142a",
+      "name": "Check If Exists"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "skip-check",
+              "leftValue": "={{ $json.alreadyExists }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1840,
+        256
+      ],
+      "id": "510ef072-4219-4c51-b9cf-dc7e02693957",
+      "name": "If Already Exists"
+    },
+    {
+      "parameters": {
+        "jsCode": "// スキップログ\nconst fileInfo = $input.first().json;\nconsole.log(`[v4] スキップ: ${fileInfo.name} (${fileInfo.category})`);\nreturn [{ json: { ...fileInfo, skipped: true, statusToSet: 'スキップ' } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1600,
+        112
+      ],
+      "id": "9dce0823-27f5-4f28-b0c7-e9dbbfc634eb",
+      "name": "Skip File"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1600,
+        400
+      ],
+      "id": "b0f6377f-18f6-4257-95a1-24e3b85f9bae",
+      "name": "Download Audio",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/tmp/{{ $('If Already Exists').item.json.baseName }}.audio",
+        "dataPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        400
+      ],
+      "id": "ea46afe6-466a-4043-92f2-8dbe98e21c2f",
+      "name": "Save Audio"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"/tmp/{{ $('If Already Exists').item.json.baseName }}.audio\" -ar 16000 -ac 1 -c:a pcm_s16le \"/tmp/{{ $('If Already Exists').item.json.baseName }}.wav\" && /opt/whisper.cpp/build/bin/whisper-cli -m /opt/whisper.cpp/models/ggml-base.bin -l ja -otxt -of \"/tmp/{{ $('If Already Exists').item.json.baseName }}\" \"/tmp/{{ $('If Already Exists').item.json.baseName }}.wav\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1120,
+        400
+      ],
+      "id": "71cec4ad-8a00-4244-bcca-2e514398a000",
+      "name": "Execute Whisper"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/tmp/{{ $('If Already Exists').item.json.baseName }}.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        400
+      ],
+      "id": "56f45f88-1a01-410e-8165-e282b2e1b63c",
+      "name": "Read Whisper Output"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Whisper出力をテキストに変換\nconst fileInfo = $('If Already Exists').item.json;\nconst whisperOutput = $input.first().json.data;\n\nlet rawText = '';\nif (typeof whisperOutput === 'string') {\n  rawText = whisperOutput;\n} else if (Buffer.isBuffer(whisperOutput)) {\n  rawText = whisperOutput.toString('utf-8');\n} else {\n  const binaryData = $input.first().binary?.data;\n  if (binaryData) {\n    rawText = Buffer.from(binaryData.data, 'base64').toString('utf-8');\n  }\n}\n\nreturn [{\n  json: {\n    ...fileInfo,\n    rawTranscription: rawText\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        400
+      ],
+      "id": "0afee5fc-6d01-4d0f-9cd0-b3c895385a09",
+      "name": "Prepare for Gemini"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=【基本指示】\nあなたは雑誌記事の編集者です。以下の文字起こしテキストを、記事として読みやすく整理してください。\n\n【必須ルール】\n1. 捏造・追加の禁止: 文字起こしにない内容は絶対に追加しない\n2. 削除・整理のみ可: 不要な部分の削除、順番の整理、表現の改善のみ実施\n3. マークダウン記法の禁止: プレーンテキストで出力\n\n【整理の要点】\n・質問は「― 」で始める（全角ダッシュ + 半角スペース）\n・回答は質問の後に改行して段落で記載（マーク不要）\n・話し言葉→書き言葉への変換\n・重複表現の削除\n・固有名詞や専門用語で誤りがある場合は【要確認】マークを付ける\n\n【文字起こしテキスト】\n{{ $json.rawTranscription }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        400
+      ],
+      "id": "cb0abb1c-fe21-4f6f-805f-9bb2a95320b2",
+      "name": "Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_GEMINI_CREDENTIAL_ID",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Geminiレスポンスを処理\nconst fileInfo = $('Prepare for Gemini').first().json;\nconst input = $input.first().json;\n\nlet organizedText = '';\nif (input.text) {\n  organizedText = input.text;\n} else if (input.content && input.content.parts) {\n  organizedText = input.content.parts[0].text;\n} else if (typeof input === 'string') {\n  organizedText = input;\n} else {\n  organizedText = '[Gemini処理エラー]\\n' + fileInfo.rawTranscription;\n}\n\nreturn [{\n  json: {\n    ...fileInfo,\n    organizedText: organizedText\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        400
+      ],
+      "id": "936c3b85-f5ce-4acf-b8b4-2e3411c71ce0",
+      "name": "Extract Gemini Result"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 両方のテキストをバイナリに変換\nconst fileInfo = $input.first().json;\nconst rawText = fileInfo.rawTranscription;\nconst organizedText = fileInfo.organizedText;\nconst rawBuffer = Buffer.from(rawText, 'utf-8');\nconst organizedBuffer = Buffer.from(organizedText, 'utf-8');\n\nreturn [{\n  json: fileInfo,\n  binary: {\n    rawTextData: {\n      data: rawBuffer.toString('base64'),\n      mimeType: 'text/plain',\n      fileName: fileInfo.txtFileName\n    },\n    organizedTextData: {\n      data: organizedBuffer.toString('base64'),\n      mimeType: 'text/plain',\n      fileName: fileInfo.txtFileName\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        400
+      ],
+      "id": "a1e75da3-e0f5-4df7-8f7a-71788b555092",
+      "name": "Prepare Upload"
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.txtFileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.transcriptionFolderId }}",
+          "mode": "id"
+        },
+        "inputDataFieldName": "rawTextData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        300
+      ],
+      "id": "df849537-26ea-4ed4-8135-0e26bde8bb3f",
+      "name": "Upload Raw (文字起こし)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.txtFileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.manuscriptFolderId }}",
+          "mode": "id"
+        },
+        "inputDataFieldName": "organizedTextData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        500
+      ],
+      "id": "8b99ea5d-91b0-40b7-98f0-5b25df3f15f6",
+      "name": "Upload Organized (原稿)",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YOUR_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 完了ログ + ステータス更新用データ準備\nconst fileInfo = $('Prepare for Gemini').first().json;\nconsole.log(`[v4] 完了: ${fileInfo.name} → ${fileInfo.txtFileName} (${fileInfo.category})`);\nreturn [{ json: { ...fileInfo, completed: true, statusToSet: '完了' } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        500
+      ],
+      "id": "a03a50eb-8ef8-4b59-b54c-3b72abfd3752",
+      "name": "Log Complete"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $json.monthCode }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "カテゴリ": "={{ $json.categoryLabel }}",
+            "文字起こしステータス": "={{ $json.statusToSet }}",
+            "原稿ステータス": "={{ $json.statusToSet }}"
+          },
+          "matchingColumns": ["カテゴリ"],
+          "schema": [
+            {"id": "カテゴリ", "displayName": "カテゴリ", "required": false, "defaultMatch": true, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "文字起こしステータス", "displayName": "文字起こしステータス", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false},
+            {"id": "原稿ステータス", "displayName": "原稿ステータス", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": false}
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        800,
+        500
+      ],
+      "id": "update-status-complete",
+      "name": "Update Status (Complete)",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Form Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Sheet Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sheet Data": {
+      "main": [
+        [
+          {
+            "node": "Extract Folder IDs from URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Folder IDs from URLs": {
+      "main": [
+        [
+          {
+            "node": "If Has Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Has Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Categories": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get Audio Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio Files": {
+      "main": [
+        [
+          {
+            "node": "Filter and Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter and Prepare": {
+      "main": [
+        [
+          {
+            "node": "If Has Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Has Audio": {
+      "main": [
+        [
+          {
+            "node": "Check Existing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Existing": {
+      "main": [
+        [
+          {
+            "node": "Check If Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Exists": {
+      "main": [
+        [
+          {
+            "node": "If Already Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Already Exists": {
+      "main": [
+        [
+          {
+            "node": "Skip File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip File": {
+      "main": [
+        [
+          {
+            "node": "Loop Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio": {
+      "main": [
+        [
+          {
+            "node": "Save Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Audio": {
+      "main": [
+        [
+          {
+            "node": "Execute Whisper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Whisper": {
+      "main": [
+        [
+          {
+            "node": "Read Whisper Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Whisper Output": {
+      "main": [
+        [
+          {
+            "node": "Prepare for Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare for Gemini": {
+      "main": [
+        [
+          {
+            "node": "Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini": {
+      "main": [
+        [
+          {
+            "node": "Extract Gemini Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Gemini Result": {
+      "main": [
+        [
+          {
+            "node": "Prepare Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Upload": {
+      "main": [
+        [
+          {
+            "node": "Upload Raw (文字起こし)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload Organized (原稿)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Organized (原稿)": {
+      "main": [
+        [
+          {
+            "node": "Log Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Complete": {
+      "main": [
+        [
+          {
+            "node": "Update Status (Complete)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status (Complete)": {
+      "main": [
+        [
+          {
+            "node": "Loop Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "v4-template",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

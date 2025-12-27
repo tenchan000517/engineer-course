@@ -16,7 +16,7 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "value": "YOUR_SPREADSHEET_ID",
           "mode": "list",
           "cachedResultName": "n8n-test"
         },
@@ -46,7 +46,7 @@
       "name": "Get PUBLISHED Posts",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "3KFmyH23tY8tVoe2",
+          "id": "YOUR_CREDENTIAL_ID",
           "name": "Google Sheets account"
         }
       }
@@ -71,7 +71,7 @@
         "filter": {
           "folderId": {
             "__rl": true,
-            "value": "1EuAjadkn81zRxfPs1Im-jXoM5zsN2mfo",
+            "value": "YOUR_PARENT_FOLDER_ID",
             "mode": "id"
           }
         },
@@ -88,7 +88,7 @@
       "alwaysOutputData": true,
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "TfNZ8jSb3HyhfHWF",
+          "id": "YOUR_DRIVE_CREDENTIAL_ID",
           "name": "Google Drive account"
         }
       }
@@ -117,7 +117,7 @@
       "alwaysOutputData": true,
       "credentials": {
         "googleDriveOAuth2Api": {
-          "id": "TfNZ8jSb3HyhfHWF",
+          "id": "YOUR_DRIVE_CREDENTIAL_ID",
           "name": "Google Drive account"
         }
       }
@@ -151,7 +151,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.cloudinary.com/v1_1/doaf4wodr/image/upload",
+        "url": "https://api.cloudinary.com/v1_1/YOUR_CLOUDINARY_CLOUD_NAME/image/upload",
         "sendBody": true,
         "contentType": "multipart-form-data",
         "bodyParameters": {
@@ -189,7 +189,7 @@
             },
             {
               "name": "access_token",
-              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
             }
           ]
         },
@@ -221,7 +221,7 @@
             },
             {
               "name": "access_token",
-              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
             }
           ]
         },
@@ -262,7 +262,7 @@
             },
             {
               "name": "access_token",
-              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
             }
           ]
         },
@@ -323,7 +323,7 @@
             },
             {
               "name": "access_token",
-              "value": "IGAAXrPoZBwfjBBZAFphYWFVRjBpdWVwTldaS2h5MFlibHZATWUowMWktczhiZAHVsTnhpc08zRWppSlVjcmFsWnRhbmFSQ1EtaW1MUzRMcUtFNmFlN3ExRjRuQ3dyZAUJsRGtMNmd0cFlITDE1dUxBSTlOVFZAzdWV4UVFRTDZAYc0FwawZDZD"
+              "value": "YOUR_INSTAGRAM_ACCESS_TOKEN"
             }
           ]
         },
@@ -343,7 +343,7 @@
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "1jnsUM1eNojeLmAGkZwEzLetBrB2CUjzRVoJ_3uKmKlQ",
+          "value": "YOUR_SPREADSHEET_ID",
           "mode": "list",
           "cachedResultName": "n8n-test"
         },
@@ -547,7 +547,7 @@
       "name": "Update Status",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "3KFmyH23tY8tVoe2",
+          "id": "YOUR_CREDENTIAL_ID",
           "name": "Google Sheets account"
         }
       }

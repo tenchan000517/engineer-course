@@ -157,7 +157,7 @@ const categories = [];
 // インタビュー系カテゴリのインデックス（0始まり）
 const interviewCatIndices = [0, 2, 3, 4, 6]; // A, H, I, K, C
 const catNames = ['A', 'H', 'I', 'K', 'C'];
-const catLabels = ['A. メインインタビュー', 'H. STAR①', 'I. STAR②', 'K. レジェンドインタビュー', 'C. 新規企業'];
+const catLabels = ['A. メインインタビュー', 'H. STAR①', 'I. STAR②', 'K. ハイスクール企画', 'C. 新規企業'];
 
 interviewCatIndices.forEach((catIdx, i) => {
   const checkRowIdx = catIdx * 2;      // チェック行

@@ -11,6 +11,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer';
 const subcourseDirectoryMap: Record<string, string> = {
   'n8n-instagram': 'n8n',
   'n8n-advanced': 'n8n-advanced',
+  'n8n-transcription': 'n8n-transcription',
 };
 
 export async function generateStaticParams() {
@@ -30,6 +31,15 @@ export async function generateStaticParams() {
   advancedModules.forEach((module) => {
     params.push({
       subcourseSlug: 'n8n-advanced',
+      moduleSlug: module.slug,
+    });
+  });
+
+  // n8n-transcription のモジュール
+  const transcriptionModules = getModulesByCategory('n8n-transcription');
+  transcriptionModules.forEach((module) => {
+    params.push({
+      subcourseSlug: 'n8n-transcription',
       moduleSlug: module.slug,
     });
   });

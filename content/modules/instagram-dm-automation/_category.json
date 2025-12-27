@@ -1,0 +1,19 @@
+{
+  "id": "instagram-dm-automation",
+  "title": "コメント→DM自動配布",
+  "description": "Meta公式APIを使ってコメントからDMを自動送信する仕組みを構築",
+  "icon": "instagram",
+  "color": "pink",
+  "order": 1,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["instagram", "meta-api", "manychat", "elgram"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "beginner",
+    "topics": ["dm-automation", "comment-trigger", "lead-generation"]
+  },
+  "moduleCount": 2,
+  "isSubcourse": true,
+  "parentCategory": "instagram"
+}

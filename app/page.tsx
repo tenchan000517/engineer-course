@@ -22,11 +22,12 @@ const iconMap: Record<string, ReactNode> = {
 };
 
 // カラーマッピング
-const colorMap: Record<string, { bg: string; bgHover: string; border: string }> = {
+const colorMap: Record<string, { bg: string; bgHover: string; border: string; text?: string }> = {
   blue: { bg: 'bg-blue-500', bgHover: 'hover:bg-blue-600', border: 'border-blue-500' },
   purple: { bg: 'bg-purple-500', bgHover: 'hover:bg-purple-600', border: 'border-purple-500' },
   orange: { bg: 'bg-orange-500', bgHover: 'hover:bg-orange-600', border: 'border-orange-500' },
   green: { bg: 'bg-green-500', bgHover: 'hover:bg-green-600', border: 'border-green-500' },
+  white: { bg: 'bg-gray-900', bgHover: 'hover:bg-gray-800', border: 'border-gray-900' },
 };
 
 export default function Home() {
@@ -72,14 +73,14 @@ export default function Home() {
                   className="block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden"
                 >
                   {/* カードヘッダー */}
-                  <div className={`${colors.bg} p-6 text-white`}>
+                  <div className={`${colors.bg} p-6 ${colors.text || 'text-white'}`}>
                     <div className="flex items-center gap-4">
-                      <div className="bg-white/20 p-3 rounded-xl">
+                      <div className={`${colors.text ? 'bg-gray-200' : 'bg-white/20'} p-3 rounded-xl`}>
                         {iconMap[category.icon] || iconMap.briefcase}
                       </div>
                       <div>
                         <h3 className="text-xl font-bold">{category.title}</h3>
-                        <p className="text-white/80 text-sm">
+                        <p className={`${colors.text ? 'text-gray-600' : 'text-white/80'} text-sm`}>
                           {category.actualModuleCount} モジュール
                         </p>
                       </div>
@@ -109,7 +110,7 @@ export default function Home() {
 
                     {/* CTAボタン */}
                     <div
-                      className={`text-center ${colors.bg} ${colors.bgHover} text-white font-medium py-2 px-4 rounded-lg transition-colors`}
+                      className={`text-center ${colors.bg} ${colors.bgHover} ${colors.text || 'text-white'} font-medium py-2 px-4 rounded-lg transition-colors`}
                     >
                       講座を見る →
                     </div>

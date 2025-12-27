@@ -41,11 +41,12 @@ const iconMap: Record<string, ReactNode> = {
 };
 
 // カラーマッピング
-const colorMap: Record<string, string> = {
-  blue: 'bg-blue-500',
-  purple: 'bg-purple-500',
-  orange: 'bg-orange-500',
-  green: 'bg-green-500',
+const colorMap: Record<string, { bg: string; text?: string }> = {
+  blue: { bg: 'bg-blue-500' },
+  purple: { bg: 'bg-purple-500' },
+  orange: { bg: 'bg-orange-500' },
+  green: { bg: 'bg-green-500' },
+  white: { bg: 'bg-gray-900' },
 };
 
 export default async function CategoryPage({
@@ -80,8 +81,8 @@ export default async function CategoryPage({
         <div className="text-center mb-12 md:mb-16">
           <div
             className={`inline-flex items-center justify-center w-16 h-16 ${
-              colorMap[category.color] || 'bg-gray-500'
-            } text-white rounded-2xl mb-4`}
+              colorMap[category.color]?.bg || 'bg-gray-500'
+            } ${colorMap[category.color]?.text || 'text-white'} rounded-2xl mb-4`}
           >
             {iconMap[category.icon] || iconMap.briefcase}
           </div>
@@ -121,7 +122,7 @@ export default async function CategoryPage({
               コース一覧
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {category.subcourses.map((subcourse: SubcourseData) => {
+              {category.subcourses.filter((subcourse: SubcourseData) => !subcourse.hidden).map((subcourse: SubcourseData) => {
                 // 動的にモジュール数をカウント
                 const moduleDir = subcourseDirectoryMap[subcourse.id];
                 const actualModuleCount = moduleDir ? getModulesByCategory(moduleDir).length : subcourse.moduleCount;
@@ -133,14 +134,14 @@ export default async function CategoryPage({
                   className="block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden"
                 >
                   {/* カードヘッダー */}
-                  <div className={`${colorMap[category.color] || 'bg-orange-500'} p-6 text-white`}>
+                  <div className={`${colorMap[category.color]?.bg || 'bg-orange-500'} p-6 ${colorMap[category.color]?.text || 'text-white'}`}>
                     <div className="flex items-center gap-4">
-                      <div className="bg-white/20 p-3 rounded-xl">
+                      <div className={`${colorMap[category.color]?.text ? 'bg-gray-200' : 'bg-white/20'} p-3 rounded-xl`}>
                         {iconMap[category.icon] || iconMap.workflow}
                       </div>
                       <div>
                         <h3 className="text-xl font-bold">{subcourse.title}</h3>
-                        <p className="text-white/80 text-sm">
+                        <p className={`${colorMap[category.color]?.text ? 'text-gray-600' : 'text-white/80'} text-sm`}>
                           {actualModuleCount} モジュール
                         </p>
                       </div>
@@ -162,7 +163,7 @@ export default async function CategoryPage({
 
                     {/* CTAボタン */}
                     <div
-                      className={`text-center ${colorMap[category.color] || 'bg-orange-500'} hover:opacity-90 text-white font-medium py-2 px-4 rounded-lg transition-opacity`}
+                      className={`text-center ${colorMap[category.color]?.bg || 'bg-orange-500'} hover:opacity-90 ${colorMap[category.color]?.text || 'text-white'} font-medium py-2 px-4 rounded-lg transition-opacity`}
                     >
                       講座を見る →
                     </div>
@@ -184,11 +185,7 @@ export default async function CategoryPage({
                   <Link
                     key={module.slug}
                     href={`/category/${categorySlug}/${module.slug}`}
-                    className={`block bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border-l-4 ${
-                      colorMap[category.color]
-                        ? `border-${category.color}-500`
-                        : 'border-blue-500'
-                    }`}
+                    className={`block bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border-l-4`}
                     style={{
                       borderLeftColor:
                         category.color === 'blue'
@@ -197,14 +194,16 @@ export default async function CategoryPage({
                           ? '#a855f7'
                           : category.color === 'orange'
                           ? '#f97316'
+                          : category.color === 'white'
+                          ? '#1f2937'
                           : '#3b82f6',
                     }}
                   >
                     <div className="p-4 md:p-6 flex items-center gap-3 md:gap-4">
                       <div
                         className={`${
-                          colorMap[category.color] || 'bg-blue-500'
-                        } w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg md:text-xl flex-shrink-0`}
+                          colorMap[category.color]?.bg || 'bg-blue-500'
+                        } w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center ${colorMap[category.color]?.text || 'text-white'} font-bold text-lg md:text-xl flex-shrink-0`}
                       >
                         {module.order}
                       </div>
@@ -242,8 +241,8 @@ export default async function CategoryPage({
                 <Link
                   href={`/category/${categorySlug}/${modules[0].slug}`}
                   className={`inline-block ${
-                    colorMap[category.color] || 'bg-blue-600'
-                  } hover:opacity-90 text-white font-bold text-base md:text-lg px-6 md:px-8 py-3 md:py-4 rounded-lg transition-opacity`}
+                    colorMap[category.color]?.bg || 'bg-blue-600'
+                  } hover:opacity-90 ${colorMap[category.color]?.text || 'text-white'} font-bold text-base md:text-lg px-6 md:px-8 py-3 md:py-4 rounded-lg transition-opacity`}
                 >
                   講座をはじめる
                 </Link>

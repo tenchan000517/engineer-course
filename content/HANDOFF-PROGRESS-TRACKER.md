@@ -12,8 +12,8 @@
 |---------|------|--------|
 | n8n上級編 Module 01-09 | ✅ 完了 | 100% |
 | Module 10: ストーリーズ | ✅ 完了 | 100% |
-| **Module 10.5: インサイトデータ取得** | 🔲 **次のタスク** | 0% |
-| Module 11: クロスポスト | 🔲 未着手 | 0% |
+| Module 10.5: インサイトデータ取得 | ✅ 完了 | 100% |
+| **Module 11: クロスポスト** | 🔲 **次のタスク** | 0% |
 | Nanobanana Pro講座 | 📋 計画中 | 0% |
 | カルーセル投稿 | 📋 計画中 | 0% |
 
@@ -37,6 +37,7 @@
 | 08 | 音声合成ワークフロー最適化 | `module-08-audio-workflow-optimization.md` | ✅ |
 | 09 | 運用フローガイド | `module-09-operation-flow.md` | ✅ |
 | 10 | ストーリーズ自動投稿 | `module-10-stories-auto-post.md` | ✅ |
+| 10.5 | インサイトデータ取得 | `module-10.5-insights.md` | ✅ |
 
 ### 1.2 ワークフローJSON
 
@@ -47,6 +48,8 @@
 | `音声合成advanced.json` | 音声合成（最適化版） | ✅ |
 | `stories-auto-post.json` | ストーリーズ自動投稿（スタンドアロン版） | ✅ |
 | `reel-story-integrated.json` | リール+ストーリーズ統合版 | ✅ |
+| `insights-fetch.json` | インサイトデータ取得 | ✅ |
+| `monthly-summary.json` | 月次サマリー生成 | ✅ |
 
 ---
 
@@ -90,41 +93,83 @@ Instagram Graph API ストーリーズ投稿:
 
 ---
 
-## 3. 次のタスク: Module 10.5 インサイトデータ取得
+## 3. 完了: Module 10.5 インサイトデータ取得
 
 ### 3.1 概要
 
 | 項目 | 内容 |
 |------|------|
-| 目的 | Instagram投稿のパフォーマンスデータを自動取得 |
-| ファイル名 | `module-10.5-insights.md`（仮） |
+| 目的 | Instagram投稿のパフォーマンスデータを自動取得・月次サマリー生成 |
+| ファイル名 | `module-10.5-insights.md` |
 | 詳細仕様 | `HANDOFF-module-insights.md` |
 | 前提 | Module 10完了 |
 
-### 3.2 ユーザー確認事項（未確認）
+### 3.2 ユーザー確認事項（確認済み）
 
 | # | 質問 | 回答 |
 |---|------|------|
-| 1 | 取得したいインサイトデータは？ | 未確認 |
-| 2 | データの保存先は？ | 未確認 |
-| 3 | 取得タイミングは？ | 未確認 |
-| 4 | 分析・可視化は必要？ | 未確認 |
-| 5 | 過去投稿も取得したい？ | 未確認 |
+| 1 | 取得したいインサイトデータは？ | 投稿効果（リーチ、エンゲージメント等）+ フォロワー推移 |
+| 2 | データの保存先は？ | 新規insightsシート |
+| 3 | 取得タイミングは？ | 投稿時のみ（48時間後） |
+| 4 | 分析・可視化は必要？ | 月次サマリーをGoogleスプレッドシートに生成 |
+| 5 | 過去投稿も取得したい？ | 今後の投稿から取得 |
 
 ### 3.3 実装チェックリスト
 
-- [ ] ユーザー確認事項を質問
-- [ ] Instagram Graph API インサイト権限の確認
-- [ ] シート構造の設計
-- [ ] ワークフロー作成
-- [ ] 動作確認
-- [ ] スクリーンショット作成
-- [ ] 講座執筆
-- [ ] ワークフローJSON作成
+- [x] ユーザー確認事項を質問
+- [x] シート構造の設計（insights, monthly_summary）
+- [x] ワークフロー作成（insights-fetch, monthly-summary）
+- [x] 講座執筆（module-10.5-insights.md）
+- [x] ワークフローJSON作成
+- [x] 動作確認・デバッグ
+- [x] GAS（シート自動作成スクリプト）作成
+- [x] postsシートの入力規則に`INSIGHTS_FETCHED`追加
+- [x] スケジュール設定（毎日0:00）
+
+### 3.4 作成したファイル
+
+| ファイル | 用途 | 場所 |
+|----------|------|------|
+| `module-10.5-insights.md` | 講座ファイル | `content/modules/n8n-advanced/` |
+| `insights-fetch.json` | インサイト取得WF（プレースホルダー版） | `public/n8n-advanced/download/` |
+| `monthly-summary.json` | 月次サマリーWF（プレースホルダー版） | `public/n8n-advanced/download/` |
+| `insights-fetch-production.json` | インサイト取得WF（本番用） | `docs/archive/n8n-production/` |
+| `monthly-summary-production.json` | 月次サマリーWF（本番用） | `docs/archive/n8n-production/` |
+| `createInsightsSheets.gs` | GAS（シート自動作成） | `scripts/gas/` |
+
+### 3.5 技術仕様（確定済み）
+
+```
+Instagram Graph API インサイト取得:
+GET /{media-id}/insights?metric=reach,likes,comments,saved,shares,total_interactions
+
+※リールでは impressions, plays は使用不可
+※代わりに total_interactions を使用
+
+スケジュール: 毎日0:00実行
+対象: status=STORY_POSTED かつ published_at から48時間経過した投稿
+更新後ステータス: INSIGHTS_FETCHED
+```
+
+### 3.6 発生した問題と解決策
+
+| 問題 | 原因 | 解決策 |
+|------|------|--------|
+| メトリクスエラー | リールでimpressionsとplaysが未サポート | `reach,likes,comments,saved,shares,total_interactions`に変更 |
+| ループ接続逆転 | JSONのmain配列順序 | index 0をDone、index 1をLoopに修正 |
+| ステータス更新エラー | postsシートの入力規則にINSIGHTS_FETCHEDがない | 入力規則に追加 |
+| 日付比較エラー | TypeScript型エラー | `getTime()`を使用 |
+
+### 3.7 セキュリティ対応
+
+- 本番用JSON（認証情報含む）は `docs/archive/n8n-production/` に保存（gitignore済み）
+- 公開用JSON（`public/n8n-advanced/download/`）はプレースホルダー版
+- `content/modules/`のワークフローJSONは`n8n-production/`に移動済み
+- `_category.json`は復元済み（カテゴリ表示に必要）
 
 ---
 
-## 4. その次: Module 11 クロスポスト
+## 4. 次のタスク: Module 11 クロスポスト
 
 ### 4.1 概要
 
@@ -133,7 +178,7 @@ Instagram Graph API ストーリーズ投稿:
 | 目的 | Facebook / X / TikTokへ同時投稿 |
 | ファイル名 | `module-11-crosspost.md` |
 | 詳細仕様 | `HANDOFF-module-11-crosspost.md` |
-| 前提 | Module 10.5（インサイト）完了 |
+| 前提 | Module 10.5完了 ✅ |
 
 ### 4.2 実装チェックリスト
 
@@ -260,8 +305,10 @@ Instagram Graph API カルーセル投稿:
 
 ```
 1. このファイル（HANDOFF-PROGRESS-TRACKER.md）で進捗確認
-2. HANDOFF-module-insights.md で次のタスク詳細確認
-3. ユーザーにインサイト関連の確認事項を質問
+2. HANDOFF-module-11-crosspost.md で次のタスク詳細確認
+3. ユーザーにクロスポスト関連の確認事項を質問
+   - どのプラットフォームを優先するか（Facebook/X/TikTok）
+   - 各プラットフォームのAPI設定状況
 4. 回答に基づいてワークフロー設計・実装
 5. 完了したらこのファイルのチェックリストを更新
 ```
@@ -276,6 +323,8 @@ Instagram Graph API カルーセル投稿:
 | 2025-12-16 | Module 10完了（ストーリーズ自動投稿） | Claude Opus 4.5 |
 | 2025-12-16 | Module 10統合セクション追加、統合版JSON作成、緊急停止トラブルシューティング追加 | Claude Opus 4.5 |
 | 2025-12-16 | Module 10.5（インサイトデータ取得）を次のタスクとして追加 | Claude Opus 4.5 |
+| 2025-12-16 | Module 10.5完了（講座・ワークフローJSON作成）、次のタスクをModule 11に更新 | Claude Opus 4.5 |
+| 2025-12-16 | Module 10.5動作確認完了、メトリクス修正、GAS追加、スケジュール0:00設定 | Claude Opus 4.5 |
 
 ---
 

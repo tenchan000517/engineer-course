@@ -7,12 +7,14 @@ import { ReactNode } from 'react';
 const subcourseDirectoryMap: Record<string, string> = {
   'n8n-instagram': 'n8n',
   'n8n-advanced': 'n8n-advanced',
+  'n8n-transcription': 'n8n-transcription',
 };
 
 export async function generateStaticParams() {
   return [
     { subcourseSlug: 'n8n-instagram' },
     { subcourseSlug: 'n8n-advanced' },
+    { subcourseSlug: 'n8n-transcription' },
   ];
 }
 

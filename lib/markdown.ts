@@ -24,6 +24,7 @@ export interface SubcourseData {
   description: string;
   moduleCount: number;
   level: string;
+  hidden?: boolean;
 }
 
 export interface CategoryData {

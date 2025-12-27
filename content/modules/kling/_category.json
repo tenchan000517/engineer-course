@@ -1,0 +1,35 @@
+{
+  "id": "kling",
+  "title": "KLING AI 動画生成講座",
+  "description": "KLING AIを使ったAI動画生成を学ぶ",
+  "icon": "video",
+  "color": "green",
+  "order": 8,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["kling", "kling-ai"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["ai-video", "image-to-video", "text-to-video", "audio-generation"]
+  },
+  "moduleCount": 3,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "kling-basics",
+      "title": "Klingで動画生成",
+      "description": "アカウント作成から動画生成の基本まで",
+      "moduleCount": 3,
+      "level": "beginner"
+    },
+    {
+      "id": "kling-advanced",
+      "title": "上級編",
+      "description": "Elements機能とPV制作",
+      "moduleCount": 0,
+      "level": "advanced",
+      "hidden": true
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "google-flow",
+  "title": "Google Flow 動画生成講座",
+  "description": "Google FlowとVeo 3.1を使ったAI動画生成を学ぶ",
+  "icon": "video",
+  "color": "purple",
+  "order": 7,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["google-flow", "veo", "nano-banana-pro"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["ai-video", "image-generation", "prompt-engineering"]
+  },
+  "moduleCount": 6,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "google-flow-basics",
+      "title": "基礎編",
+      "description": "環境構築から企業PV制作まで",
+      "moduleCount": 6,
+      "level": "beginner"
+    },
+    {
+      "id": "google-flow-advanced",
+      "title": "上級編",
+      "description": "高度なプロンプト技法とAPI連携",
+      "moduleCount": 0,
+      "level": "advanced",
+      "hidden": true
+    }
+  ]
+}

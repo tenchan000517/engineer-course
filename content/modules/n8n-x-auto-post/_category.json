@@ -1,0 +1,19 @@
+{
+  "id": "n8n-x-auto-post",
+  "title": "X自動投稿 - 初級編",
+  "description": "n8nとPythonでX（旧Twitter）への自動投稿システムを構築する",
+  "icon": "workflow",
+  "color": "orange",
+  "order": 5,
+  "tags": {
+    "language": ["python", "nocode"],
+    "framework": ["n8n", "flask", "tweepy"],
+    "editor": ["browser", "vscode"],
+    "platform": ["windows", "docker"],
+    "level": "beginner",
+    "topics": ["automation", "twitter", "api"]
+  },
+  "moduleCount": 4,
+  "isSubcourse": true,
+  "parentCategory": "n8n"
+}

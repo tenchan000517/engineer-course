@@ -1,0 +1,19 @@
+{
+  "id": "sora2-advanced",
+  "title": "上級編",
+  "description": "本格的な長尺アニメーション制作とAPI自動化",
+  "icon": "video",
+  "color": "white",
+  "order": 7,
+  "tags": {
+    "language": ["nocode", "api"],
+    "framework": ["sora2", "nano-banana-pro", "gemini"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "advanced",
+    "topics": ["ai-video", "image-generation", "prompt-engineering", "automation"]
+  },
+  "moduleCount": 0,
+  "isSubcourse": true,
+  "parentCategory": "sora2"
+}

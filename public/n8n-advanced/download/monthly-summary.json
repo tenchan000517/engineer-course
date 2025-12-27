@@ -1,0 +1,198 @@
+{
+  "name": "Monthly Summary",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 1 * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        300
+      ],
+      "id": "schedule-trigger-monthly",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);\nconst yearMonth = `${lastMonth.getFullYear()}-${String(lastMonth.getMonth() + 1).padStart(2, '0')}`;\n\nreturn [{\n  json: {\n    year_month: yearMonth,\n    start_date: new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1).toISOString(),\n    end_date: new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0, 23, 59, 59).toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        300
+      ],
+      "id": "calculate-last-month",
+      "name": "Calculate Last Month"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "insights",
+          "mode": "list",
+          "cachedResultName": "insights"
+        },
+        "options": {
+          "returnAll": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -320,
+        300
+      ],
+      "id": "get-last-month-insights",
+      "name": "Get Last Month Insights",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $('Get Last Month Insights').all();\nconst yearMonth = $('Calculate Last Month').item.json.year_month;\n\nreturn items.filter(item => {\n  const fetchedAt = new Date(item.json.fetched_at);\n  const itemYearMonth = `${fetchedAt.getFullYear()}-${String(fetchedAt.getMonth() + 1).padStart(2, '0')}`;\n  return itemYearMonth === yearMonth;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        300
+      ],
+      "id": "filter-last-month-data",
+      "name": "Filter Last Month Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst yearMonth = $('Calculate Last Month').item.json.year_month;\n\nif (items.length === 0) {\n  return [{\n    json: {\n      year_month: yearMonth,\n      total_posts: 0,\n      total_reach: 0,\n      total_impressions: 0,\n      total_likes: 0,\n      total_comments: 0,\n      total_saved: 0,\n      avg_engagement_rate: 0,\n      follower_start: 0,\n      follower_end: 0,\n      follower_growth: 0,\n      growth_rate: 0\n    }\n  }];\n}\n\n// 日付順にソート\nconst sorted = items.sort((a, b) => new Date(a.json.fetched_at) - new Date(b.json.fetched_at));\n\n// 集計\nconst totalPosts = items.length;\nconst totalReach = items.reduce((sum, item) => sum + (parseInt(item.json.reach) || 0), 0);\nconst totalImpressions = items.reduce((sum, item) => sum + (parseInt(item.json.impressions) || 0), 0);\nconst totalLikes = items.reduce((sum, item) => sum + (parseInt(item.json.likes) || 0), 0);\nconst totalComments = items.reduce((sum, item) => sum + (parseInt(item.json.comments) || 0), 0);\nconst totalSaved = items.reduce((sum, item) => sum + (parseInt(item.json.saved) || 0), 0);\n\n// 平均エンゲージメント率\nconst avgEngagementRate = items.reduce((sum, item) => sum + parseFloat(item.json.engagement_rate || 0), 0) / totalPosts;\n\n// フォロワー推移\nconst followerStart = parseInt(sorted[0].json.follower_count) || 0;\nconst followerEnd = parseInt(sorted[sorted.length - 1].json.follower_count) || 0;\nconst followerGrowth = followerEnd - followerStart;\nconst growthRate = followerStart > 0 ? ((followerGrowth / followerStart) * 100).toFixed(2) : 0;\n\nreturn [{\n  json: {\n    year_month: yearMonth,\n    total_posts: totalPosts,\n    total_reach: totalReach,\n    total_impressions: totalImpressions,\n    total_likes: totalLikes,\n    total_comments: totalComments,\n    total_saved: totalSaved,\n    avg_engagement_rate: avgEngagementRate.toFixed(2),\n    follower_start: followerStart,\n    follower_end: followerEnd,\n    follower_growth: followerGrowth,\n    growth_rate: growthRate\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        300
+      ],
+      "id": "calculate-summary",
+      "name": "Calculate Summary"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "monthly_summary",
+          "mode": "list",
+          "cachedResultName": "monthly_summary"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        300
+      ],
+      "id": "append-summary-sheet",
+      "name": "Append to Summary Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Calculate Last Month",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Last Month": {
+      "main": [
+        [
+          {
+            "node": "Get Last Month Insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Last Month Insights": {
+      "main": [
+        [
+          {
+            "node": "Filter Last Month Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Last Month Data": {
+      "main": [
+        [
+          {
+            "node": "Calculate Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Summary": {
+      "main": [
+        [
+          {
+            "node": "Append to Summary Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "instanceId": ""
+  },
+  "id": "",
+  "tags": []
+}
