@@ -11,6 +11,18 @@ interface CategorySidebarProps {
   currentModuleSlug: string;
 }
 
+// orderを表示用に変換（2.1 → A, 2.2 → B, ...）
+function formatOrder(order: number): string {
+  console.log('formatOrder called:', order, typeof order, Number.isInteger(order));
+  if (Number.isInteger(order)) {
+    return order.toString();
+  }
+  // 小数部分を取得してアルファベットに変換
+  const decimal = Math.round((order % 1) * 10); // 0.1 → 1, 0.2 → 2
+  console.log('decimal:', decimal, 'result:', String.fromCharCode(64 + decimal));
+  return String.fromCharCode(64 + decimal); // 1 → A, 2 → B
+}
+
 // カラーマッピング
 const colorMap: Record<string, { bg: string; text: string; activeBg: string }> = {
   blue: { bg: 'bg-blue-500', text: 'text-blue-700', activeBg: 'bg-blue-50' },
@@ -119,7 +131,7 @@ export default function CategorySidebar({
                             : 'bg-gray-200 text-gray-600'
                         }`}
                       >
-                        {module.order}
+                        {formatOrder(module.order)}
                       </span>
                       <span className="text-sm flex-1 break-words">
                         {module.title

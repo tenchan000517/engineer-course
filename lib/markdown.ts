@@ -110,9 +110,20 @@ function parseModuleContent(
   const duration = durationMatch ? durationMatch[1] : '';
   const difficulty = difficultyMatch ? difficultyMatch[1] : '';
 
-  // Extract module number for ordering
-  const orderMatch = slug.match(/(?:module-)?(\d+)/);
-  const order = orderMatch ? parseInt(orderMatch[1], 10) : 99;
+  // Extract module number for ordering (supports 02a, 02b style)
+  const orderMatch = slug.match(/(?:module-)?(\d+)([a-z])?/);
+  let order = 99;
+  if (orderMatch) {
+    const baseOrder = parseInt(orderMatch[1], 10);
+    const letterSuffix = orderMatch[2];
+    if (letterSuffix) {
+      // a=0.1, b=0.2, c=0.3, ...
+      const letterValue = (letterSuffix.charCodeAt(0) - 96) * 0.1;
+      order = baseOrder + letterValue;
+    } else {
+      order = baseOrder;
+    }
+  }
 
   // Clean content
   let cleanedContent = content;

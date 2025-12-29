@@ -9,6 +9,16 @@ interface SidebarProps {
   modules: ModuleData[];
 }
 
+// orderを表示用に変換（2.1 → A, 2.2 → B, ...）
+function formatOrder(order: number): string {
+  if (Number.isInteger(order)) {
+    return order.toString();
+  }
+  // 小数部分を取得してアルファベットに変換
+  const decimal = Math.round((order % 1) * 10); // 0.1 → 1, 0.2 → 2
+  return String.fromCharCode(64 + decimal); // 1 → A, 2 → B
+}
+
 export default function Sidebar({ modules }: SidebarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -92,7 +102,7 @@ export default function Sidebar({ modules }: SidebarProps) {
                             : 'bg-gray-200 text-gray-600'
                         }`}
                       >
-                        {module.order}
+                        {formatOrder(module.order)}
                       </span>
                       <span className="text-sm flex-1 break-words">
                         {module.title.replace(/^モジュール\d+:\s*/, '')}

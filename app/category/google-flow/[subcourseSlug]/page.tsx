@@ -30,6 +30,15 @@ const colorMap: Record<string, { bg: string; text?: string; border: string }> = 
   purple: { bg: 'bg-purple-600', text: 'text-white', border: '#9333ea' },
 };
 
+// orderを表示用に変換（2.1 → A, 2.2 → B, ...）
+function formatOrder(order: number): string {
+  if (Number.isInteger(order)) {
+    return order.toString();
+  }
+  const decimal = Math.round((order % 1) * 10);
+  return String.fromCharCode(64 + decimal);
+}
+
 export default async function SubcoursePage({
   params,
 }: {

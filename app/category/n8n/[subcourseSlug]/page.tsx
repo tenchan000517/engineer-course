@@ -36,6 +36,15 @@ const colorMap: Record<string, string> = {
   orange: 'bg-orange-500',
 };
 
+// orderを表示用に変換（2.1 → A, 2.2 → B, ...）
+function formatOrder(order: number): string {
+  if (Number.isInteger(order)) {
+    return order.toString();
+  }
+  const decimal = Math.round((order % 1) * 10);
+  return String.fromCharCode(64 + decimal);
+}
+
 export default async function SubcoursePage({
   params,
 }: {
@@ -126,7 +135,7 @@ export default async function SubcoursePage({
                   <div
                     className="bg-orange-500 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg md:text-xl flex-shrink-0"
                   >
-                    {module.order}
+                    {formatOrder(module.order)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 break-words">

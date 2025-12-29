@@ -12,6 +12,15 @@ const subcourseDirectoryMap: Record<string, string> = {
   'nanobanana-beginner': 'nanobanana-beginner',
 };
 
+// orderを表示用に変換（2.1 → A, 2.2 → B, ...）
+function formatOrder(order: number): string {
+  if (Number.isInteger(order)) {
+    return order.toString();
+  }
+  const decimal = Math.round((order % 1) * 10);
+  return String.fromCharCode(64 + decimal);
+}
+
 export async function generateStaticParams() {
   const params: { subcourseSlug: string; moduleSlug: string }[] = [];
 
@@ -95,7 +104,7 @@ export default async function SubcourseModulePage({
                   ? 'bg-amber-500 text-white'
                   : 'bg-gray-200 text-gray-600'
               }`}>
-                {m.order}
+                {formatOrder(m.order)}
               </span>
               <span className="text-sm truncate">{m.title}</span>
             </Link>
