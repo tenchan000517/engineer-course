@@ -1,0 +1,295 @@
+{
+  "name": "X Thread",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 19
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        320
+      ],
+      "id": "schedule-thread-001",
+      "name": "Schedule 19:00"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo",
+          "mode": "list",
+          "cachedResultName": "x-auto-post-advanced",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1626660346,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit#gid=1626660346"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "READY"
+            },
+            {
+              "lookupColumn": "pattern",
+              "lookupValue": "thread"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -560,
+        320
+      ],
+      "id": "get-thread-posts-001",
+      "name": "Get Thread Posts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 1
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        320
+      ],
+      "id": "limit-thread-001",
+      "name": "Limit 1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo",
+          "mode": "list",
+          "cachedResultName": "x-auto-post-advanced",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1681576108,
+          "mode": "list",
+          "cachedResultName": "thread_draft",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit#gid=1681576108"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "post_id",
+              "lookupValue": "={{ $json.post_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        320
+      ],
+      "id": "get-thread-draft-001",
+      "name": "Get Thread Draft",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:5000/thread",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ tweets: [$json.tweet_1, $json.tweet_2, $json.tweet_3, $json.tweet_4, $json.tweet_5, $json.tweet_6, $json.tweet_7].filter(t => t && t.trim() !== '') }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        160,
+        320
+      ],
+      "id": "post-thread-001",
+      "name": "Post Thread"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo",
+          "mode": "list",
+          "cachedResultName": "x-auto-post-advanced",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1626660346,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit#gid=1626660346"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "status": "POSTED",
+            "posted_at": "={{ $now.toISO() }}",
+            "tweet_url": "=https://x.com/i/web/status/{{ $json.tweet_id }}"
+          },
+          "matchingColumns": [
+            "post_id"
+          ],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "posted_at",
+              "displayName": "posted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tweet_url",
+              "displayName": "tweet_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        320
+      ],
+      "id": "update-status-thread-001",
+      "name": "Update Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule 19:00": {
+      "main": [
+        [
+          {
+            "node": "Get Thread Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Thread Posts": {
+      "main": [
+        [
+          {
+            "node": "Limit 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit 1": {
+      "main": [
+        [
+          {
+            "node": "Get Thread Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Thread Draft": {
+      "main": [
+        [
+          {
+            "node": "Post Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Thread": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "x-thread-v1",
+  "meta": {
+    "instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"
+  },
+  "id": "x-thread",
+  "tags": []
+}

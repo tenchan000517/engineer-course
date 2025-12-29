@@ -8,6 +8,8 @@ const subcourseDirectoryMap: Record<string, string> = {
   'n8n-instagram': 'n8n',
   'n8n-advanced': 'n8n-advanced',
   'n8n-transcription': 'n8n-transcription',
+  'n8n-x-auto-post': 'n8n-x-auto-post',
+  'n8n-x-advanced': 'n8n-x-advanced',
 };
 
 export async function generateStaticParams() {
@@ -15,6 +17,8 @@ export async function generateStaticParams() {
     { subcourseSlug: 'n8n-instagram' },
     { subcourseSlug: 'n8n-advanced' },
     { subcourseSlug: 'n8n-transcription' },
+    { subcourseSlug: 'n8n-x-auto-post' },
+    { subcourseSlug: 'n8n-x-advanced' },
   ];
 }
 

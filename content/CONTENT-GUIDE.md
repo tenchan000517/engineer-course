@@ -210,6 +210,40 @@ A: 回答
 
 ---
 
+## コマンド記述ルール
+
+ターミナルコマンドを記載する際は、PowerShellとGit Bashの違いを明示する。
+
+### コマンドが同じ場合
+
+見出しに「（PowerShell、Git Bash共通）」を付けて1つのコードブロックにまとめる。
+
+```markdown
+### 使い方（PowerShell、Git Bash共通）
+
+` ` `bash
+pip install pillow
+` ` `
+```
+
+### コマンドが異なる場合
+
+それぞれ別のコードブロックで記載する。
+
+```markdown
+**PowerShellの場合**:
+` ` `powershell
+.\venv\Scripts\Activate
+` ` `
+
+**Git Bashの場合**:
+` ` `bash
+source venv/Scripts/activate
+` ` `
+```
+
+---
+
 ## n8nノード指示ルール
 
 Google Sheets / Google Drive ノードを指示する際は、**必ずActionを明記**すること。
@@ -281,4 +315,223 @@ public/
 
 ---
 
-**最終更新**: 2025-12-10
+## 講座構造（親カテゴリ + 子講座）
+
+講座は必ず**親カテゴリ + 子講座**の構造にする。
+
+### ディレクトリ構造
+
+```
+content/modules/
+├── {親カテゴリ}/                    ← 親カテゴリ
+│   └── _category.json
+└── {子講座}/                        ← 子講座（モジュールはここ）
+    ├── _category.json
+    ├── module-01-xxx.md
+    ├── module-02-xxx.md
+    └── ...
+
+app/category/
+├── [categorySlug]/                  ← 汎用ルーティング（既存）
+│   └── page.tsx
+└── {親カテゴリ}/                    ← 専用ルーティング（新規作成）
+    └── [subcourseSlug]/
+        ├── page.tsx                 ← 子講座一覧ページ
+        └── [moduleSlug]/
+            └── page.tsx             ← モジュール詳細ページ
+```
+
+### 親カテゴリの_category.json
+
+```json
+{
+  "id": "{親カテゴリID}",
+  "title": "講座タイトル",
+  "description": "講座の説明",
+  "icon": "image",
+  "color": "amber",
+  "order": 6,
+  "tags": { ... },
+  "moduleCount": 9,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "{子講座ID}",
+      "title": "子講座タイトル",
+      "description": "子講座の説明",
+      "moduleCount": 9,
+      "level": "beginner"
+    }
+  ]
+}
+```
+
+### 子講座の_category.json
+
+```json
+{
+  "id": "{子講座ID}",
+  "title": "子講座タイトル",
+  "description": "子講座の説明",
+  "icon": "image",
+  "color": "amber",
+  "order": 1,
+  "tags": { ... },
+  "moduleCount": 9,
+  "isSubcourse": true,
+  "parentCategory": "{親カテゴリID}"
+}
+```
+
+### ルーティングページの作成
+
+n8nの実装を参考にする：`app/category/n8n/[subcourseSlug]/page.tsx`
+
+必須の変更箇所:
+1. `subcourseDirectoryMap` に子講座IDを登録
+2. `generateStaticParams()` に子講座を追加
+3. 親カテゴリIDを正しく指定
+4. 色を正しく指定
+
+---
+
+## 新しい色の追加
+
+新しい色を使用する場合、以下の**3ファイルすべて**にcolorMapを追加する：
+
+| ファイル | 追加箇所 |
+|----------|----------|
+| `app/page.tsx` | `colorMap` |
+| `app/category/[categorySlug]/page.tsx` | `colorMap` と `borderLeftColor` の条件分岐 |
+| `components/CategorySidebar.tsx` | `colorMap` |
+
+### 利用可能な色
+
+| 色名 | Tailwind | Hex（border用） |
+|------|----------|-----------------|
+| blue | bg-blue-500 | #3b82f6 |
+| purple | bg-purple-500 | #a855f7 |
+| orange | bg-orange-500 | #f97316 |
+| green | bg-green-500 | #22c55e |
+| amber | bg-amber-500 | #f59e0b |
+| yellow | bg-yellow-500 | #eab308 |
+| pink | bg-pink-500 | #ec4899 |
+| white | bg-gray-900 | #1f2937 |
+
+---
+
+## Pythonコマンドジェネレータ
+
+Nanobanana講座など、Pythonコマンドを実行する講座では、**Pythonコマンドジェネレータ**を使用する。
+
+### 概要
+
+プロンプト例を示す際に、ユーザーが自由にプロンプト・ファイル名・アスペクト比を編集でき、実行可能なPythonコマンドを生成・コピーできるUIコンポーネント。
+
+### UI構成
+
+```
+クリックしてPythonコマンドを生成    ← 説明文（折りたたみ時のみ表示）
+[▼ ナラティブ記述（良い例）]        ← トグルボタン
+
+↓ クリックで展開 ↓
+
+┌─────────────────────────────────────────────────┐
+│ プロンプト                                        │
+│ ┌─────────────────────────────────────────────┐ │
+│ │ A fluffy orange tabby cat sits...           │ │ ← 編集可能
+│ └─────────────────────────────────────────────┘ │
+│                                                  │
+│ ファイル名                                        │
+│ ┌──────────────────────────────┐┌─────┐        │
+│ │ cat_narrative                ││.png │        │ ← 拡張子自動付与
+│ └──────────────────────────────┘└─────┘        │
+│                                                  │
+│ アスペクト比        デフォルト                     │
+│ ┌───────┐         ┌──────────┐                 │
+│ │ 1:1 ▼ │         │↺ デフォルト│                │ ← リセットボタン
+│ └───────┘         └──────────┘                 │
+├─────────────────────────────────────────────────┤
+│ python generate_image.py "A fluffy..." cat...  │📋│ ← コピーボタン
+└─────────────────────────────────────────────────┘
+```
+
+### 使用場面
+
+- プロンプトを指定してPythonスクリプトを実行する箇所
+- ユーザーが自由にプロンプトやファイル名を変更できる箇所
+- 比較用に複数のプロンプトを試す箇所
+
+### マークダウンでの記述方法
+
+**重要**: プロンプト例のコードブロックの**下**に設置する。コードブロックとジェネレータのプロンプトは**必ず同一**にすること。
+
+```markdown
+#### 良い例（ナラティブ記述）
+
+` ` `
+A fluffy orange tabby cat sits contentedly on a cushioned window sill,
+watching raindrops trace paths down the glass. The warm glow of a
+nearby lamp casts soft amber highlights on the cat's fur, while the
+grey afternoon light filters through the rain-streaked window.
+` ` `
+
+<div data-prompt-command
+     data-prompt="A fluffy orange tabby cat sits contentedly on a cushioned window sill, watching raindrops trace paths down the glass. The warm glow of a nearby lamp casts soft amber highlights on the cat's fur, while the grey afternoon light filters through the rain-streaked window."
+     data-filename="cat_narrative"
+     data-title="ナラティブ記述（良い例）">
+</div>
+```
+
+### 属性一覧
+
+| 属性 | 必須 | 説明 | 例 |
+|------|------|------|-----|
+| `data-prompt-command` | ○ | コンポーネントを有効化 | （値不要） |
+| `data-prompt` | ○ | デフォルトプロンプト | `"A cute cat"` |
+| `data-filename` | △ | デフォルトファイル名（.pngは不要） | `"cat_narrative"` |
+| `data-ratio` | - | デフォルトアスペクト比（省略時は1:1） | `"16:9"` |
+| `data-title` | - | ボタンのタイトル | `"キーワード列挙（悪い例）"` |
+
+### 機能一覧
+
+| 機能 | 説明 |
+|------|------|
+| 展開/折りたたみ | ボタンクリックでUI展開 |
+| プロンプト編集 | テキストエリアで自由に編集可能 |
+| ファイル名編集 | 入力ボックス + .png自動付与 |
+| アスペクト比選択 | ドロップダウン（1:1, 16:9, 9:16, 3:4, 4:3） |
+| デフォルトリセット | ボタンクリックで初期値に戻す |
+| コマンドコピー | 生成されたコマンドをクリップボードにコピー |
+
+### 注意事項
+
+1. **一貫性**: 同じセクション内でプロンプト例を示す場合、コードブロックとジェネレータのプロンプトを**必ず統一**する
+2. **テーマの統一**: セクションをまたいで同じテーマ（例：猫と窓）を扱う場合、プロンプトを一貫させる
+3. **配置順序**: 必ずコードブロック → ジェネレータの順で配置
+4. **ファイル名**: 拡張子（.png）は不要。コンポーネントが自動付与する
+
+### 実装ファイル
+
+- コンポーネント: `components/PromptCommand.tsx`
+- マークダウン処理: `components/MarkdownRenderer.tsx`
+
+---
+
+## 新しい講座作成チェックリスト
+
+新しい講座を作成する際は、以下を順番に実施する：
+
+1. [ ] 親カテゴリディレクトリ作成: `content/modules/{親カテゴリ}/`
+2. [ ] 親カテゴリ_category.json作成（hasSubcourses: true）
+3. [ ] 子講座ディレクトリ作成: `content/modules/{子講座}/`
+4. [ ] 子講座_category.json作成（isSubcourse: true）
+5. [ ] モジュールファイル作成: `module-XX-xxx.md`
+6. [ ] ルーティング作成: `app/category/{親カテゴリ}/[subcourseSlug]/page.tsx`
+7. [ ] ルーティング作成: `app/category/{親カテゴリ}/[subcourseSlug]/[moduleSlug]/page.tsx`
+8. [ ] 新しい色を使う場合は3ファイルにcolorMap追加
+9. [ ] publicディレクトリ作成: `public/{子講座}/`
+
+---
+
+**最終更新**: 2025-12-28

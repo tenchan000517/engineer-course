@@ -1,0 +1,19 @@
+{
+  "id": "x-research",
+  "title": "X向けリサーチ",
+  "description": "Xのトレンドを調査し、150投稿/月を生成する手法を学ぶ",
+  "icon": "search",
+  "color": "purple",
+  "order": 1,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["antigravity", "claude-code"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "intermediate",
+    "topics": ["research", "x", "trends", "batch-processing"]
+  },
+  "moduleCount": 3,
+  "isSubcourse": true,
+  "parentCategory": "post-research"
+}

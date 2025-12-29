@@ -12,6 +12,8 @@ const subcourseDirectoryMap: Record<string, string> = {
   'n8n-instagram': 'n8n',
   'n8n-advanced': 'n8n-advanced',
   'n8n-transcription': 'n8n-transcription',
+  'n8n-x-auto-post': 'n8n-x-auto-post',
+  'n8n-x-advanced': 'n8n-x-advanced',
 };
 
 export async function generateStaticParams() {
@@ -40,6 +42,24 @@ export async function generateStaticParams() {
   transcriptionModules.forEach((module) => {
     params.push({
       subcourseSlug: 'n8n-transcription',
+      moduleSlug: module.slug,
+    });
+  });
+
+  // n8n-x-auto-post のモジュール
+  const xAutoPostModules = getModulesByCategory('n8n-x-auto-post');
+  xAutoPostModules.forEach((module) => {
+    params.push({
+      subcourseSlug: 'n8n-x-auto-post',
+      moduleSlug: module.slug,
+    });
+  });
+
+  // n8n-x-advanced のモジュール
+  const xAdvancedModules = getModulesByCategory('n8n-x-advanced');
+  xAdvancedModules.forEach((module) => {
+    params.push({
+      subcourseSlug: 'n8n-x-advanced',
       moduleSlug: module.slug,
     });
   });

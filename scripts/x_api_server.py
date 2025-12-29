@@ -1,14 +1,19 @@
 from flask import Flask, request, jsonify
 import tweepy
+import os
+from dotenv import load_dotenv
+
+# .envファイルから環境変数を読み込み
+load_dotenv()
 
 app = Flask(__name__)
 
-# ====== 認証情報を入力 ======
-API_KEY = "YOUR_API_KEY"
-API_SECRET = "YOUR_API_SECRET"
-ACCESS_TOKEN = "YOUR_ACCESS_TOKEN"
-ACCESS_TOKEN_SECRET = "YOUR_ACCESS_TOKEN_SECRET"
-# ============================
+# ====== 環境変数から認証情報を取得 ======
+API_KEY = os.getenv("X_API_KEY")
+API_SECRET = os.getenv("X_API_SECRET")
+ACCESS_TOKEN = os.getenv("X_ACCESS_TOKEN")
+ACCESS_TOKEN_SECRET = os.getenv("X_ACCESS_TOKEN_SECRET")
+# ========================================
 
 # Twitterクライアント
 client = tweepy.Client(

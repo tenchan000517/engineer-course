@@ -28,6 +28,9 @@ const colorMap: Record<string, { bg: string; bgHover: string; border: string; te
   orange: { bg: 'bg-orange-500', bgHover: 'hover:bg-orange-600', border: 'border-orange-500' },
   green: { bg: 'bg-green-500', bgHover: 'hover:bg-green-600', border: 'border-green-500' },
   white: { bg: 'bg-gray-900', bgHover: 'hover:bg-gray-800', border: 'border-gray-900' },
+  amber: { bg: 'bg-amber-500', bgHover: 'hover:bg-amber-600', border: 'border-amber-500' },
+  yellow: { bg: 'bg-yellow-500', bgHover: 'hover:bg-yellow-600', border: 'border-yellow-500' },
+  pink: { bg: 'bg-pink-500', bgHover: 'hover:bg-pink-600', border: 'border-pink-500' },
 };
 
 export default function Home() {
@@ -35,10 +38,23 @@ export default function Home() {
 
   // カテゴリごとのモジュール数を取得
   const categoriesWithCount = categories.map((category) => {
-    const modules = getModulesByCategory(category.id);
+    let actualModuleCount = 0;
+
+    if (category.hasSubcourses && category.subcourses) {
+      // 子講座がある場合は、各子講座のモジュール数を合計
+      category.subcourses.forEach((subcourse) => {
+        const subModules = getModulesByCategory(subcourse.id);
+        actualModuleCount += subModules.length;
+      });
+    } else {
+      // 子講座がない場合は直接カウント
+      const modules = getModulesByCategory(category.id);
+      actualModuleCount = modules.length;
+    }
+
     return {
       ...category,
-      actualModuleCount: modules.length,
+      actualModuleCount,
     };
   });
 

@@ -1,0 +1,478 @@
+{
+  "name": "X Auto Post Advanced",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        320
+      ],
+      "id": "manual-trigger-001",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo",
+          "mode": "list",
+          "cachedResultName": "x-auto-post-advanced",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1626660346,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit#gid=1626660346"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "status",
+              "lookupValue": "READY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -560,
+        320
+      ],
+      "id": "get-posts-001",
+      "name": "Get READY Posts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 1
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        320
+      ],
+      "id": "limit-001",
+      "name": "Limit 1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.pattern }}",
+                    "rightValue": "announcement",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "announcement"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.pattern }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.pattern }}",
+                    "rightValue": "thread",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "thread"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -320,
+        320
+      ],
+      "id": "switch-pattern-001",
+      "name": "Switch Pattern"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:5000/post",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $json.content }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -80,
+        120
+      ],
+      "id": "post-announcement-001",
+      "name": "Post Announcement"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:5000/generate-and-post",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $json.content, prompt: $json.image_prompt, aspect_ratio: '16:9' }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -80,
+        320
+      ],
+      "id": "post-image-001",
+      "name": "Post with Image"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo",
+          "mode": "list",
+          "cachedResultName": "x-auto-post-advanced",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1681576108,
+          "mode": "list",
+          "cachedResultName": "thread_draft",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit#gid=1681576108"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        520
+      ],
+      "id": "get-thread-draft-001",
+      "name": "Get Thread Draft",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByFields",
+        "fields": "post_id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        160,
+        520
+      ],
+      "id": "merge-001",
+      "name": "Merge Posts + Thread"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:5000/thread",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ tweets: [$json.tweet_1, $json.tweet_2, $json.tweet_3, $json.tweet_4, $json.tweet_5, $json.tweet_6, $json.tweet_7].filter(t => t && t.trim() !== '') }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        400,
+        520
+      ],
+      "id": "post-thread-001",
+      "name": "Post Thread"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo",
+          "mode": "list",
+          "cachedResultName": "x-auto-post-advanced",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1626660346,
+          "mode": "list",
+          "cachedResultName": "posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZAxg-H-SH0eQs3iOi_-lA3MupdC-e6yoyW_k6IL1Kbo/edit#gid=1626660346"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "status": "POSTED",
+            "posted_at": "={{ $now.toISO() }}",
+            "tweet_url": "=https://x.com/i/web/status/{{ $json.tweet_id }}"
+          },
+          "matchingColumns": [
+            "post_id"
+          ],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "posted_at",
+              "displayName": "posted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tweet_url",
+              "displayName": "tweet_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        320
+      ],
+      "id": "update-status-001",
+      "name": "Update Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3KFmyH23tY8tVoe2",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Get READY Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get READY Posts": {
+      "main": [
+        [
+          {
+            "node": "Limit 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit 1": {
+      "main": [
+        [
+          {
+            "node": "Switch Pattern",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Pattern": {
+      "main": [
+        [
+          {
+            "node": "Post Announcement",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Post with Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Thread Draft",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Posts + Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Announcement": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post with Image": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Thread Draft": {
+      "main": [
+        [
+          {
+            "node": "Merge Posts + Thread",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Posts + Thread": {
+      "main": [
+        [
+          {
+            "node": "Post Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Thread": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "x-auto-post-v1",
+  "meta": {
+    "instanceId": "7b9aa171b14242b9606ae8a78c80997e8606678e3b8e440a23de3728e3221a90"
+  },
+  "id": "x-auto-post-advanced",
+  "tags": []
+}

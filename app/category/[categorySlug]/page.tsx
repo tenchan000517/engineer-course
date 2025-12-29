@@ -12,6 +12,7 @@ import { ReactNode } from 'react';
 const subcourseDirectoryMap: Record<string, string> = {
   'n8n-instagram': 'n8n',
   'n8n-advanced': 'n8n-advanced',
+  'nanobanana-beginner': 'nanobanana-beginner',
 };
 
 export async function generateStaticParams() {
@@ -47,6 +48,9 @@ const colorMap: Record<string, { bg: string; text?: string }> = {
   orange: { bg: 'bg-orange-500' },
   green: { bg: 'bg-green-500' },
   white: { bg: 'bg-gray-900' },
+  amber: { bg: 'bg-amber-500' },
+  yellow: { bg: 'bg-yellow-500' },
+  pink: { bg: 'bg-pink-500' },
 };
 
 export default async function CategoryPage({
@@ -194,6 +198,14 @@ export default async function CategoryPage({
                           ? '#a855f7'
                           : category.color === 'orange'
                           ? '#f97316'
+                          : category.color === 'green'
+                          ? '#22c55e'
+                          : category.color === 'amber'
+                          ? '#f59e0b'
+                          : category.color === 'yellow'
+                          ? '#eab308'
+                          : category.color === 'pink'
+                          ? '#ec4899'
                           : category.color === 'white'
                           ? '#1f2937'
                           : '#3b82f6',

@@ -125,7 +125,15 @@ Successfully installed flask-x.x.x
 
 （既にインストール済みの場合は「Requirement already satisfied」と表示されます）
 
-### 2-3. インストール確認
+### 2-3. python-dotenvのインストール
+
+python-dotenvは`.env`ファイルから環境変数を読み込むためのライブラリです。
+
+```powershell
+pip install python-dotenv
+```
+
+### 2-4. インストール確認
 
 ```powershell
 pip show tweepy
@@ -141,6 +149,7 @@ pip show flask
 
 - [ ] tweepyがインストールされた
 - [ ] flaskがインストールされた
+- [ ] python-dotenvがインストールされた
 
 ---
 
@@ -154,22 +163,38 @@ pip show flask
 mkdir C:\scripts
 ```
 
-### 3-2. スクリプトファイルの作成
+### 3-2. .envファイルの作成
+
+`C:\scripts\.env` を作成し、Module 02で取得した認証情報を入力します。
+
+```
+X_API_KEY=あなたのAPI_KEY
+X_API_SECRET=あなたのAPI_SECRET
+X_ACCESS_TOKEN=あなたのACCESS_TOKEN
+X_ACCESS_TOKEN_SECRET=あなたのACCESS_TOKEN_SECRET
+```
+
+### 3-3. スクリプトファイルの作成
 
 以下の内容で `C:\scripts\x_api_server.py` を作成します。
 
 ```python
 from flask import Flask, request, jsonify
 import tweepy
+import os
+from dotenv import load_dotenv
+
+# .envファイルから環境変数を読み込み
+load_dotenv()
 
 app = Flask(__name__)
 
-# ====== 認証情報を入力 ======
-API_KEY = "YOUR_API_KEY"
-API_SECRET = "YOUR_API_SECRET"
-ACCESS_TOKEN = "YOUR_ACCESS_TOKEN"
-ACCESS_TOKEN_SECRET = "YOUR_ACCESS_TOKEN_SECRET"
-# ============================
+# ====== 環境変数から認証情報を取得 ======
+API_KEY = os.getenv("X_API_KEY")
+API_SECRET = os.getenv("X_API_SECRET")
+ACCESS_TOKEN = os.getenv("X_ACCESS_TOKEN")
+ACCESS_TOKEN_SECRET = os.getenv("X_ACCESS_TOKEN_SECRET")
+# ========================================
 
 # Twitterクライアント
 client = tweepy.Client(
@@ -208,26 +233,16 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 ```
 
-### 3-3. 認証情報の入力
-
-スクリプト内の以下の部分を、Module 02で取得したAPIキーに置き換えます。
-
-```python
-API_KEY = "YOUR_API_KEY"           # ← あなたのAPI Keyに置き換え
-API_SECRET = "YOUR_API_SECRET"     # ← あなたのAPI Secretに置き換え
-ACCESS_TOKEN = "YOUR_ACCESS_TOKEN" # ← あなたのAccess Tokenに置き換え
-ACCESS_TOKEN_SECRET = "YOUR_ACCESS_TOKEN_SECRET"  # ← あなたのAccess Token Secretに置き換え
-```
-
 ### 重要な注意事項
 
-- **APIキーを含むスクリプトは絶対にGitHubなどに公開しないでください**
-- 本番環境では環境変数を使用することを推奨します
+- **`.env`ファイルは絶対にGitHubなどに公開しないでください**
+- `.gitignore`に`.env`を追加してください
 
 ### チェックポイント
 
+- [ ] `.env`ファイルを作成した
 - [ ] スクリプトファイルを作成した
-- [ ] 4つのAPIキーを入力した
+- [ ] 4つのAPIキーを`.env`に入力した
 
 ---
 
@@ -348,14 +363,23 @@ Module 04では、n8nからこのAPIサーバーを呼び出すワークフロ�
 
 [x_api_server.py](/n8n-x-auto-post/download/x_api_server.py)
 
-**ダウンロード後に変更が必要な箇所**:
+**ダウンロード後に必要な設定**:
 
-| プレースホルダー | 変更内容 |
-|-----------------|---------|
-| `YOUR_API_KEY` | あなたのAPI Key |
-| `YOUR_API_SECRET` | あなたのAPI Secret |
-| `YOUR_ACCESS_TOKEN` | あなたのAccess Token |
-| `YOUR_ACCESS_TOKEN_SECRET` | あなたのAccess Token Secret |
+スクリプトと同じディレクトリに`.env`ファイルを作成し、以下の内容を設定してください。
+
+```
+X_API_KEY=あなたのAPI_KEY
+X_API_SECRET=あなたのAPI_SECRET
+X_ACCESS_TOKEN=あなたのACCESS_TOKEN
+X_ACCESS_TOKEN_SECRET=あなたのACCESS_TOKEN_SECRET
+```
+
+| 環境変数 | 取得場所 |
+|----------|----------|
+| X_API_KEY | X Developer Portal → Keys and tokens |
+| X_API_SECRET | X Developer Portal → Keys and tokens |
+| X_ACCESS_TOKEN | X Developer Portal → Keys and tokens |
+| X_ACCESS_TOKEN_SECRET | X Developer Portal → Keys and tokens |
 
 ---
 
@@ -378,8 +402,8 @@ A: はい、スクリプト内の `app.run(host='0.0.0.0', port=5000)` のポー
 **Q: 複数のアカウントで投稿したい場合は？**
 A: 別のポートで別のAPIサーバーを起動し、それぞれに異なるAPIキーを設定します。
 
-**Q: 環境変数でAPIキーを管理できますか？**
-A: はい、`os.environ.get('API_KEY')` を使用して環境変数から読み込むことを推奨します。
+**Q: .envファイルが読み込まれません**
+A: `.env`ファイルがスクリプトと同じディレクトリにあることを確認してください。また、`python-dotenv`がインストールされているか確認してください。
 
 **Q: サーバーが落ちたらどうなりますか？**
 A: n8nからのリクエストがエラーになります。本番運用ではsupervisordなどでプロセス監視することを推奨します。

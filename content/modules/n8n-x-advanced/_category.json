@@ -1,0 +1,19 @@
+{
+  "id": "n8n-x-advanced",
+  "title": "X自動投稿 - 上級編",
+  "description": "スプレッドシートとGASを活用した高品質スレッド投稿の自動化",
+  "icon": "workflow",
+  "color": "orange",
+  "order": 6,
+  "tags": {
+    "language": ["python", "javascript", "nocode"],
+    "framework": ["n8n", "gas", "tweepy"],
+    "editor": ["browser", "vscode"],
+    "platform": ["windows", "docker"],
+    "level": "intermediate",
+    "topics": ["automation", "twitter", "spreadsheet", "gas"]
+  },
+  "moduleCount": 4,
+  "isSubcourse": true,
+  "parentCategory": "n8n"
+}

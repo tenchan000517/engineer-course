@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import { CheckCircle, CheckSquare, Copy, Check } from 'lucide-react';
+import PromptCommand from './PromptCommand';
 
 interface MarkdownRendererProps {
   content: string;
@@ -149,6 +150,25 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
                 {...props}
               />
             );
+          },
+          div: ({ node, ...props }: any) => {
+            // PromptCommand コンポーネント用の特別な処理
+            if (props['data-prompt-command'] !== undefined) {
+              // 参照画像をカンマ区切りから配列に変換
+              const refImagesStr = props['data-reference-images'] || '';
+              const referenceImages = refImagesStr ? refImagesStr.split(',').map((s: string) => s.trim()) : [];
+
+              return (
+                <PromptCommand
+                  prompt={props['data-prompt'] || ''}
+                  filename={props['data-filename']}
+                  ratio={props['data-aspect-ratio'] || props['data-ratio'] || '1:1'}
+                  title={props['data-title']}
+                  referenceImages={referenceImages}
+                />
+              );
+            }
+            return <div {...props} />;
           },
         }}
       >

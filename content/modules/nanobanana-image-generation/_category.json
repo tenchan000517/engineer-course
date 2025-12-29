@@ -1,0 +1,27 @@
+{
+  "id": "nanobanana-image-generation",
+  "title": "Nanobanana画像生成",
+  "description": "Gemini APIを使った画像生成（Nanobanana / Nano Banana Pro）を学ぶ",
+  "icon": "image",
+  "color": "amber",
+  "order": 6,
+  "tags": {
+    "language": ["python"],
+    "framework": ["google-genai"],
+    "editor": ["vscode", "powershell"],
+    "platform": ["windows"],
+    "level": "beginner",
+    "topics": ["ai", "image-generation", "gemini"]
+  },
+  "moduleCount": 9,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "nanobanana-beginner",
+      "title": "Nanobanana / Nano Banana Pro 初級編",
+      "description": "Gemini APIで画像を生成する基礎から応用まで",
+      "moduleCount": 9,
+      "level": "beginner"
+    }
+  ]
+}

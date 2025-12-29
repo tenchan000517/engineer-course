@@ -1,0 +1,27 @@
+{
+  "id": "post-research",
+  "title": "投稿リサーチ講座",
+  "description": "SNS投稿のためのトレンドリサーチ手法を学ぶ",
+  "icon": "search",
+  "color": "purple",
+  "order": 7,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["antigravity", "spreadsheet"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "intermediate",
+    "topics": ["research", "sns", "trends"]
+  },
+  "moduleCount": 0,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "x-research",
+      "title": "X向けリサーチ",
+      "description": "Xのトレンドを調査し、投稿アイデアを生成する手法を学ぶ",
+      "moduleCount": 1,
+      "level": "intermediate"
+    }
+  ]
+}

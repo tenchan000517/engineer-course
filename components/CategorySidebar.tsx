@@ -17,6 +17,9 @@ const colorMap: Record<string, { bg: string; text: string; activeBg: string }> =
   purple: { bg: 'bg-purple-500', text: 'text-purple-700', activeBg: 'bg-purple-50' },
   orange: { bg: 'bg-orange-500', text: 'text-orange-700', activeBg: 'bg-orange-50' },
   green: { bg: 'bg-green-500', text: 'text-green-700', activeBg: 'bg-green-50' },
+  amber: { bg: 'bg-amber-500', text: 'text-amber-700', activeBg: 'bg-amber-50' },
+  yellow: { bg: 'bg-yellow-500', text: 'text-yellow-700', activeBg: 'bg-yellow-50' },
+  pink: { bg: 'bg-pink-500', text: 'text-pink-700', activeBg: 'bg-pink-50' },
 };
 
 export default function CategorySidebar({

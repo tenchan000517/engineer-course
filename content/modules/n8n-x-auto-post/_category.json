@@ -13,7 +13,7 @@
     "level": "beginner",
     "topics": ["automation", "twitter", "api"]
   },
-  "moduleCount": 4,
+  "moduleCount": 6,
   "isSubcourse": true,
   "parentCategory": "n8n"
 }
