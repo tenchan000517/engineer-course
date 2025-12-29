@@ -1,0 +1,370 @@
+{
+  "description": "Announcement投稿のURL修正リスト",
+  "created_at": "2025-12-29",
+  "corrections": [
+    {
+      "batch": 1,
+      "post_id": "20250113-001",
+      "topic": "Antigravity",
+      "old_url": "https://aistudio.google.com/",
+      "new_url": "https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/",
+      "new_reply_content": "公式発表はこちら👉 https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/"
+    },
+    {
+      "batch": 1,
+      "post_id": "20250113-003",
+      "topic": "Antigravity バイブコーディング",
+      "old_url": "https://aistudio.google.com/",
+      "new_url": "https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/",
+      "new_reply_content": "公式発表はこちら👉 https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/"
+    },
+    {
+      "batch": 1,
+      "post_id": "20250114-001",
+      "topic": "Antigravity + NanoBanana",
+      "old_url": "https://aistudio.google.com/",
+      "new_url": "https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/",
+      "new_reply_content": "Antigravity公式発表👉 https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/"
+    },
+    {
+      "batch": 1,
+      "post_id": "20250114-003",
+      "topic": "Gemini 3 Flash + Gemini CLI",
+      "old_url": "https://developers.googleblog.com/",
+      "new_url": "https://developers.googleblog.com/gemini-3-flash-is-now-available-in-gemini-cli/",
+      "new_reply_content": "公式発表はこちら👉 https://developers.googleblog.com/gemini-3-flash-is-now-available-in-gemini-cli/"
+    },
+    {
+      "batch": 1,
+      "post_id": "20250121-001",
+      "topic": "Google AI Studio / Opal",
+      "old_url": "https://aistudio.google.com/",
+      "new_url": "https://developers.googleblog.com/introducing-opal/",
+      "new_reply_content": "Opal公式発表👉 https://developers.googleblog.com/introducing-opal/"
+    },
+    {
+      "batch": 1,
+      "post_id": "20250121-003",
+      "topic": "Google AI Studio 画像編集アプリ",
+      "old_url": "https://aistudio.google.com/",
+      "new_url": "https://developers.googleblog.com/introducing-opal/",
+      "new_reply_content": "Opal公式発表👉 https://developers.googleblog.com/introducing-opal/"
+    },
+    {
+      "batch": 1,
+      "post_id": "20250129-001",
+      "topic": "Opal 無料利用",
+      "old_url": "https://aistudio.google.com/",
+      "new_url": "https://blog.google/technology/google-labs/opal-expansion-160/",
+      "new_reply_content": "Opal拡大発表👉 https://blog.google/technology/google-labs/opal-expansion-160/"
+    },
+    {
+      "batch": 1,
+      "post_id": "20250129-003",
+      "topic": "Opal 活用例",
+      "old_url": "https://aistudio.google.com/",
+      "new_url": "https://blog.google/technology/google-labs/opal-expansion-160/",
+      "new_reply_content": "Opal公式👉 https://blog.google/technology/google-labs/opal-expansion-160/"
+    },
+    {
+      "batch": 2,
+      "post_id": "20250119-001",
+      "topic": "Suno 注目",
+      "old_url": "https://suno.com/",
+      "new_url": "https://suno.com/blog/suno-studio",
+      "new_reply_content": "Suno Studio発表👉 https://suno.com/blog/suno-studio"
+    },
+    {
+      "batch": 2,
+      "post_id": "20250119-003",
+      "topic": "Suno 収益化 Spotify",
+      "old_url": "https://suno.com/",
+      "new_url": "https://suno.com/blog/series-c-announcement",
+      "new_reply_content": "Suno公式発表👉 https://suno.com/blog/series-c-announcement"
+    },
+    {
+      "batch": 2,
+      "post_id": "20250120-001",
+      "topic": "Suno BGM生成",
+      "old_url": "https://suno.com/",
+      "new_url": "https://suno.com/blog/suno-studio",
+      "new_reply_content": "Suno Studio発表👉 https://suno.com/blog/suno-studio"
+    },
+    {
+      "batch": 2,
+      "post_id": "20250120-003",
+      "topic": "Suno プロンプトテクニック",
+      "old_url": "https://suno.com/",
+      "new_url": "https://suno.com/blog/introducing-v4-5",
+      "new_reply_content": "Suno v4.5発表👉 https://suno.com/blog/introducing-v4-5"
+    },
+    {
+      "batch": 3,
+      "post_id": "20250115-001",
+      "topic": "Manus 1.6 Max",
+      "old_url": "https://manus.im/",
+      "new_url": "https://manus.im/blog/manus-max-release",
+      "new_reply_content": "Manus 1.6 Max発表👉 https://manus.im/blog/manus-max-release"
+    },
+    {
+      "batch": 3,
+      "post_id": "20250115-003",
+      "topic": "Manus AIエージェント機能強化",
+      "old_url": "https://manus.im/",
+      "new_url": "https://manus.im/blog/manus-browser-operator",
+      "new_reply_content": "Manus Browser Operator発表👉 https://manus.im/blog/manus-browser-operator"
+    },
+    {
+      "batch": 3,
+      "post_id": "20250116-001",
+      "topic": "Manus + LINE連携",
+      "old_url": "https://manus.im/",
+      "new_url": "https://manus.im/blog/projects-connectors",
+      "new_reply_content": "Manus Connectors発表👉 https://manus.im/blog/projects-connectors"
+    },
+    {
+      "batch": 3,
+      "post_id": "20250116-003",
+      "topic": "Manus + Gemini 3 Pro資料作成",
+      "old_url": "https://manus.im/",
+      "new_url": "https://manus.im/blog/manus-max-release",
+      "new_reply_content": "Manus 1.6 Max発表👉 https://manus.im/blog/manus-max-release"
+    },
+    {
+      "batch": 4,
+      "post_id": "20250107-003",
+      "topic": "NotebookLM Lecture Mode",
+      "old_url": "https://notebooklm.google/",
+      "new_url": "https://blog.google/technology/google-labs/notebooklm-video-overviews-studio-upgrades/",
+      "new_reply_content": "NotebookLM Studio発表👉 https://blog.google/technology/google-labs/notebooklm-video-overviews-studio-upgrades/"
+    },
+    {
+      "batch": 4,
+      "post_id": "20250108-001",
+      "topic": "NotebookLM スライド・図解生成",
+      "old_url": "https://notebooklm.google/",
+      "new_url": "https://blog.google/technology/google-labs/8-ways-to-make-the-most-out-of-slide-decks-in-notebooklm/",
+      "new_reply_content": "NotebookLM Slide Decks👉 https://blog.google/technology/google-labs/8-ways-to-make-the-most-out-of-slide-decks-in-notebooklm/"
+    },
+    {
+      "batch": 4,
+      "post_id": "20250108-003",
+      "topic": "NotebookLM データ分析",
+      "old_url": "https://notebooklm.google/",
+      "new_url": "https://workspaceupdates.googleblog.com/2025/12/transform-sources-structured-data-tables-notebooklm.html",
+      "new_reply_content": "NotebookLM Data Tables発表👉 https://workspaceupdates.googleblog.com/2025/12/transform-sources-structured-data-tables-notebooklm.html"
+    },
+    {
+      "batch": 5,
+      "post_id": "20250109-001",
+      "topic": "Canva Affinity",
+      "old_url": "https://www.canva.com/",
+      "new_url": "https://www.canva.com/newsroom/news/affinity-free/",
+      "new_reply_content": "Affinity無料化発表👉 https://www.canva.com/newsroom/news/affinity-free/"
+    },
+    {
+      "batch": 5,
+      "post_id": "20250109-003",
+      "topic": "Canva Magic Studio",
+      "old_url": "https://www.canva.com/magic/",
+      "new_url": "https://www.canva.com/newsroom/news/canva-ai-launches/",
+      "new_reply_content": "Canva AI発表👉 https://www.canva.com/newsroom/news/canva-ai-launches/"
+    },
+    {
+      "batch": 5,
+      "post_id": "20250110-001",
+      "topic": "ChatGPT + Canva",
+      "old_url": "https://www.canva.com/",
+      "new_url": "https://www.canva.com/newsroom/news/canva-create-2025/",
+      "new_reply_content": "Canva Create 2025発表👉 https://www.canva.com/newsroom/news/canva-create-2025/"
+    },
+    {
+      "batch": 5,
+      "post_id": "20250110-003",
+      "topic": "Canva Code",
+      "old_url": "https://www.canva.com/",
+      "new_url": "https://www.canva.com/newsroom/news/canva-ai-launches/",
+      "new_reply_content": "Canva Code発表👉 https://www.canva.com/newsroom/news/canva-ai-launches/"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250102-003",
+      "topic": "ChatGPT Tasks",
+      "old_url": "https://chatgpt.com/",
+      "new_url": "https://help.openai.com/en/articles/10291617-scheduled-tasks-in-chatgpt",
+      "new_reply_content": "OpenAI公式ガイド👉 https://help.openai.com/en/articles/10291617-scheduled-tasks-in-chatgpt"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250104-001",
+      "topic": "Gemini Gems",
+      "old_url": "https://gemini.google.com/",
+      "new_url": "https://blog.google/products/gemini/new-gemini-app-features-march-2025/",
+      "new_reply_content": "Gems無料化発表👉 https://blog.google/products/gemini/new-gemini-app-features-march-2025/"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250117-001",
+      "topic": "Claude Opus 4.5",
+      "old_url": "https://www.anthropic.com/",
+      "new_url": "https://www.anthropic.com/news/claude-opus-4-5",
+      "new_reply_content": "Claude Opus 4.5発表👉 https://www.anthropic.com/news/claude-opus-4-5"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250117-003",
+      "topic": "Claude Code",
+      "old_url": "https://www.anthropic.com/",
+      "new_url": "https://www.anthropic.com/news/claude-code-on-the-web",
+      "new_reply_content": "Claude Code発表👉 https://www.anthropic.com/news/claude-code-on-the-web"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250118-001",
+      "topic": "Claude Code Web",
+      "old_url": "https://claude.ai/",
+      "new_url": "https://www.anthropic.com/news/claude-code-on-the-web",
+      "new_reply_content": "Claude Code Web発表👉 https://www.anthropic.com/news/claude-code-on-the-web"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250118-003",
+      "topic": "Claude 執筆AI活用",
+      "old_url": "https://claude.ai/",
+      "new_url": "https://www.anthropic.com/news/claude-opus-4-5",
+      "new_reply_content": "Claude公式発表👉 https://www.anthropic.com/news/claude-opus-4-5"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250122-001",
+      "topic": "Perplexity Comet",
+      "old_url": "https://www.perplexity.ai/",
+      "new_url": "https://www.perplexity.ai/hub/blog/introducing-comet",
+      "new_reply_content": "Comet発表👉 https://www.perplexity.ai/hub/blog/introducing-comet"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250122-003",
+      "topic": "Perplexity 初心者向け",
+      "old_url": "https://www.perplexity.ai/",
+      "new_url": "https://www.perplexity.ai/hub/blog/comet-is-now-available-to-everyone-worldwide",
+      "new_reply_content": "Comet無料公開👉 https://www.perplexity.ai/hub/blog/comet-is-now-available-to-everyone-worldwide"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250123-001",
+      "topic": "Copilot Excel",
+      "old_url": "https://copilot.microsoft.com/",
+      "new_url": "https://techcommunity.microsoft.com/blog/microsoft365insiderblog/bring-ai-to-your-formulas-with-the-copilot-function-in-excel/4443487",
+      "new_reply_content": "Copilot Excel発表👉 https://techcommunity.microsoft.com/blog/microsoft365insiderblog/bring-ai-to-your-formulas-with-the-copilot-function-in-excel/4443487"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250123-003",
+      "topic": "Copilot Word",
+      "old_url": "https://copilot.microsoft.com/",
+      "new_url": "https://www.microsoft.com/en-us/microsoft-365/blog/2025/09/29/vibe-working-introducing-agent-mode-and-office-agent-in-microsoft-365-copilot/",
+      "new_reply_content": "Agent Mode発表👉 https://www.microsoft.com/en-us/microsoft-365/blog/2025/09/29/vibe-working-introducing-agent-mode-and-office-agent-in-microsoft-365-copilot/"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250124-001",
+      "topic": "Stitch リリース",
+      "old_url": "https://labs.google/",
+      "new_url": "https://developers.googleblog.com/en/stitch-a-new-way-to-design-uis/",
+      "new_reply_content": "Stitch発表👉 https://developers.googleblog.com/en/stitch-a-new-way-to-design-uis/"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250124-003",
+      "topic": "Stitch デザイン効率化",
+      "old_url": "https://labs.google/",
+      "new_url": "https://blog.google/technology/google-labs/stitch-gemini-3/",
+      "new_reply_content": "Stitch Gemini 3対応👉 https://blog.google/technology/google-labs/stitch-gemini-3/"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250125-001",
+      "topic": "イルシル スライド生成",
+      "old_url": "https://irusiru.jp/",
+      "new_url": "https://prtimes.jp/main/html/rd/p/000000078.000104853.html",
+      "new_reply_content": "イルシル公式発表👉 https://prtimes.jp/main/html/rd/p/000000078.000104853.html"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250125-003",
+      "topic": "イルシル 競合との差別化",
+      "old_url": "https://irusiru.jp/",
+      "new_url": "https://prtimes.jp/main/html/rd/p/000000078.000104853.html",
+      "new_reply_content": "イルシル公式発表👉 https://prtimes.jp/main/html/rd/p/000000078.000104853.html"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250126-001",
+      "topic": "Grok 4.1",
+      "old_url": "https://x.ai/",
+      "new_url": "https://x.ai/news/grok-4",
+      "new_reply_content": "Grok 4発表👉 https://x.ai/news/grok-4"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250126-003",
+      "topic": "Grok コンテンツ活用",
+      "old_url": "https://x.ai/",
+      "new_url": "https://x.ai/news/grok-4",
+      "new_reply_content": "Grok 4発表👉 https://x.ai/news/grok-4"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250127-001",
+      "topic": "Skywork オールインワン",
+      "old_url": "https://skywork.ai/",
+      "new_url": "NO_CHANGE",
+      "new_reply_content": "NO_CHANGE",
+      "note": "Skyworkはプラットフォームのため、公式トップページでOK"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250127-003",
+      "topic": "Skywork 業務活用",
+      "old_url": "https://skywork.ai/",
+      "new_url": "NO_CHANGE",
+      "new_reply_content": "NO_CHANGE",
+      "note": "Skyworkはプラットフォームのため、公式トップページでOK"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250128-001",
+      "topic": "Seedream モデルハブ",
+      "old_url": "https://seedream.ai/",
+      "new_url": "https://seed.bytedance.com/en/seedream4_0",
+      "new_reply_content": "Seedream 4.0発表👉 https://seed.bytedance.com/en/seedream4_0"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250128-003",
+      "topic": "Seedream 初心者向け",
+      "old_url": "https://seedream.ai/",
+      "new_url": "https://seed.bytedance.com/en/seedream4_0",
+      "new_reply_content": "Seedream 4.0発表👉 https://seed.bytedance.com/en/seedream4_0"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250130-001",
+      "topic": "Readdy Web制作",
+      "old_url": "https://readdy.ai/",
+      "new_url": "NO_CHANGE",
+      "new_reply_content": "NO_CHANGE",
+      "note": "Readdyは新興サービスで公式発表ブログがないため、公式トップページでOK"
+    },
+    {
+      "batch": 6,
+      "post_id": "20250130-003",
+      "topic": "Readdy サイト作成",
+      "old_url": "https://readdy.ai/",
+      "new_url": "NO_CHANGE",
+      "new_reply_content": "NO_CHANGE",
+      "note": "Readdyは新興サービスで公式発表ブログがないため、公式トップページでOK"
+    }
+  ]
+}
