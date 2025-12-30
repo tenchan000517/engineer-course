@@ -6,11 +6,13 @@ import { ReactNode } from 'react';
 // サブコースIDとディレクトリのマッピング
 const subcourseDirectoryMap: Record<string, string> = {
   'instagram-dm-automation': 'instagram-dm-automation',
+  'instagram-research': 'instagram-research',
 };
 
 export async function generateStaticParams() {
   return [
     { subcourseSlug: 'instagram-dm-automation' },
+    { subcourseSlug: 'instagram-research' },
   ];
 }
 

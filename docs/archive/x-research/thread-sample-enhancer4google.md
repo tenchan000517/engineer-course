@@ -12,7 +12,7 @@ NotebookLM使ってて
 
 それ全部、
 こーすけ先生
-@GASsuke4u
+@TENCHAN_0517
  の
 Chrome拡張で解決できます。
 
@@ -161,7 +161,8 @@ NotebookLMで作った資料を一瞬でプレゼン形式に変換したり、�
 Chromeウェブストアで「Enhancer 4 Google」と検索！
 
 僕のアカウントでは、AIで業務効率化や時短を加速させるノウハウを毎日発信しています。
-NotebookLMの活用法について、誰よりも詳しく発信しているので、NotebookLMを使いこなしたい方は、ぜひフォローをお願いします！
+[ツール名]の活用法について、誰よりも詳しく発信しているので、[ツール名]を使いこなしたい方は、ぜひフォローをお願いします！
+@TENCHAN_0517
 ```
 
 ---
@@ -170,9 +171,9 @@ NotebookLMの活用法について、誰よりも詳しく発信しているの�
 
 | 項目 | 値 |
 |------|-----|
-| 投稿者 | @ai_jitan |
+| 投稿者 | @TENCHAN_0517 |
 | 投稿日 | 2025-12-XX |
 | トピック | NotebookLM / Chrome拡張 |
 | カテゴリ | ツール紹介 |
-| 紹介ツール作者 | @GASsuke4u |
+| 紹介ツール作者 | @TENCHAN_0517 |
 | Chrome拡張URL | https://chromewebstore.google.com/detail/enhancer-4-google/cmihmmpeladlmemlonckioeleobhggfl |

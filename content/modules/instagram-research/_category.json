@@ -1,0 +1,19 @@
+{
+  "id": "instagram-research",
+  "title": "競合リサーチ・ネタ探し",
+  "description": "ViralFindrを使ってバズっているリールを発見し、投稿ネタや競合分析に活用する",
+  "icon": "instagram",
+  "color": "pink",
+  "order": 2,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["instagram", "viralfindr"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "beginner",
+    "topics": ["research", "competitor-analysis", "content-ideas", "viral-content"]
+  },
+  "moduleCount": 1,
+  "isSubcourse": true,
+  "parentCategory": "instagram"
+}

@@ -10,6 +10,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer';
 // サブコースIDとディレクトリのマッピング
 const subcourseDirectoryMap: Record<string, string> = {
   'instagram-dm-automation': 'instagram-dm-automation',
+  'instagram-research': 'instagram-research',
 };
 
 // orderを表示用に変換（2.1 → A, 2.2 → B, ...）
@@ -29,6 +30,15 @@ export async function generateStaticParams() {
   dmAutomationModules.forEach((module) => {
     params.push({
       subcourseSlug: 'instagram-dm-automation',
+      moduleSlug: module.slug,
+    });
+  });
+
+  // instagram-research のモジュール
+  const researchModules = getModulesByCategory('instagram-research');
+  researchModules.forEach((module) => {
+    params.push({
+      subcourseSlug: 'instagram-research',
       moduleSlug: module.slug,
     });
   });

@@ -569,33 +569,123 @@ DM自動化 + イベント検知 = Enterprise必須（$42,000+/月）
 | 2025-12-29 | **Module 04追加**（投稿に合わせた特典の作成） | AI Assistant |
 | 2025-12-29 | **特典調査完了** - 調査結果をresearch-gift-examples.mdに保存 | AI Assistant |
 | 2025-12-30 | **エルグラムマニュアル調査反映** - 機能一覧(Module 02.5)追加、Module 02/03を詳細化 | AI Assistant |
+| 2025-12-30 | **Module 02 スクショ反映完了** - 登録〜Instagram接続までの14枚を配置、講座内容を実フローに修正 | AI Assistant |
+| 2025-12-30 | **Module 02 セクション4完了** - 自動応答設定のスクショ9枚追加、講座更新 | AI Assistant |
+| 2025-12-30 | **Module 04（特典作成）のブラッシュアップ開始** | AI Assistant |
+| 2025-12-30 | **番外編: ViralFindr競合リサーチ講座** - スクショ6枚収集、モジュール作成完了 | AI Assistant |
 
 ---
 
 ## 次のアクション
 
-### 即座に実行（検証フェーズ）
+### Module 02: 完了
 
-1. **講座内容を実践検証** - ユーザーがエルグラムを実際に設定
-2. **スクリーンショット収集** - 各ステップで画面キャプチャ
-3. **トラブルシューティング追記** - 発生した問題を記録
+- セクション2-3（登録〜接続）: スクリーンショット14枚配置済み
+- セクション4（自動応答設定）: スクリーンショット9枚追加済み
+- 合計23枚のスクショで講座完成
+- セクション5（テスト）: 実際の動作テスト後に完成予定
 
-### 検証完了後
+### 現在の作業: Module 04（特典作成）のブラッシュアップ
 
-1. スクリーンショットを講座に埋め込み
-2. トラブルシューティングを実データで更新
-3. 特典作成フローの設計（フェーズ4に戻る）
+現在の`module-04-gift-creation.md`を実践的な内容に改善する。
+
+**方針**:
+- ユーザーが特典の具体例を収集中
+- 収集した例を元に「自動配布可否」で分類
+- どうやって作るかをまとめる
+
+**エルグラムで自動配布できる形式**:
+| 形式 | 配布方法 | 可否 |
+|------|----------|------|
+| PDF | Google Driveリンク | ✅ |
+| Canvaテンプレート | Canvaリンク | ✅ |
+| Notionテンプレート | Notionリンク | ✅ |
+| プロンプト集 | テキスト直接 or リンク | ✅ |
+| 画像素材 | 画像直接送信 | ✅ |
+| 動画 | YouTube限定公開リンク等 | ✅ |
+
+**次セッションでやること**:
+1. ユーザーが収集した特典例を確認
+2. 自動配布可否で分類・整理
+3. 各特典タイプの作成方法をまとめる
+4. Module 04に反映
+
+### 番外編: ViralFindr競合リサーチ講座（完了）
+
+**配置先**: `content/modules/instagram-research/`
+
+**作成済みファイル**:
+- `_category.json` - 子講座設定
+- `module-01-viralfindr.md` - ViralFindrでバズリールを発見する
+
+**スクショ配置先**: `public/instagram-research/`
+| ファイル名 | 内容 |
+|-----------|------|
+| module-01-step01-toppage.jpg | トップページ |
+| module-01-step02-register.png | 登録画面 |
+| module-01-step03-dashboard.jpg | ダッシュボード |
+| module-01-step04-user-reels-search.png | User Reels検索 |
+| module-01-step05-results.png | Results画面 |
+| module-01-step06-analysis.jpg | 分析結果・CSVダウンロード |
+
+**ルーティング更新済み**:
+- `app/category/instagram/[subcourseSlug]/page.tsx`
+- `app/category/instagram/[subcourseSlug]/[moduleSlug]/page.tsx`
+
+### 次のステップ
+
+1. **特典例の収集** - ユーザーが実施中
+2. **特典例の分類・作成方法まとめ** - 次セッション
+3. **Module 02 テスト実施** - 動作確認
+4. **Module 03のスクショ撮影** - 高度な設定
+
+---
+
+## 共有済みスクリーンショット
+
+### Module 02: エルグラム登録〜Instagram接続（セクション2-3）
+
+| パス | 内容 | 手順 | 講座使用 |
+|------|------|------|----------|
+| `/instagram-dm-automation/module-02-step01-homepage.png` | エルグラム公式サイトトップ | セクション2 Step 1 | 可 |
+| `/instagram-dm-automation/module-02-step02-email-register.png` | メールアドレス入力画面 | セクション2 Step 2 | 可 |
+| `/instagram-dm-automation/module-02-step03-email-sent.png` | 認証メール送信完了 | セクション2 Step 3 | 可 |
+| `/instagram-dm-automation/module-02-step04-email-confirm.png` | メール確認（ユーザー登録へ進む） | セクション2 Step 3 | 可 |
+| `/instagram-dm-automation/module-02-step05-account-info.png` | アカウント情報登録 | セクション2 Step 4 | 可 |
+| `/instagram-dm-automation/module-02-step06-register-complete.png` | 登録完了 | セクション2 Step 5 | 可 |
+| `/instagram-dm-automation/module-02-step07-login.png` | ログイン画面 | セクション2 Step 6 | 可 |
+| `/instagram-dm-automation/module-02-step08-welcome.png` | Welcome画面 | セクション3 Step 1 | 可 |
+| `/instagram-dm-automation/module-02-step09-ig-connect-info.png` | Instagram接続説明 | セクション3 Step 2 | 可 |
+| `/instagram-dm-automation/module-02-step10-ig-permission.png` | Instagram権限許可 | セクション3 Step 3 | 可 |
+| `/instagram-dm-automation/module-02-step11-connect-confirm.png` | 接続確認画面 | セクション3 Step 4 | 可 |
+| `/instagram-dm-automation/module-02-step12-connect-complete.png` | 接続完了 | セクション3 Step 5 | 可 |
+| `/instagram-dm-automation/module-02-step13-terms-popup.png` | 利用規約改定ポップアップ | セクション3 Step 6 | 可 |
+| `/instagram-dm-automation/module-02-step14-dashboard.png` | 管理画面（ダッシュボード） | セクション3 Step 7 | 可 |
+
+### Module 02: 自動応答設定（セクション4）
+
+| パス | 内容 | 手順 | 講座使用 |
+|------|------|------|----------|
+| `/instagram-dm-automation/module-02-step15-auto-response-start.png` | 自動応答初期画面 | セクション4 開始 | 可 |
+| `/instagram-dm-automation/module-02-step16-trigger-select.png` | トリガー選択画面 | セクション4 トリガー選択 | 可 |
+| `/instagram-dm-automation/module-02-step17-new-create-modal.png` | 新規作成モーダル | セクション4 管理名設定 | 可 |
+| `/instagram-dm-automation/module-02-step18-select-post.png` | 対象の投稿を選択 | セクション4 Step 1 | 可 |
+| `/instagram-dm-automation/module-02-step19-keyword-setting.png` | キーワード設定 | セクション4 Step 2 | 可 |
+| `/instagram-dm-automation/module-02-step20-filter-setting.png` | 絞り込み設定 | セクション4 Step 3 | 可 |
+| `/instagram-dm-automation/module-02-step21-action-setting.png` | アクション設定 | セクション4 Step 4 | 可 |
+| `/instagram-dm-automation/module-02-step22-comment-reply.png` | 投稿内コメント返信 | セクション4 Step 5 | 可 |
+| `/instagram-dm-automation/module-02-step23-schedule-setting.png` | 稼働スケジュール | セクション4 Step 6 | 可 |
 
 ---
 
 ## 作成済み講座モジュール
 
-### Instagram DM自動配布講座（暫定版）
+### Instagram DM自動配布講座
 
 | Module | タイトル | 状態 | 備考 |
 |--------|----------|------|------|
 | 01 | コメント→DM自動配布の仕組みと概要 | **暫定完了** | スクショ待ち |
-| 02 | エルグラムでコメント→DM自動配布を設定 | **暫定完了** | スクショ待ち、詳細化済み |
+| 02 | エルグラムでコメント→DM自動配布を設定 | **完了** | スクショ23枚反映済み（セクション2-4完了） |
 | 02a | エルグラム機能一覧（できること早見表） | **新規追加** | マニュアル調査結果反映 |
 | 03 | 高度な自動応答設定と活用事例 | **暫定完了** | スクショ待ち、詳細化済み |
 | 04 | 投稿に合わせた特典の作成 | **暫定完了** | スクショ待ち |

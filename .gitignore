@@ -36,6 +36,9 @@ yarn-error.log*
 # n8n production workflows with credentials
 docs/archive/n8n-production/
 
+# GAS production code with credentials
+docs/archive/gas-production/
+
 # vercel
 .vercel
 

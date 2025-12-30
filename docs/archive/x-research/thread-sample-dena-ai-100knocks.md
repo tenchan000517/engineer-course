@@ -29,7 +29,7 @@ https://downloads.ctfassets.net/7mrdlclm9xss/m7XsAz2M3bT8WoDrfmYn3/8ee77c25f48de
 DeNA代表南場さんのAI活用事例はこちらにまとめています：
 ```
 
-引用リポスト元 (@SuguruKun_ai, 2024-03-24):
+引用リポスト元 (@TENCHAN_0517, 2024-03-24):
 ```
 全社長が参考にしてほしい。
 DeNA代表 南場さんのAIツール活用術
@@ -48,7 +48,7 @@ DeNA代表 南場さんのAIツール活用術
 
 | 項目 | 値 |
 |------|-----|
-| 投稿者 | @SuguruKun_ai |
+| 投稿者 | @TENCHAN_0517 |
 | 投稿日 | 2025-12-XX |
 | トピック | AI活用事例 / 企業事例 |
 | カテゴリ | 資料紹介 |

@@ -1,7 +1,7 @@
 {
   "id": "instagram-dm-automation",
   "title": "コメント→DM自動配布",
-  "description": "エルグラム（Meta公式API）を使ってコメントからDMを自動送信する仕組みを構築。プレゼント配布によるエンゲージメント向上とリード獲得を実現。",
+  "description": "エルグラム（Meta公式API）を使ってコメントからDMを自動送信する仕組みを構築。特典付き投稿システムで作成した投稿と連携し、自動でDM配布。",
   "icon": "instagram",
   "color": "pink",
   "order": 1,
@@ -13,7 +13,7 @@
     "level": "beginner",
     "topics": ["dm-automation", "comment-trigger", "lead-generation", "engagement"]
   },
-  "moduleCount": 5,
+  "moduleCount": 3,
   "isSubcourse": true,
   "parentCategory": "instagram"
 }

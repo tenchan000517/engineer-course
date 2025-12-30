@@ -13,14 +13,21 @@
     "level": "beginner",
     "topics": ["sns", "marketing", "automation", "dm"]
   },
-  "moduleCount": 2,
+  "moduleCount": 3,
   "hasSubcourses": true,
   "subcourses": [
     {
       "id": "instagram-dm-automation",
       "title": "コメント→DM自動配布",
       "description": "Meta公式APIを使ってコメントからDMを自動送信する仕組みを構築",
-      "moduleCount": 2,
+      "moduleCount": 5,
+      "level": "beginner"
+    },
+    {
+      "id": "instagram-research",
+      "title": "競合リサーチ・ネタ探し",
+      "description": "ViralFindrを使ってバズっているリールを発見し、投稿ネタや競合分析に活用",
+      "moduleCount": 1,
       "level": "beginner"
     }
   ]

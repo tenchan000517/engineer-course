@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 
 const contentDirectory = path.join(process.cwd(), 'content');
 const modulesDirectory = path.join(contentDirectory, 'modules');
+const giftsDirectory = path.join(contentDirectory, 'gifts');
 
 // ============================================
 // Types
@@ -50,6 +51,14 @@ export interface ModuleData {
   difficulty: string;
   content: string;
   order: number;
+}
+
+export interface GiftData {
+  slug: string;
+  title: string;
+  duration: string;
+  difficulty: string;
+  content: string;
 }
 
 // ============================================
@@ -244,4 +253,68 @@ export function getAllModules(): ModuleData[] {
   const categories = getAllCategories();
   if (categories.length === 0) return [];
   return getModulesByCategory(categories[0].id);
+}
+
+// ============================================
+// Gift Functions (特典ページ用)
+// ============================================
+
+function parseGiftContent(fileName: string, fileContents: string): GiftData {
+  const slug = fileName.replace(/\.md$/, '');
+  const { content } = matter(fileContents);
+
+  // Extract title from first h1
+  const titleMatch = content.match(/^#\s+(.+)$/m);
+  const title = titleMatch ? titleMatch[1] : slug;
+
+  // Extract duration and difficulty
+  const durationMatch = content.match(/\*\*所要時間\*\*:\s*(.+)/);
+  const difficultyMatch = content.match(/\*\*難易度\*\*:\s*(.+)/);
+
+  const duration = durationMatch ? durationMatch[1] : '';
+  const difficulty = difficultyMatch ? difficultyMatch[1] : '';
+
+  // Clean content
+  let cleanedContent = content;
+  cleanedContent = cleanedContent.replace(/^#\s+.+$/m, '');
+  cleanedContent = cleanedContent.replace(/\*\*所要時間\*\*:\s*.+\n?/g, '');
+  cleanedContent = cleanedContent.replace(/\*\*難易度\*\*:\s*.+\n?/g, '');
+  cleanedContent = cleanedContent.replace(/^\n+---\n+/, '');
+  cleanedContent = cleanedContent.trim();
+
+  return {
+    slug,
+    title,
+    duration,
+    difficulty,
+    content: cleanedContent,
+  };
+}
+
+export function getAllGifts(): GiftData[] {
+  if (!fs.existsSync(giftsDirectory)) {
+    return [];
+  }
+
+  const fileNames = fs.readdirSync(giftsDirectory);
+
+  const gifts = fileNames
+    .filter((fileName) => fileName.endsWith('.md'))
+    .map((fileName) => {
+      const fullPath = path.join(giftsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      return parseGiftContent(fileName, fileContents);
+    });
+
+  return gifts;
+}
+
+export function getGiftBySlug(slug: string): GiftData | null {
+  try {
+    const fullPath = path.join(giftsDirectory, `${slug}.md`);
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    return parseGiftContent(`${slug}.md`, fileContents);
+  } catch (error) {
+    return null;
+  }
 }

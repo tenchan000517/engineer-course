@@ -1,0 +1,19 @@
+{
+  "id": "instagram-gift-post",
+  "title": "特典付き投稿システム",
+  "description": "特典付きInstagram投稿の作成からn8nでの自動投稿までの一連のワークフローを構築。リサーチ→特典ページ作成→GAS管理→自動投稿→エルグラム連携。",
+  "icon": "gift",
+  "color": "purple",
+  "order": 2,
+  "tags": {
+    "language": ["nocode", "gas"],
+    "framework": ["instagram", "n8n", "gas", "vercel"],
+    "editor": ["browser", "vscode"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "intermediate",
+    "topics": ["gift-post", "automation", "content-management", "spreadsheet"]
+  },
+  "moduleCount": 5,
+  "isSubcourse": true,
+  "parentCategory": "instagram"
+}
