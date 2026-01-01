@@ -123,7 +123,7 @@ export default async function SubcourseModulePage({
       </aside>
 
       <main className="flex-1 md:ml-64 w-full overflow-x-hidden min-w-0">
-        <div className="max-w-4xl mx-auto px-4 md:px-8 py-4 md:py-8 w-full min-w-0">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-8 w-full min-w-0">
           {/* 上部ナビゲーション */}
           <div className="flex justify-between items-center mb-6 md:mb-8 gap-2 w-full min-w-0">
             {prevModule ? (
