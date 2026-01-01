@@ -270,14 +270,18 @@ content/gifts/
 | `content/gifts/nanobanana-quick-start.md` | Nanobananaクイックスタート | 型E |
 | `content/gifts/sora2-quick-start.md` | Sora2クイックスタート | 型E |
 
-### 特典ページシステム（以前から存在）
+### 特典ページシステム
 
 | ファイル | 内容 |
 |----------|------|
 | `lib/markdown.ts` | `getAllGifts()`, `getGiftBySlug()` 関数追加 |
-| `app/gift/[slug]/page.tsx` | 特典ページルーティング（単独レイアウト） |
+| `app/gifts/page.tsx` | **特典一覧ページ**（カード形式、22件表示） |
+| `app/gift/[slug]/page.tsx` | 特典ページルーティング（単独レイアウト、max-w-7xl） |
 | `content/gifts/` | 特典コンテンツ配置先 |
-| `content/gifts/sample-chatgpt-canvas.md` | サンプル特典ページ |
+
+**URL構成**:
+- 一覧: `/gifts` → 個別: `/gift/{slug}`
+- 一方通行設計（一覧→個別のみ、戻りリンクなし）
 
 ### GASコード
 
@@ -588,6 +592,9 @@ content/gifts/
 | 2025-12-31 | **フェーズ8の詳細設計完了**。4つの投稿+特典セットを定義。次世代セッションで量産フェーズ開始 | AI Assistant |
 | 2025-01-01 | **フェーズ8完了**。20セットの台本を一括作成（`gift-post-scripts-batch.md`）。17個の特典ページを新規作成。フェーズ9へ | AI Assistant |
 | 2026-01-01 | **Module 06を全面改訂**。既存フロー流用→専用ワークフロー作成に方針変更。スケジュールが異なるため別ワークフローが必要。設定を変数化して柔軟性確保 | AI Assistant |
+| 2026-01-02 | **特典一覧ページ作成**（`/gifts`）。カード形式で22件表示。一方通行設計（一覧→特典のみ、戻りリンクなし） | AI Assistant |
+| 2026-01-02 | **全ページのコンテンツ幅を拡大**。max-w-4xl(896px)→max-w-7xl(1280px)に変更。特典ページ・モジュールページ全10ファイル対象 | AI Assistant |
+| 2026-01-02 | **本番デプロイ完了**。Vercel --prod実行 | AI Assistant |
 
 ---
 
