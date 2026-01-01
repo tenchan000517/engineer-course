@@ -7,12 +7,14 @@ import { ReactNode } from 'react';
 const subcourseDirectoryMap: Record<string, string> = {
   'instagram-dm-automation': 'instagram-dm-automation',
   'instagram-research': 'instagram-research',
+  'instagram-gift-post': 'instagram-gift-post',
 };
 
 export async function generateStaticParams() {
   return [
     { subcourseSlug: 'instagram-dm-automation' },
     { subcourseSlug: 'instagram-research' },
+    { subcourseSlug: 'instagram-gift-post' },
   ];
 }
 

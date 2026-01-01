@@ -29,6 +29,13 @@
       "description": "ViralFindrを使ってバズっているリールを発見し、投稿ネタや競合分析に活用",
       "moduleCount": 1,
       "level": "beginner"
+    },
+    {
+      "id": "instagram-gift-post",
+      "title": "特典付き投稿システム",
+      "description": "特典付きInstagram投稿の作成からn8nでの自動投稿までの一連のワークフローを構築",
+      "moduleCount": 7,
+      "level": "intermediate"
     }
   ]
 }

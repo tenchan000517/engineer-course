@@ -11,6 +11,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer';
 const subcourseDirectoryMap: Record<string, string> = {
   'instagram-dm-automation': 'instagram-dm-automation',
   'instagram-research': 'instagram-research',
+  'instagram-gift-post': 'instagram-gift-post',
 };
 
 // orderを表示用に変換（2.1 → A, 2.2 → B, ...）
@@ -39,6 +40,15 @@ export async function generateStaticParams() {
   researchModules.forEach((module) => {
     params.push({
       subcourseSlug: 'instagram-research',
+      moduleSlug: module.slug,
+    });
+  });
+
+  // instagram-gift-post のモジュール
+  const giftPostModules = getModulesByCategory('instagram-gift-post');
+  giftPostModules.forEach((module) => {
+    params.push({
+      subcourseSlug: 'instagram-gift-post',
       moduleSlug: module.slug,
     });
   });
