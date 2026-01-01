@@ -140,8 +140,7 @@ Antigravityの出力はあくまで「叩き台」。Claude Codeは以下を行�
 [CTA]
 
 【画像プロンプト】英語のみ
-Flowchart showing AI workflow. Labels: INPUT, PROCESS, OUTPUT.
-Minimal design, white background.
+Google Workspace automation flowchart on white background. Four official Google icons in corners: Gmail (red envelope), Sheets (green grid), Docs (blue document), Drive (triangle). Central AI brain icon with sparkles in purple. Curved arrows connecting all apps through center hub. Large text 'AUTO WORKFLOW' at bottom in bold sans-serif. Each icon in white rounded square with subtle shadow. Clean spacing, modern diagram style.
 
 【リプライ】ソースURL（価値があれば）
 ```
@@ -448,7 +447,8 @@ quality_check_report.json    # 品質チェック結果
 | 2025-12-29 | URLルール改定（必須→価値があれば） |
 | 2025-12-29 | 全体フロー明確化（Antigravity→Claude Code） |
 | 2025-12-29 | ★URL検証ステップ追加（トップページURL問題対策） |
+| 2025-01-02 | 画像プロンプト例を詳細版に更新 |
 
 ---
 
-**最終更新**: 2025-12-29
+**最終更新**: 2025-01-02

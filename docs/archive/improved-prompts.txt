@@ -1,0 +1,512 @@
+================================================================================
+1
+================================================================================
+BEFORE:
+Comparison table with two columns. Left: GPT-5.2 with OpenAI logo. Right: Gemini 3 with Google logo. Rows: Coding, Creative, Speed, Reasoning. Checkmarks and ratings. Clean minimal design.
+
+AFTER:
+Professional comparison infographic on white background. Two-column table with rounded corners and subtle drop shadow. Left column header: GPT-5.2 with green OpenAI logo on light gray. Right column header: Gemini 3 with blue/red/yellow/green Google logo on light gray. Four rows with icons: Coding (brackets icon), Creative (palette), Speed (lightning), Reasoning (brain). Green checkmarks for winners, gray for others. Consistent 24px padding, modern sans-serif typography. Sharp vector-style graphics.
+
+================================================================================
+2
+================================================================================
+BEFORE:
+Two-column comparison. Claude vs GPT icons. Rows: Japanese, Coding, Long Text, Reasoning. Checkmarks and ratings. Clean comparison table.
+
+AFTER:
+Professional comparison infographic on white background. Two-column table with rounded corners and subtle drop shadow. Left column: Claude with orange Anthropic logo. Right column: ChatGPT with green OpenAI logo. Four rows with icons: Japanese (Japan flag icon), Coding (code brackets), Long Text (document stack), Reasoning (lightbulb). Green checkmarks for winners, star ratings below each. Modern sans-serif typography, consistent spacing. Sharp vector-style graphics.
+
+================================================================================
+3
+================================================================================
+BEFORE:
+Split screen comparison. Left side: Text 'AI IMAGE'. Right side: Generated artwork. Quality indicators and checkmarks. Modern tech presentation style.
+
+AFTER:
+Split screen infographic on white background with thin vertical divider. Left panel: Large text 'AI IMAGE' in bold sans-serif, prompt text box below with sample text. Right panel: Generated colorful artwork example with glossy finish. Quality indicator bar at bottom showing HIGH level in green. Green checkmarks next to features: Resolution, Detail, Style. Rounded corners, subtle shadows. Modern tech presentation style.
+
+================================================================================
+4
+================================================================================
+BEFORE:
+Calendar icon with notification bell. Text labels: SCHEDULE, REMIND, NOTIFY. Arrows showing automation flow. Simple flat design, white background.
+
+AFTER:
+Automation workflow infographic on white background. Large blue calendar icon on left with date grid visible. Yellow notification bell icon on right with motion lines. Three labeled steps connected by curved blue arrows: SCHEDULE (calendar), REMIND (clock), NOTIFY (bell). Each label in rounded pill shape with icon. Flat design style, soft shadows, modern sans-serif typography. Clean spacing with 32px gaps.
+
+================================================================================
+5
+================================================================================
+BEFORE:
+Tree diagram showing conversation branches. Main trunk splits into three branches labeled A, B, C. Each branch has sub-nodes. Clean minimal flowchart style.
+
+AFTER:
+Conversation tree diagram on white background. Central trunk as vertical blue line starting from chat bubble icon at top. Three main branches spreading horizontally, labeled A (green), B (blue), C (orange) in circular nodes. Each branch has 2-3 smaller sub-nodes as circles. Connecting lines with rounded corners. Light gray dotted guidelines. Modern sans-serif labels, consistent node sizes. Clean minimal flowchart style with subtle shadows.
+
+================================================================================
+6
+================================================================================
+BEFORE:
+Flowchart with Google app icons: Gmail, Sheets, Docs, Drive. Arrows connecting them. AI icon in center. Text: 'AUTO WORKFLOW'. Clean automation diagram.
+
+AFTER:
+Google Workspace automation flowchart on white background. Four official Google icons in corners: Gmail (red envelope), Sheets (green grid), Docs (blue document), Drive (triangle). Central AI brain icon with sparkles in purple. Curved arrows connecting all apps through center hub. Large text 'AUTO WORKFLOW' at bottom in bold sans-serif. Each icon in white rounded square with subtle shadow. Clean spacing, modern diagram style.
+
+================================================================================
+7
+================================================================================
+BEFORE:
+Speech bubble with text transforming into flowchart. No code symbol. Text: 'DESCRIBE → BUILD'. Simple before/after diagram.
+
+AFTER:
+Before/after transformation diagram on white background. Left side: Large speech bubble with sample text lines inside. Center: Transformation arrow with sparkles, crossed-out code brackets symbol above. Right side: Professional flowchart with connected nodes. Large text 'DESCRIBE → BUILD' at bottom with arrow icon between words. Gradient from blue (left) to green (right). Rounded corners, modern sans-serif typography, subtle shadows.
+
+================================================================================
+8
+================================================================================
+BEFORE:
+Gmail icon with sorting arrows. Three folders: IMPORTANT, ARCHIVE, REPLY. Automation flow diagram. Text: 'AUTO EMAIL'. Clean email workflow.
+
+AFTER:
+Email automation workflow on white background. Large Gmail icon (red envelope) at top. Three branching arrows pointing down to three folder icons: IMPORTANT (red star, red folder), ARCHIVE (gray box, gray folder), REPLY (blue arrow, blue folder). Each folder labeled in rounded pill below. Sorting arrows with gradient colors. Text 'AUTO EMAIL' at bottom in bold sans-serif. Clean layout with consistent spacing, subtle shadows.
+
+================================================================================
+9
+================================================================================
+BEFORE:
+Spreadsheet icon with data flowing in automatically. Charts generating. Timer icon for scheduling. Text: 'AUTO DATA'. Clean data workflow.
+
+AFTER:
+Data automation infographic on white background. Left: Multiple small data source icons (database, cloud, API) with blue flowing lines. Center: Large green spreadsheet icon with cells and numbers visible. Right: Generated charts (bar chart, line graph, pie chart) emerging with sparkle effects. Small orange timer icon in corner. Text 'AUTO DATA' at bottom in bold sans-serif. Flowing animation lines, modern flat design, subtle shadows.
+
+================================================================================
+10
+================================================================================
+BEFORE:
+Report document with charts, auto-generated. Calendar with recurring icon. Send arrow to email. Text: 'AUTO REPORT'. Professional report style.
+
+AFTER:
+Automated reporting workflow on white background. Left: Calendar icon with circular recurring arrows in blue. Center: Professional report document with embedded bar chart and pie chart, AI sparkle icon overlay. Right: Email envelope icon with send arrow. Connected by curved workflow arrows. Text 'AUTO REPORT' at bottom in bold navy sans-serif. Professional business style, subtle shadows, consistent 24px spacing.
+
+================================================================================
+11
+================================================================================
+BEFORE:
+Hexagonal diagram with 'Gemini 3' in center. Six connected nodes: MULTIMODAL, REASONING, WORKSPACE, CODING, SPEED, VISION. Google colors, clean design.
+
+AFTER:
+Hexagonal hub diagram on white background. Large central hexagon with 'Gemini 3' text and Google G logo inside, gradient blue/purple fill. Six outer hexagons connected by lines: MULTIMODAL (image+text icon, red), REASONING (brain icon, blue), WORKSPACE (grid icon, green), CODING (brackets icon, yellow), SPEED (lightning icon, orange), VISION (eye icon, purple). Each label below its hexagon. Google brand colors, modern sans-serif typography, subtle shadows.
+
+================================================================================
+12
+================================================================================
+BEFORE:
+Diamond gem icon with sparkles. Connected to three smaller icons: DOCUMENT, CHAT, DATABASE. Text: 'Custom AI'. Elegant minimal design.
+
+AFTER:
+Custom AI hub diagram on white background. Large purple diamond gem icon in center with animated sparkle effects around it. Three connected nodes via thin elegant lines: DOCUMENT (blue file icon), CHAT (green speech bubble), DATABASE (orange cylinder). Each with label below in small caps. Text 'Custom AI' below center in elegant serif font. Soft gradient background glow behind gem. Minimal design, luxury feel, subtle shadows.
+
+================================================================================
+13
+================================================================================
+BEFORE:
+Banana icon with sparkles. Four feature icons around it: TEXT, LANGUAGE, CHARACTER, SEARCH. Text: 'NanoBanana Pro'. Playful yet professional design.
+
+AFTER:
+Feature hub diagram on white background. Large yellow banana icon in center with golden sparkle effects and small crown. Four surrounding feature icons in circles: TEXT (document icon, blue), LANGUAGE (globe icon, green), CHARACTER (person silhouette, orange), SEARCH (magnifying glass, purple). Connected by curved dotted lines. Text 'NanoBanana Pro' below in bold playful font with gradient. Cheerful yet professional, rounded corners, soft shadows.
+
+================================================================================
+14
+================================================================================
+BEFORE:
+Robot agent icon with multiple task icons around it: RESEARCH, ANALYZE, REPORT, BROWSE. Central hub design. Text: 'AI AGENT'. Clean automation style.
+
+AFTER:
+AI Agent hub diagram on white background. Central robot icon with friendly face, blue metallic finish, antenna with signal waves. Four orbiting task icons: RESEARCH (magnifying glass + document, green), ANALYZE (chart bars, blue), REPORT (clipboard with checkmark, orange), BROWSE (globe with cursor, purple). Orbital rings connecting them. Text 'AI AGENT' below in bold tech font. Futuristic clean style, glowing accents, subtle shadows.
+
+================================================================================
+15
+================================================================================
+BEFORE:
+Central hub with 50 source icons around it. Types: PDF, URL, VIDEO, AUDIO. Text: '50 SOURCES'. Hub and spoke diagram, clean design.
+
+AFTER:
+Hub and spoke diagram on white background. Large central circle with brain/AI icon and '50' number badge. Multiple small icons radiating outward in organized rings: PDF (red), URL (blue link), VIDEO (purple play button), AUDIO (orange waveform), plus various document types. Thin spoke lines connecting to center. Text '50 SOURCES' prominently below in bold sans-serif. Color-coded by type, clean organized layout, subtle shadows.
+
+================================================================================
+16
+================================================================================
+BEFORE:
+Claude logo with feature icons: JAPANESE, LONG TEXT, COMPLEX, QUALITY. Star ratings for each. Clean product overview style.
+
+AFTER:
+Product feature overview on white background. Large Claude logo (orange/coral) centered at top. Four feature rows below with icons and 5-star ratings: JAPANESE (Japan flag icon, 5 gold stars), LONG TEXT (stacked documents, 5 stars), COMPLEX (interconnected nodes, 5 stars), QUALITY (diamond gem, 5 stars). Each row in rounded card with light gray background. Modern sans-serif labels, consistent spacing, clean product style.
+
+================================================================================
+17
+================================================================================
+BEFORE:
+Text bubble transforming into code, then into app screen. Three step flow: DESCRIBE → CODE → APP. Clean development workflow.
+
+AFTER:
+Three-step transformation flow on white background. Step 1: Large speech bubble with text lines, labeled 'DESCRIBE' below. Step 2: Code editor window with syntax-highlighted code, labeled 'CODE' below. Step 3: Mobile app screen mockup with UI elements, labeled 'APP' below. Large gradient arrows between steps (blue to purple to green). Each step number in circle above. Modern development workflow style, rounded corners, subtle shadows.
+
+================================================================================
+18
+================================================================================
+BEFORE:
+Light bulb idea icon transforming into working app. Vibes/waves around it. Text: 'IDEA → APP'. Creative coding style.
+
+AFTER:
+Idea to app transformation on white background. Left: Glowing yellow light bulb icon with radiating creative waves and sparkles in rainbow colors. Center: Large transformation arrow with magic particle effects. Right: Polished mobile app mockup with working UI, green status indicators. Text 'IDEA → APP' below in bold gradient font (yellow to green). Creative energetic style, motion blur effects, vibrant colors.
+
+================================================================================
+19
+================================================================================
+BEFORE:
+Sketch transforming into interactive prototype. Feedback arrows and iteration cycles. Text: 'RAPID PROTOTYPE'. Agile development style.
+
+AFTER:
+Rapid prototyping workflow on white background. Left: Hand-drawn wireframe sketch on paper texture. Center: Circular iteration arrows with version numbers (v1, v2, v3). Right: Polished interactive prototype with clickable buttons highlighted. Feedback comment bubbles around prototype. Text 'RAPID PROTOTYPE' below in bold tech font. Agile/sprint style colors (blue, green), motion indicators, modern development aesthetic.
+
+================================================================================
+20
+================================================================================
+BEFORE:
+Document icon transforming into slide deck. Three slide thumbnails showing text, charts, and images. Arrow: SOURCE → SLIDES. Clean professional style.
+
+AFTER:
+Document to slides transformation on white background. Left: Stack of document pages with text lines visible. Center: Large curved transformation arrow with AI sparkle effect. Right: Three slide thumbnails in row showing: text layout slide, chart/graph slide, image-heavy slide. Arrow label 'SOURCE → SLIDES' below in professional sans-serif. Blue and orange accent colors, clean corporate style, subtle shadows, consistent spacing.
+
+================================================================================
+21
+================================================================================
+BEFORE:
+Spreadsheet icon connected to analysis icon. Charts and graphs emerging. Text: 'DATA → INSIGHTS'. Clean analytical style.
+
+AFTER:
+Data analysis transformation on white background. Left: Green spreadsheet with visible cells and numbers. Center: AI brain icon with processing indicators. Right: Multiple emerging visualizations - bar chart (blue), line graph (green), pie chart (orange), trend arrow (purple). Flowing connection lines between elements. Text 'DATA → INSIGHTS' below in bold analytical font. Clean corporate style, data-focused colors, subtle shadows.
+
+================================================================================
+22
+================================================================================
+BEFORE:
+Headphones icon with audio waveform. Document icon transforming into podcast icon. Text: 'DOCUMENT → AUDIO'. Clean modern style.
+
+AFTER:
+Document to audio transformation on white background. Left: Blue document icon with text lines. Center: Animated audio waveform in gradient purple, large headphones icon above. Right: Podcast microphone icon with broadcast waves. Transformation arrow flowing through waveform. Text 'DOCUMENT → AUDIO' below in modern rounded font. Purple and blue gradient accents, audio visualization style, clean modern aesthetic.
+
+================================================================================
+23
+================================================================================
+BEFORE:
+Infographic template with charts, icons, and data visualizations. Text: 'DATA → VISUAL'. Professional business style, clean layout.
+
+AFTER:
+Data visualization showcase on white background. Central infographic template showing: header section with title, KPI cards with numbers and trend arrows, bar chart section, pie chart section, icon grid with statistics. Left: Raw data table. Arrow pointing to infographic. Text 'DATA → VISUAL' below in professional serif font. Corporate blue and teal colors, clean grid layout, subtle shadows, business presentation style.
+
+================================================================================
+24
+================================================================================
+BEFORE:
+Chat interface showing multiple user avatars and AI icon in group conversation. Speech bubbles with icons. Modern messaging app style, clean design.
+
+AFTER:
+Group chat interface mockup on white background. Phone screen frame showing: header with 'Team Chat' title, multiple user avatar circles (different colors) on left of messages, AI assistant avatar (purple robot) on right responses. Speech bubbles with text and reaction icons. Typing indicator at bottom. Modern messaging app style with rounded bubbles, soft shadows, blue accent color, clean iOS/Android design aesthetic.
+
+================================================================================
+25
+================================================================================
+BEFORE:
+Image editing app interface with AI enhancement tools. Before/after image comparison. Text: 'BUILD YOUR OWN'. App development style.
+
+AFTER:
+AI image editor app mockup on white background. App window showing: toolbar with AI enhancement buttons (magic wand, auto-enhance, remove background). Main canvas with before/after slider comparison - left side original photo, right side AI-enhanced. Side panel with adjustment sliders. Text 'BUILD YOUR OWN' below in tech startup font. Purple and white app theme, modern UI components, subtle shadows, developer showcase style.
+
+================================================================================
+26
+================================================================================
+BEFORE:
+Beginner-friendly interface with simple steps: 1, 2, 3. Smiling user icon. Text: '5 MINUTES TO FIRST APP'. Welcoming tutorial style.
+
+AFTER:
+Beginner tutorial interface on white background. Three large numbered circles (1, 2, 3) in green gradient, connected by dotted progress line. Each with simple icon: 1 (click cursor), 2 (drag blocks), 3 (play button). Friendly smiling user avatar giving thumbs up. Confetti/celebration elements. Text '5 MINUTES TO FIRST APP' in friendly rounded bold font with stopwatch icon. Welcoming green and yellow colors, playful but professional.
+
+================================================================================
+27
+================================================================================
+BEFORE:
+Browser window with code editor. Cloud icon. Text: 'NO INSTALL NEEDED'. Web-based development style.
+
+AFTER:
+Web-based IDE mockup on white background. Browser window frame with URL bar showing 'app.example.com'. Inside: split-pane code editor with syntax highlighting (left), live preview (right). Large cloud icon above browser with checkmark. Crossed-out download/install icon. Text 'NO INSTALL NEEDED' below in modern tech font with cloud accent. Blue and white theme, clean developer aesthetic, subtle shadows.
+
+================================================================================
+28
+================================================================================
+BEFORE:
+Terminal window with code and Claude icon. Review checkmarks and suggestion bubbles. Text: 'CODE ASSISTANT'. Developer tools style.
+
+AFTER:
+AI code assistant interface on white background. Dark terminal window with syntax-highlighted code, line numbers visible. Claude AI icon (orange) in corner with glowing effect. Green checkmarks next to reviewed code lines. Suggestion bubbles pointing to specific lines with improvement tips. Text 'CODE ASSISTANT' below in monospace developer font. Dark theme terminal, orange and green accents, professional developer tools aesthetic.
+
+================================================================================
+29
+================================================================================
+BEFORE:
+Speed meter graphic showing 'FAST' level. Lightning bolt icon. Text: 'SWE-bench 78%'. Performance bars. Clean minimal tech style.
+
+AFTER:
+Performance benchmark graphic on white background. Large semicircular speed meter with needle pointing to green 'FAST' zone. Yellow lightning bolt icon with motion lines. Horizontal performance bars below: Coding (78%, green), Reasoning (85%, blue), Speed (92%, orange). Large text 'SWE-bench 78%' in bold tech font with upward trend arrow. Clean minimal tech style, gradient fills, subtle shadows.
+
+================================================================================
+30
+================================================================================
+BEFORE:
+Brain icon with multiple connected thought bubbles. Arrows showing iterative thinking process. Labels: HYPOTHESIS A, B, C. Clean minimal design.
+
+AFTER:
+Iterative thinking process diagram on white background. Central purple brain icon with neural network pattern overlay. Three thought bubble chains extending outward, each labeled: HYPOTHESIS A (green path), HYPOTHESIS B (blue path), HYPOTHESIS C (orange path). Circular arrows showing iteration/refinement cycles. Small lightbulb icons at successful endpoints. Text labels in clean sans-serif. Minimal scientific style, subtle gradients, clean connecting lines.
+
+================================================================================
+31
+================================================================================
+BEFORE:
+Version badge '1.6 MAX' with four feature icons: MOBILE APP, IMAGE EDIT, BROWSER, MULTITASK. Upgrade arrow. Clean product update style.
+
+AFTER:
+Product version update graphic on white background. Large version badge '1.6 MAX' in gradient gold/orange with shine effect and 'NEW' ribbon. Four feature icons in grid below: MOBILE APP (phone icon), IMAGE EDIT (magic wand on photo), BROWSER (globe with cursor), MULTITASK (four squares). Green upward upgrade arrow with sparkles. Each feature with checkmark. Modern product announcement style, celebratory colors, subtle shadows.
+
+================================================================================
+32
+================================================================================
+BEFORE:
+AI brain icon with verification checkmarks. Source documents connected with citation links. Text: 'GROUNDED AI'. Trust indicators, clean design.
+
+AFTER:
+Grounded AI trust diagram on white background. Central AI brain icon with shield overlay and green verification checkmark. Multiple source documents around it (research paper, website, database) connected by citation link lines with reference numbers. Trust indicator badges: 'VERIFIED', 'CITED', 'ACCURATE' in green pills. Text 'GROUNDED AI' below in trustworthy serif font. Blue and green trust colors, professional academic style, clean layout.
+
+================================================================================
+33
+================================================================================
+BEFORE:
+Google Slides icon connected to image generation icon with plus sign. Slide examples with generated images. Clean integration diagram.
+
+AFTER:
+Google Slides integration diagram on white background. Large official Google Slides icon (yellow) on left. Large plus sign in circle (blue). AI image generation icon (purple camera with sparkles) on right. Below: three slide thumbnails showing generated images inserted - landscape photo slide, product image slide, illustration slide. Text 'SLIDES + AI IMAGES' below. Google brand colors, clean integration style, subtle shadows.
+
+================================================================================
+34
+================================================================================
+BEFORE:
+NotebookLM icon connected to image gallery. Arrows showing: DOCUMENT → ANALYZE → VISUALIZE. Clean workflow diagram.
+
+AFTER:
+NotebookLM visualization workflow on white background. Left: NotebookLM icon (purple notebook with AI sparkle). Center: Three-step arrow flow with labels: DOCUMENT (upload icon), ANALYZE (magnifying glass), VISUALIZE (chart icon). Right: Image gallery grid showing generated infographics and charts. Flowing gradient arrows connecting steps. Google purple brand color, clean analytical workflow style, subtle shadows, modern typography.
+
+================================================================================
+35
+================================================================================
+BEFORE:
+LINE app icon connected to Manus AI icon. Message bubbles with task icons. Text: 'LINE + AI'. Messaging integration style.
+
+AFTER:
+LINE AI integration diagram on white background. Large official LINE icon (green speech bubble) on left. Connection line with plus sign. AI assistant icon (blue robot with antenna) on right. Message bubble examples between them showing: task request (checklist icon), AI response (sparkle), completed notification (checkmark). Text 'LINE + AI' below in friendly rounded font. LINE green and AI blue colors, messaging app style, clean modern design.
+
+================================================================================
+36
+================================================================================
+BEFORE:
+ChatGPT icon and Canva icon connected with arrows. Design template emerging from chat bubble. Text: 'CHAT → DESIGN'. Integration diagram.
+
+AFTER:
+ChatGPT to Canva integration on white background. Left: ChatGPT icon (green) with chat bubble containing design request text. Center: Bidirectional arrows with magic sparkle effect. Right: Canva icon (blue/purple gradient) with design canvas. Below: Design template examples emerging - social post, presentation slide, banner. Text 'CHAT → DESIGN' in modern gradient font. Green to purple color flow, creative integration style, subtle shadows.
+
+================================================================================
+37
+================================================================================
+BEFORE:
+Gem diamond icon connected to workflow flowchart. Custom AI processing steps. Text: 'GEMS + FLOWS'. Advanced automation diagram.
+
+AFTER:
+Advanced AI automation diagram on white background. Left: Purple gem diamond icon (Google AI Studio Gems) with sparkle effects. Center: Complex flowchart with decision nodes, process boxes, and conditional branches. Multiple gem icons at decision points indicating custom AI processing. Right: Output icons (document, email, database). Text 'GEMS + FLOWS' below in tech font with gem icon. Purple and blue advanced tech colors, sophisticated diagram style.
+
+================================================================================
+38
+================================================================================
+BEFORE:
+Three app icons (Photo, Designer, Publisher) merging into one Canva logo. Text: 'ALL IN ONE'. File format icons: PSD, AI. Clean merger diagram.
+
+AFTER:
+App consolidation diagram on white background. Three separate app icons at top: Photo Editor (camera icon, red), Designer (pen tool, blue), Publisher (document icon, green). Merging arrows pointing down to large Canva logo in center with glow effect. File format badges around it: PSD, AI, PDF, PNG with checkmarks. Text 'ALL IN ONE' below in bold modern font. Before/after comparison style, clean corporate merger aesthetic, subtle shadows.
+
+================================================================================
+39
+================================================================================
+BEFORE:
+Magic wand icon with sparkles. Four feature icons: BACKGROUND, 3D, VIDEO, EDIT. Before/after comparison. Clean magical style.
+
+AFTER:
+AI magic features showcase on white background. Large purple magic wand icon with golden sparkles and star trail effect. Four feature cards around it: BACKGROUND (eraser removing bg, before/after), 3D (flat to 3D cube), VIDEO (film strip with AI), EDIT (photo with adjustments). Each card shows mini before/after. Central before/after photo comparison with slider. Text 'AI MAGIC' below in whimsical gradient font. Magical purple and gold theme, enchanting style.
+
+================================================================================
+40
+================================================================================
+BEFORE:
+Slide deck with AI magic wand. Before (blank) and after (designed) slides. Text: 'AI SLIDES'. Professional presentation style.
+
+AFTER:
+AI presentation transformation on white background. Left: Blank white slide with just bullet points, labeled 'BEFORE'. Center: Magic wand icon with AI sparkles and transformation rays. Right: Beautifully designed slide with graphics, icons, professional layout, labeled 'AFTER'. Three additional slide thumbnails below showing variety. Text 'AI SLIDES' in professional bold font with magic accent. Blue and gold professional theme, corporate presentation style, subtle shadows.
+
+================================================================================
+41
+================================================================================
+BEFORE:
+Instagram post templates in grid. AI icon generating content. Text: 'AUTO GENERATE'. Social media ready sizes shown. Clean social style.
+
+AFTER:
+Social media content generation on white background. AI brain icon at top with content rays emanating down. Grid of Instagram post templates: quote post, product showcase, carousel preview, story format. Size indicators: 1080x1080, 1080x1350, 1920x1080. Each template with placeholder content and Instagram UI elements. Text 'AUTO GENERATE' below in trendy social media font. Instagram gradient colors (pink/purple/orange), modern social style, clean grid layout.
+
+================================================================================
+42
+================================================================================
+BEFORE:
+Code brackets icon inside Canva design. Interactive elements like buttons and animations. Text: 'CODE + DESIGN'. Modern creative style.
+
+AFTER:
+Code meets design showcase on white background. Split composition: Left side shows code editor with HTML/CSS, syntax highlighted. Right side shows rendered interactive design with animated button, hover effects indicator, smooth transitions arrows. Code brackets and image icon merging with plus sign. Text 'CODE + DESIGN' below in modern tech-creative hybrid font. Blue (code) and pink (design) gradient split, modern creative developer style.
+
+================================================================================
+43
+================================================================================
+BEFORE:
+Document stack with AI enhancement glow. Types: MANUAL, FAQ, TECH DOCS. Text: 'AUTO DOCS'. Professional documentation style.
+
+AFTER:
+AI documentation generation on white background. Input: messy notes and raw text on left. Center: AI processing icon with glowing enhancement effect. Output: Three polished document types stacked - MANUAL (blue, book icon), FAQ (green, question mark), TECH DOCS (orange, gear icon). Each with professional formatting preview. Text 'AUTO DOCS' below in clean technical font. Professional blue and gray documentation colors, corporate technical style, subtle shadows.
+
+================================================================================
+44
+================================================================================
+BEFORE:
+Three panels showing same character in different poses and backgrounds. Consistency arrow connecting all three. Text: 'SAME CHARACTER'. Clean illustration style.
+
+AFTER:
+Character consistency showcase on white background. Three comic-style panels in row: Panel 1 - character standing, city background. Panel 2 - same character sitting, office background. Panel 3 - same character running, park background. Green consistency checkmarks on each panel. Dotted arrow line connecting all three with 'CONSISTENT' label. Reference character sheet thumbnail in corner. Text 'SAME CHARACTER' below in comic book font. Vibrant illustration colors, clean panel borders, comic book style.
+
+================================================================================
+45
+================================================================================
+BEFORE:
+Social media post templates in different sizes. Icons: Instagram, Twitter, YouTube. Text: 'SNS READY'. Modern social media style.
+
+AFTER:
+Multi-platform social templates on white background. Three template mockups with platform icons: Instagram (square 1:1 with gradient border), Twitter/X (landscape 16:9 with bird icon), YouTube (thumbnail 16:9 with play button). Each showing same content adapted to size. Platform icons above each. Dimension labels below. Text 'SNS READY' in trendy bold social font with checkmark. Platform brand colors, modern social media aesthetic, clean organized grid.
+
+================================================================================
+46
+================================================================================
+BEFORE:
+Professor icon at podium. Clock showing 30 minutes. Three length options: SHORT, DEFAULT, LONG. Clean educational style.
+
+AFTER:
+Podcast length options on white background. Friendly professor character at podium with microphone, academic style. Large clock showing 30 minutes highlighted. Three length option cards: SHORT (5 min, coffee cup icon), DEFAULT (30 min, highlighted with glow), LONG (60 min, book icon). Each with duration bar indicator. Text 'CHOOSE LENGTH' in educational friendly font. Academic blue and warm yellow colors, welcoming educational style, rounded corners.
+
+================================================================================
+47
+================================================================================
+BEFORE:
+Writer icon training AI. Learning cycle arrows. Text samples showing style consistency. Text: 'TRAIN YOUR WRITER'. Creative AI style.
+
+AFTER:
+AI writing style training on white background. Left: Writer persona icon with pen, surrounded by sample text snippets in specific style. Center: Circular training cycle with arrows - UPLOAD, LEARN, ADAPT, GENERATE. Right: AI icon producing text in matching style with consistency checkmarks. Before/after text comparison showing style match. Text 'TRAIN YOUR WRITER' in creative typewriter-style font. Purple and coral creative colors, learning diagram style, clean educational aesthetic.
+
+================================================================================
+48
+================================================================================
+BEFORE:
+Magnifying glass icon with web pages flowing into report. Analysis icons. Text: 'AUTO RESEARCH'. Research workflow style.
+
+AFTER:
+Automated research workflow on white background. Left: Multiple web page icons and document sources flowing inward. Center: Large magnifying glass with AI eye icon, analysis indicators (checkmarks, highlights). Right: Polished research report with citations, key findings highlighted, executive summary. Progress indicators: SEARCH, ANALYZE, SUMMARIZE, CITE. Text 'AUTO RESEARCH' in academic professional font. Blue and green research colors, scholarly style, clean flow diagram.
+
+================================================================================
+49
+================================================================================
+BEFORE:
+Research icon flowing to slide deck. Gemini and Manus logos working together. Text: 'RESEARCH → SLIDES'. Professional workflow.
+
+AFTER:
+Research to presentation workflow on white background. Left: Research document stack with highlight markers. Center: Two AI icons working together - Gemini (Google colors) and Manus (blue) with collaboration arrows. Right: Professional slide deck with research findings formatted - title slide, data slides, conclusion. Workflow arrow with transformation sparkles. Text 'RESEARCH → SLIDES' in professional business font. Corporate blue and Google colors, professional workflow aesthetic, subtle shadows.
+
+================================================================================
+50
+================================================================================
+BEFORE:
+Task board with checkboxes, AI updating progress. Calendar and notification icons. Text: 'AUTO TASK MANAGEMENT'. Project management style.
+
+AFTER:
+AI task management dashboard on white background. Kanban board with three columns: TO DO (red), IN PROGRESS (yellow), DONE (green). Task cards with checkboxes, some with AI sparkle icon auto-updating. AI robot assistant icon moving tasks between columns. Calendar widget showing scheduled tasks. Notification bell with badge. Progress bar at top. Text 'AUTO TASK MANAGEMENT' in clean project management font. Productivity app colors, modern dashboard style, subtle shadows.
+
+================================================================================
+51
+================================================================================
+BEFORE:
+Music note icons with AI generation sparkles. Genre labels: POP, ROCK, JAZZ. Microphone icon. Text: 'AI MUSIC'. Creative music style.
+
+AFTER:
+AI music generation showcase on white background. Large musical notes with AI sparkle effects and generation rays. Three genre cards: POP (pink, synthesizer icon), ROCK (red, guitar icon), JAZZ (blue, saxophone icon). Professional microphone icon in center with sound waves. Audio waveform visualization below. Text 'AI MUSIC' in stylized music industry font with note accent. Vibrant music industry colors, creative audio style, dynamic composition.
+
+================================================================================
+52
+================================================================================
+BEFORE:
+Music note flowing to Spotify icon. Dollar signs and streaming chart. Text: 'CREATE → DISTRIBUTE → EARN'. Music business workflow.
+
+AFTER:
+Music monetization workflow on white background. Three-step flow: CREATE (music notes with AI sparkle, studio icon), DISTRIBUTE (arrows to platform icons - Spotify green, Apple Music pink, YouTube red), EARN (dollar signs, rising revenue chart, coin stack). Each step in rounded card with icon and label. Success indicators: play counts, revenue numbers. Text 'CREATE → DISTRIBUTE → EARN' in bold music business font. Green money accents, professional music industry style.
+
+================================================================================
+53
+================================================================================
+BEFORE:
+Video player with music wave. Custom BGM label. YouTube icon. Text: 'ORIGINAL BGM'. Content creator style.
+
+AFTER:
+Custom BGM for creators on white background. Video player interface with play button and timeline. Audio waveform overlay in colorful gradient beneath video. 'CUSTOM BGM' label badge with music note. YouTube icon with creator checkmark. Copyright-free indicator with green checkmark. Video thumbnail examples with music icon overlay. Text 'ORIGINAL BGM' in content creator style font. YouTube red and audio purple colors, creator-focused modern style.
+
+================================================================================
+54
+================================================================================
+BEFORE:
+Prompt text box with music settings: GENRE, TEMPO, INSTRUMENTS. Quality meter showing improvement. Text: 'BETTER PROMPTS'. Tutorial style.
+
+AFTER:
+Music prompt optimization tutorial on white background. Large text input box with sample music prompt. Three setting sliders below: GENRE (dropdown showing options), TEMPO (BPM slider 60-180), INSTRUMENTS (multi-select chips). Before/after quality comparison: basic prompt, optimized prompt with quality meter going from yellow to green. Lightbulb tip icons. Text 'BETTER PROMPTS' in educational tutorial font. Blue and green learning colors, helpful tutorial aesthetic, clean UI style.
+
+================================================================================
+55
+================================================================================
+BEFORE:
+Short music wave with brand logo placeholder. Podcast and ad icons. Text: 'CUSTOM JINGLE'. Business audio branding style.
+
+AFTER:
+Custom jingle creation on white background. Short audio waveform (5-10 second length indicator) with brand logo placeholder in center. Use case icons around it: PODCAST INTRO (microphone), AD SPOT (megaphone), BRAND VIDEO (play button), PHONE HOLD (telephone). Each with mini waveform. Professional audio editing interface preview. Text 'CUSTOM JINGLE' in professional branding font. Corporate blue and audio orange colors, business audio branding style, clean professional aesthetic.
+
+================================================================================
+56
+================================================================================
+BEFORE:
+Two people icons with music note between them. Collaboration arrows. Demo tape icon. Text: 'AI COLLABORATION'. Creative teamwork style.
+
+AFTER:
+AI music collaboration diagram on white background. Left: Human creator icon with headphones and musical instrument. Right: AI assistant icon with robot features and music processing visualization. Center: Large musical note with bidirectional collaboration arrows and sparkles. Demo tape/file sharing icon between them. Joint creation output: finished track with both contributor credits. Text 'AI COLLABORATION' in creative partnership font. Purple human and blue AI colors, creative teamwork style, harmonious design.
+
+================================================================================
+57
+================================================================================
+BEFORE:
+Website mockup with image placeholder being filled by AI. Code and image icons merging. Text: 'CODE + IMAGE'. Web development style.
+
+AFTER:
+AI-powered web development on white background. Website mockup with header, navigation, content areas. Image placeholder showing AI generation in progress with sparkle loading effect. Split view: left shows HTML/CSS code with image tag highlighted, right shows rendered page with AI-generated image appearing. Code brackets and image icon merging with plus sign. Text 'CODE + IMAGE' in developer font. Blue code and purple AI colors, modern web development aesthetic, clean technical style.

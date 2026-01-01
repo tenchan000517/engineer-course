@@ -118,7 +118,7 @@ def generate_image():
 
         # Nanobanana（Gemini）で画像生成
         response = genai_client.models.generate_content(
-            model="gemini-2.5-flash-image",
+            model="gemini-3-pro-image-preview",
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_modalities=['IMAGE'],
@@ -216,7 +216,7 @@ def generate_and_post():
 
         # 1. 画像生成
         response = genai_client.models.generate_content(
-            model="gemini-2.5-flash-image",
+            model="gemini-3-pro-image-preview",
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_modalities=['IMAGE'],
