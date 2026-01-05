@@ -247,6 +247,7 @@ content/gifts/
 | ファイル | 内容 |
 |----------|------|
 | `docs/archive/gift-post-scripts-batch.md` | **20セットの台本を一括収録** |
+| `docs/archive/gift-post-list.md` | **投稿一覧**（状態管理、特典ページ対応表） |
 
 ### 特典ページ（2025-01-01作成）- 17個
 
@@ -595,6 +596,7 @@ content/gifts/
 | 2026-01-02 | **特典一覧ページ作成**（`/gifts`）。カード形式で22件表示。一方通行設計（一覧→特典のみ、戻りリンクなし） | AI Assistant |
 | 2026-01-02 | **全ページのコンテンツ幅を拡大**。max-w-4xl(896px)→max-w-7xl(1280px)に変更。特典ページ・モジュールページ全10ファイル対象 | AI Assistant |
 | 2026-01-02 | **本番デプロイ完了**。Vercel --prod実行 | AI Assistant |
+| 2026-01-02 | **投稿一覧作成**（`gift-post-list.md`）。20件の状態管理、特典ページ対応表 | AI Assistant |
 
 ---
 

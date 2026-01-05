@@ -1,0 +1,27 @@
+{
+  "id": "suno",
+  "title": "Suno 音楽生成講座",
+  "description": "SunoでAI音楽を生成する方法を学ぶ",
+  "icon": "music",
+  "color": "orange",
+  "order": 20,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["suno"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["ai-music", "music-generation", "prompt-engineering"]
+  },
+  "moduleCount": 1,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "suno-beginner",
+      "title": "初級編",
+      "description": "Sunoの基本操作から楽曲生成まで",
+      "moduleCount": 1,
+      "level": "beginner"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "suno-beginner",
+  "title": "初級編",
+  "description": "Sunoの基本操作から楽曲生成まで",
+  "icon": "music",
+  "color": "orange",
+  "order": 1,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["suno"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["ai-music", "music-generation", "prompt-engineering"]
+  },
+  "moduleCount": 1,
+  "isSubcourse": true,
+  "parentCategory": "suno"
+}
