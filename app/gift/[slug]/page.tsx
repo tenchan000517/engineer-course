@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getAllGifts, getGiftBySlug } from '@/lib/markdown';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
+import GiftDiscordCTA from '@/components/GiftDiscordCTA';
 
 export async function generateStaticParams() {
   const gifts = getAllGifts();
@@ -75,6 +76,9 @@ export default async function GiftPage({
         <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
           <MarkdownRenderer content={gift.content} />
         </div>
+
+        {/* Discord CTA */}
+        <GiftDiscordCTA />
       </main>
     </div>
   );

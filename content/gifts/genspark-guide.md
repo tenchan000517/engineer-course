@@ -16,7 +16,7 @@ Gensparkは「何でもできるAI」です。リサーチ、資料作成、動�
 4. [機能3: 動画生成](#機能3-動画生成)
 5. [プロンプト集](#プロンプト集)
    - [Claudeでバズるリール台本を作成](#1-claudeでバズるリール台本を作成)
-   - [NanoBananaで理想の自分を作成](#2-nanobananaで理想の自分を作成)
+   - [NanoBananaで画像を生成](#2-nanobananaで画像を生成)
    - [Gensparkでプロ級リサーチ](#3-gensparkでプロ級リサーチ)
    - [Gensparkで営業資料を作成](#4-gensparkで営業資料を作成)
 
@@ -38,6 +38,8 @@ Gensparkは、複数のAIを統合した「スーパーエージェント」で�
 1. [genspark.ai](https://www.genspark.ai/) にアクセス
 2. Googleアカウントでログイン
 3. 使いたい機能を選択
+
+![Gensparkワークスペース](/images/genspark/genspark-workspace.png)
 
 ---
 
@@ -93,6 +95,30 @@ Gensparkのリサーチは「出典付き」で信頼性が高いのが特徴で
 - **事前リサーチを指示**: データがない部分は「Webで調べて」と指示
 - **構成を指定**: どんなスライドが欲しいか明確に
 - **会社情報を入れる**: 連絡先など固有情報は必ず入力
+
+### 実際に作成したスライド見本
+
+以下は「東海地方高校生向け就活情報誌の営業資料」をGensparkで作成した例です。
+
+![表紙](/images/genspark/slide-01-cover.png)
+
+![市場規模](/images/genspark/slide-02-market.png)
+
+![市場特徴](/images/genspark/slide-03-characteristics.png)
+
+![情報収集トレンド](/images/genspark/slide-04-trends.png)
+
+![エリア分析](/images/genspark/slide-05-analysis.png)
+
+![3つの強み](/images/genspark/slide-06-strengths.png)
+
+![採用ファネル](/images/genspark/slide-07-funnel.png)
+
+![料金プラン](/images/genspark/slide-08-pricing.png)
+
+![お問い合わせ](/images/genspark/slide-09-contact.png)
+
+**ポイント**: 市場データや統計は全てGensparkがリサーチして自動で挿入しています。出典も明記されています。
 
 ---
 
@@ -176,41 +202,82 @@ Gensparkのリサーチは「出典付き」で信頼性が高いのが特徴で
 
 ---
 
-### 2. NanoBananaで理想の自分を作成
+### 2. NanoBananaで画像を生成
 
-**使用ツール**: NanoBanana Pro（Google AI Studio経由）
+**使用ツール**: Google AI Studio（ブラウザのみ、無料）
 
-NanoBananaは、Googleの画像生成AI「Gemini」を使って高品質な画像を生成できるツールです。
+NanoBananaは、Googleの画像生成AI「Gemini」を使って高品質な画像を生成できるツールです。プログラミング不要で、ブラウザから簡単に使えます。
 
-#### 環境構築（初回のみ）
+#### 使い方（3ステップ）
 
-1. [Google AI Studio](https://aistudio.google.com/)にアクセス
-2. APIキーを取得
-3. Python環境でgoogle-genai SDKをインストール
+**Step 1: Google AI Studioにアクセス**
 
-```powershell
-pip install google-genai python-dotenv
+1. [Google AI Studio](https://aistudio.google.com/) を開く
+2. Googleアカウントでログイン
+
+![Google AI Studioホーム画面](/images/genspark/google-ai-studio-home.png)
+
+**Step 2: 画像生成モードに切り替え**
+
+1. 右上の「Model」から `Gemini 2.5 Flash` を選択
+2. 「Output Format」を `Images and text` に変更
+
+**Step 3: プロンプトを入力して生成**
+
+1. 作りたい画像の説明を入力
+2. 「Run」ボタンをクリック
+3. 数秒で画像が生成される
+
+#### プロンプト例と生成結果
+
+**例1: シンプルなオブジェクト**
+```
+A cute orange cat sitting on a cushion
 ```
 
-#### プロンプト例: 透明感のある寝起き美女
+![猫の生成例](/nanobanana-image-generation/images/module-03-sample-cat.png)
 
+**例2: ビジネス用プロフィール画像**
 ```
-masterpiece, best quality, ultra detailed, highres, 8k, (1girl), solo, (beautiful face:1.2), (waking up:1.2), sitting on bed, (messy hair:1.3), bedhead, (no makeup:1.4), natural skin, bare face, sleepy eyes, slightly open mouth, stretching, (white oversized t-shirt:1.1), falling off shoulder, bedroom, messy bed sheet, pillow, (morning light:1.3), sun rays, volumetric lighting, soft focus, depth of field, cinematic lighting, lens flare, floating dust, dreamy atmosphere
-```
-
-**ネガティブプロンプト**:
-```
-(worst quality, low quality:1.4), (heavy makeup:1.3), lipstick, eyeshadow, blush, jewelry, earrings, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, jpeg artifacts, signature, watermark, username, blurry, artist name, gloom, dark
+A professional photo of a young Japanese businessman in a suit, modern office background, natural lighting
 ```
 
-#### プロンプトのポイント
+![ビジネスマンの生成例](/nanobanana-image-generation/images/module-03-sample-japanese-man.png)
 
-| 要素 | 効果 |
-|------|------|
-| `(no makeup:1.4)` | すっぴん感を強調 |
-| `messy hair, bedhead` | 寝癖でリアリティUP |
-| `morning light, sun rays` | 逆光で肌を綺麗に |
-| `(1.2)` などの数字 | 重み付け（大きいほど強調） |
+**例3: 風景**
+```
+A peaceful mountain landscape at sunset with a calm lake in the foreground
+```
+
+![風景の生成例](/nanobanana-image-generation/images/module-03-sample-landscape.png)
+
+#### プロンプトの良い例・悪い例
+
+**悪い例（曖昧）**:
+```
+A dog
+```
+
+![悪いプロンプトの結果](/nanobanana-image-generation/images/module-03-prompt-bad.png)
+
+**良い例（具体的）**:
+```
+A golden retriever puppy playing with a red ball in a sunny park
+```
+
+![良いプロンプトの結果](/nanobanana-image-generation/images/module-03-prompt-good.png)
+
+#### プロンプトのコツ
+
+| 要素 | 説明 | 例 |
+|------|------|-----|
+| 主題 | 何を描くか | a woman, a coffee cup |
+| 属性 | 主題の特徴 | cute, professional |
+| 背景 | 場所・状況 | office background, white background |
+| 光 | 照明の指定 | natural lighting, soft light |
+| スタイル | 画風 | realistic, anime style |
+
+**ポイント**: 英語で書くと精度が上がります。具体的に書くほど、イメージ通りの画像が生成されます。
 
 ---
 
