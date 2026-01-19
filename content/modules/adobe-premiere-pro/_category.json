@@ -1,0 +1,27 @@
+{
+  "id": "adobe-premiere-pro",
+  "title": "Adobe Premiere Pro講座",
+  "description": "Adobe Premiere Proでプロ品質の動画を編集・作成する",
+  "icon": "video",
+  "color": "purple",
+  "order": 25,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["premiere-pro", "adobe"],
+    "editor": ["premiere-pro"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["video-editing", "short-video", "instagram", "reels", "tiktok"]
+  },
+  "moduleCount": 1,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "premiere-pro-short-video",
+      "title": "ショート動画作成",
+      "description": "2025年のInstagramアルゴリズムに対応したバズるReels動画を作成",
+      "moduleCount": 6,
+      "level": "beginner"
+    }
+  ]
+}

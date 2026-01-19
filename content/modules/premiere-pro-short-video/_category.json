@@ -1,0 +1,19 @@
+{
+  "id": "premiere-pro-short-video",
+  "title": "ショート動画作成",
+  "description": "2025年のInstagramアルゴリズムに対応したバズるReels動画をAdobe Premiere Proで作成する実践講座",
+  "icon": "video",
+  "color": "purple",
+  "order": 1,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["premiere-pro", "adobe", "instagram"],
+    "editor": ["premiere-pro"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["short-video", "reels", "video-editing", "instagram-algorithm", "bgm", "sound-design"]
+  },
+  "moduleCount": 6,
+  "isSubcourse": true,
+  "parentCategory": "adobe-premiere-pro"
+}
