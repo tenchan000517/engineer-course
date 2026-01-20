@@ -72,10 +72,10 @@ export default function Sidebar({ modules }: SidebarProps) {
         <div className="p-6">
           <Link href="/" className="block mb-8" onClick={() => setIsOpen(false)}>
             <h1 className="text-2xl font-bold text-gray-900">
-              Engineer Course
+              AIツールマスター講座
             </h1>
             <p className="text-sm text-gray-600 mt-1">
-              Next.jsポートフォリオ講座
+              AI活用スキルを身につける
             </p>
           </Link>
 

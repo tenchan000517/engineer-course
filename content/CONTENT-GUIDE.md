@@ -332,14 +332,17 @@ content/modules/
     └── ...
 
 app/category/
-├── [categorySlug]/                  ← 汎用ルーティング（既存）
-│   └── page.tsx
-└── {親カテゴリ}/                    ← 専用ルーティング（新規作成）
-    └── [subcourseSlug]/
-        ├── page.tsx                 ← 子講座一覧ページ
+└── [categorySlug]/
+    ├── page.tsx                     ← カテゴリ一覧（子講座リスト or モジュールリスト）
+    └── [slug]/
+        ├── page.tsx                 ← 子講座一覧 or モジュール詳細（自動判定）
         └── [moduleSlug]/
-            └── page.tsx             ← モジュール詳細ページ
+            └── page.tsx             ← 子講座内モジュール詳細
 ```
+
+**ルーティングの自動判定**:
+- `[slug]` が子講座IDに一致 → 子講座のモジュール一覧を表示
+- `[slug]` がモジュールスラッグに一致 → モジュール詳細を表示
 
 ### 親カテゴリの_category.json
 
@@ -383,15 +386,16 @@ app/category/
 }
 ```
 
-### ルーティングページの作成
+### ルーティング（共通化済み）
 
-n8nの実装を参考にする：`app/category/n8n/[subcourseSlug]/page.tsx`
+ルーティングは全カテゴリで共通化されているため、**新しい講座を追加する際にルーティングファイルの作成は不要**。
 
-必須の変更箇所:
-1. `subcourseDirectoryMap` に子講座IDを登録
-2. `generateStaticParams()` に子講座を追加
-3. 親カテゴリIDを正しく指定
-4. 色を正しく指定
+```
+app/category/[categorySlug]/[slug]/page.tsx          ← 全カテゴリ共通
+app/category/[categorySlug]/[slug]/[moduleSlug]/page.tsx  ← 全カテゴリ共通
+```
+
+`_category.json` を正しく設定すれば、自動的にルーティングされる。
 
 ---
 
@@ -527,11 +531,11 @@ grey afternoon light filters through the rain-streaked window.
 3. [ ] 子講座ディレクトリ作成: `content/modules/{子講座}/`
 4. [ ] 子講座_category.json作成（isSubcourse: true）
 5. [ ] モジュールファイル作成: `module-XX-xxx.md`
-6. [ ] ルーティング作成: `app/category/{親カテゴリ}/[subcourseSlug]/page.tsx`
-7. [ ] ルーティング作成: `app/category/{親カテゴリ}/[subcourseSlug]/[moduleSlug]/page.tsx`
-8. [ ] 新しい色を使う場合は3ファイルにcolorMap追加
-9. [ ] publicディレクトリ作成: `public/{子講座}/`
+6. [ ] 新しい色を使う場合は3ファイルにcolorMap追加
+7. [ ] publicディレクトリ作成: `public/{子講座}/`
+
+**注意**: ルーティングファイルの作成は不要（共通化済み）
 
 ---
 
-**最終更新**: 2025-12-28
+**最終更新**: 2025-01-20

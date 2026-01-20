@@ -64,7 +64,7 @@ export default function Home() {
         {/* ヘッダーセクション */}
         <div className="text-center mb-12 md:mb-16">
           <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
-            Engineer Course
+            AIツールマスター講座
           </h1>
           <p className="text-lg md:text-xl text-gray-700 mb-2">
             プログラミング・自動化・AI開発を学ぶ

@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Engineer Course - Next.jsポートフォリオ講座",
-  description: "非エンジニア向けのNext.jsポートフォリオサイト制作講座",
+  title: "AIツールマスター講座",
+  description: "AI動画生成・音楽生成・自動化ツールの実践的な使い方を学ぶ講座",
 };
 
 export const viewport = {
