@@ -322,16 +322,60 @@ content/gifts/
 | `content/HANDOFF-sns-auto-gift.md` | API調査結果、エルグラム詳細 |
 | `content/modules/instagram-dm-automation/module-02-elgram-setup.md` | エルグラム設定講座 |
 
+### 特典サンプルリサーチ
+
+| ファイル | 内容 |
+|----------|------|
+| `content/HANDOFF-instagram-tokuten-research.md` | **特典例収集の管理HANDOFF**（量産フロー、収集済みリスト） |
+| `docs/reference/instagram-tokuten/` | **他アカウント特典例18件**（非公開、gitignore済み） |
+
+### リールの型定義
+
+| ファイル | 内容 |
+|----------|------|
+| `content/HANDOFF-reel-kata.md` | **動画の型×台本の型の定義**（進行中、最新の進捗はこちら） |
+| `docs/archive/ranking-reel-script-guide.md` | **ランキングリール台本作成ガイド**（13ステップのフロー、プロンプト、キャプション、ナレーション） |
+| `docs/archive/reel-formats.md` | **リールフォーマット一覧**（比較・アフレコ・トーク・解説系） |
+
 ---
 
 ## 台本テンプレート資料
 
 ### 必須参照ドキュメント
 
-| ファイル | 内容 |
-|----------|------|
-| `docs/archive/gift-post-script-sample.md` | 10本の実際の台本サンプル（全文+分析） |
-| `docs/archive/gift-post-script-template-guide.md` | パターン化したテンプレートガイド |
+| ファイル | 内容 | 状態 |
+|----------|------|------|
+| `docs/archive/gift-post-script-sample.md` | 10本の実際の台本サンプル（全文+分析） | - |
+| `docs/archive/gift-post-script-template-guide.md` | パターン化したテンプレートガイド | **ブラッシュアップ中**（動画と台本が混在） |
+| `docs/reference/instagram-tokuten/` | **他アカウントの特典例18件**（内容の参考資料） | - |
+
+**注意**: テンプレートガイドは現在ブラッシュアップ中。最新の進捗は`content/HANDOFF-reel-kata.md`を参照。
+
+### 特典サンプルリサーチ（2026-01-20完了）
+
+他のInstagramアカウントの特典例を収集し、自分の特典設計の参考資料とした。
+
+**収集済み: 18件**
+
+| アカウント | 件数 | 主な内容 |
+|-----------|------|----------|
+| SakiSNS | 5件 | リールの型、AIフックパターン、GPTs |
+| NatsumiAI | 2件 | インスタを伸ばす方法、フックパターン |
+| pigu_gpt | 1件 | Threads×アフィリエイト解説 |
+| mio_ai_insta | 10件 | 顔出しなし発信、台本作成、アバター動画、海外テク |
+
+**特典の形式パターン**:
+- テキスト+画像（noteスタイル）
+- ステップバイステップガイド
+- プロンプト集・テンプレート集
+- ツール使い方ガイド（スクショ付き）
+- インフルエンサー紹介・まとめ
+
+**参照先**:
+- 特典内容: `docs/reference/instagram-tokuten/{AccountName}/`
+- 管理HANDOFF: `content/HANDOFF-instagram-tokuten-research.md`
+
+**注意**: `docs/reference/instagram-tokuten/`は`.gitignore`登録済み（他者の特典のため非公開）
 
 ### テンプレートガイドの構成（本質分析版）
 
@@ -597,6 +641,9 @@ content/gifts/
 | 2026-01-02 | **全ページのコンテンツ幅を拡大**。max-w-4xl(896px)→max-w-7xl(1280px)に変更。特典ページ・モジュールページ全10ファイル対象 | AI Assistant |
 | 2026-01-02 | **本番デプロイ完了**。Vercel --prod実行 | AI Assistant |
 | 2026-01-02 | **投稿一覧作成**（`gift-post-list.md`）。20件の状態管理、特典ページ対応表 | AI Assistant |
+| 2026-01-20 | **特典サンプルリサーチ完了**。4アカウントから18件収集（SakiSNS 5件、NatsumiAI 2件、pigu_gpt 1件、mio_ai_insta 10件）。参照先を追加 | AI Assistant |
+| 2026-01-20 | **リールの型定義プロジェクト開始**。動画の型（5つ）を定義完了。`HANDOFF-reel-kata.md`を新規作成。テンプレートガイドは動画と台本が混在しているためブラッシュアップ中 | AI Assistant |
+| 2026-01-20 | **ランキングリール台本作成ガイド完成**。`video-kata-memo.md`→`ranking-reel-script-guide.md`にリネーム。13ステップの統合フロー作成。特典用プロンプト作成フローを統合。2〜5のリール型を`reel-formats.md`に分離 | AI Assistant |
 
 ---
 
