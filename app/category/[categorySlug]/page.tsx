@@ -139,7 +139,7 @@ export default async function CategoryPage({
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 text-center">
               コース一覧
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {category.subcourses.filter((subcourse: SubcourseData) => !subcourse.hidden).map((subcourse: SubcourseData) => {
                 // 動的にモジュール数をカウント
                 const moduleDir = subcourseDirectoryMap[subcourse.id];
@@ -198,63 +198,40 @@ export default async function CategoryPage({
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 text-center">
                 モジュール一覧
               </h2>
-              <div className="space-y-3 md:space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {modules.map((module) => (
                   <Link
                     key={module.slug}
                     href={`/category/${categorySlug}/${module.slug}`}
-                    className={`block bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border-l-4`}
-                    style={{
-                      borderLeftColor:
-                        category.color === 'blue'
-                          ? '#3b82f6'
-                          : category.color === 'purple'
-                          ? '#a855f7'
-                          : category.color === 'orange'
-                          ? '#f97316'
-                          : category.color === 'green'
-                          ? '#22c55e'
-                          : category.color === 'amber'
-                          ? '#f59e0b'
-                          : category.color === 'yellow'
-                          ? '#eab308'
-                          : category.color === 'pink'
-                          ? '#ec4899'
-                          : category.color === 'white'
-                          ? '#1f2937'
-                          : '#3b82f6',
-                    }}
+                    className="block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden"
                   >
-                    <div className="p-4 md:p-6 flex items-center gap-3 md:gap-4">
-                      <div
-                        className={`${
-                          colorMap[category.color]?.bg || 'bg-blue-500'
-                        } w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center ${colorMap[category.color]?.text || 'text-white'} font-bold text-lg md:text-xl flex-shrink-0`}
-                      >
-                        {formatOrder(module.order)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-base md:text-lg font-bold text-gray-900 mb-1 break-words">
-                          {module.title}
-                        </h3>
-                        <div className="flex flex-wrap gap-2 md:gap-4 text-xs md:text-sm text-gray-600">
-                          <span>{module.duration}</span>
-                          <span>{module.difficulty}</span>
+                    {/* カードヘッダー */}
+                    <div className={`${colorMap[category.color]?.bg || 'bg-blue-500'} p-6 ${colorMap[category.color]?.text || 'text-white'}`}>
+                      <div className="flex items-center gap-4">
+                        <div className={`${colorMap[category.color]?.text ? 'bg-gray-200' : 'bg-white/20'} p-3 rounded-xl`}>
+                          <span className="text-2xl font-bold">
+                            {formatOrder(module.order)}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-bold line-clamp-2">{module.title}</h3>
                         </div>
                       </div>
-                      <svg
-                        className="w-5 h-5 md:w-6 md:h-6 text-gray-400 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
+                    </div>
+
+                    {/* カードボディ */}
+                    <div className="p-6">
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
+                          {module.duration}
+                        </span>
+                        <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">
+                          {module.difficulty}
+                        </span>
+                      </div>
+                      <div className={`text-center ${colorMap[category.color]?.bg || 'bg-blue-500'} hover:opacity-90 ${colorMap[category.color]?.text || 'text-white'} font-medium py-2 px-4 rounded-lg transition-opacity`}>
+                        講座を見る →
+                      </div>
                     </div>
                   </Link>
                 ))}
