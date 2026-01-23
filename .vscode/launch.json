@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "extendscript-debug",
+            "request": "launch",
+            "name": "Run in Premiere Pro",
+            "script": "${workspaceFolder}/scripts/premiere/place_ranking_images.jsx",
+            "hostAppSpecifier": "premierepro-25.0"
+        }
+    ]
+}
