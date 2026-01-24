@@ -13,15 +13,15 @@
     "level": "beginner",
     "topics": ["video-editing", "short-video", "instagram", "reels", "tiktok"]
   },
-  "moduleCount": 1,
+  "moduleCount": 2,
   "hasSubcourses": true,
   "subcourses": [
     {
-      "id": "premiere-pro-short-video",
-      "title": "ショート動画作成",
-      "description": "2025年のInstagramアルゴリズムに対応したバズるReels動画を作成",
-      "moduleCount": 6,
-      "level": "beginner"
+      "id": "premiere-pro-ranking-reel",
+      "title": "ランキングリール制作",
+      "description": "ExtendScript自動配置でランキングリールを効率的に制作",
+      "moduleCount": 2,
+      "level": "intermediate"
     }
   ]
 }

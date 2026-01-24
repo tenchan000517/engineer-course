@@ -1,0 +1,19 @@
+{
+  "id": "premiere-pro-ranking-reel",
+  "title": "ランキングリール制作",
+  "description": "ExtendScript自動配置でランキングリールを効率的に制作",
+  "icon": "video",
+  "color": "purple",
+  "order": 1,
+  "tags": {
+    "language": ["javascript", "python"],
+    "framework": ["premiere-pro", "extendscript"],
+    "editor": ["premiere-pro", "vscode"],
+    "platform": ["windows"],
+    "level": "intermediate",
+    "topics": ["video-editing", "automation", "ranking-video", "instagram", "reels"]
+  },
+  "moduleCount": 2,
+  "isSubcourse": true,
+  "parentCategory": "adobe-premiere-pro"
+}
