@@ -35,6 +35,8 @@
 
 ### Step 1: 配置データ生成（Python）
 
+**※ `/ranking-reel` スキルを使用した場合は自動実行済み。このステップはスキップ可能。**
+
 ```bash
 python C:\engineer-course\scripts\generate_placement_json.py "{PROJECT_FOLDER}"
 ```
@@ -401,6 +403,9 @@ V10（プロンプト・手順）レイヤーは手動で挿入する。自動�
 | ExtendScript実行 | Premiere Pro 2024以降で「ファイル→スクリプト」メニューがない | VSCode + ExtendScript Debugger拡張機能を使用 | 要（重要） |
 | ExtendScriptエラー | 「Unexpected source request [object Object]」 | launch.jsonでscriptとhostAppSpecifierを明示的に指定 | 要 |
 | デバッグセッション | 「debug session is already active」エラー | Shift+F5で前のセッションを停止してから再実行 | 要 |
+| hostAppSpecifier | 「The application specified by 'premierepro-25.0' is not installed」エラー | Premiere Pro 2026の場合は`premierepro-26.0`に変更 | 要 |
+| SRT自動配置 | ExtendScriptでSRTをキャプショントラックに自動配置できない | **非対応**。SRTは手動でインポート（ファイル→読み込み→キャプションとしてインポート） | - |
+| ナレーション話者 | CTA部分が女性ボイスになってしまう | スキルに話者ルール追加：CTAは必ず男性 | - |
 
 ---
 
@@ -440,32 +445,36 @@ C:\Instagramショート\Instagram_Reels_Production\
 | シーケンス名 | `テンプレート_ランキング` |
 | フレームサイズ | 1080 x 1920 |
 | フレームレート | 30 fps |
-| ビデオトラック数 | 12 |
+| ビデオトラック数 | 14 |
 | オーディオトラック数 | 4 |
 
-### トラック構造（ランキング用）
+### トラック構造（ランキング用）- 2026-01-26更新
 
 | トラック | 名前 | 用途 | 自動配置 |
 |---------|------|------|----------|
-| V13 | テロップ背景 | テロップ背景画像 | ✅ |
-| V12 | 字幕 | SRT読み込み | - |
-| V11 | タイトル・テキスト | 動画タイトル表示 | ✅ |
-| V10 | プロンプト・手順 | ツール紹介時の情報表示 | **手動** |
-| V9 | No1 | 1位アイコン（積み重ね） | ✅ |
-| V8 | No2 | 2位アイコン（積み重ね） | ✅ |
-| V7 | No3 | 3位アイコン（積み重ね） | ✅ |
-| V6 | No4 | 4位アイコン（積み重ね） | ✅ |
-| V5 | ランキングボード/論外 | 順位板 | ✅ |
-| V4 | アバター静止画 | 女性発言時表示 | ✅ |
-| V3 | アバター動画 | アバターアニメーション | ✅ |
-| V2 | メイン動画 | ランキング説明動画 | - |
-| V1 | 背景・調整レイヤー | 背景色、カラーグレーディング | - |
+| V14 | 字幕背景 | テロップ背景画像 | ✅ |
+| V13 | タイトル背景 | タイトル背景画像 | ✅ |
+| V12 | プロンプト・手順③ | 3つ目のスクショ | ✅（スクショあれば） |
+| V11 | プロンプト・手順② | 2つ目のスクショ | ✅（スクショあれば） |
+| V10 | プロンプト・手順① | 1つ目のスクショ | ✅（スクショあれば） |
+| V9 | No.1 | 1位アイコン | ✅ |
+| V8 | No.2 | 2位アイコン | ✅ |
+| V7 | No.3 | 3位アイコン | ✅ |
+| V6 | No.4 | 4位アイコン | ✅ |
+| V5 | 論外 | 論外アイコン | ✅ |
+| V4 | ランキングボード | 順位板 | ✅ |
+| V3 | アバター静止画 | 女性発言時表示 | ✅ |
+| V2 | 調整レイヤー | カラーグレーディング | - |
+| V1 | アバター動画 | アバターアニメーション | ✅ |
 | A1 | ナレーション | 統合音声 | ✅ |
 | A2 | 女性ナレーション | 質問・相づち（個別配置時） | - |
 | A3 | BGM | 背景音楽 | ✅ |
 | A4 | 効果音・SE | 効果音 | - |
 
-**注記**: ランキングアイコンは順番に追加されて最後まで表示し続ける（積み重ね形式）
+**注記**:
+- ランキングアイコンは順番に追加されて最後まで表示し続ける（積み重ね形式）
+- SRT字幕はキャプショントラックに手動で読み込み
+- プロンプトスクショは `prompt_screenshot_1.png` 等をプロジェクトフォルダに配置すると自動配置
 
 ### 字幕スタイル設定
 
@@ -723,7 +732,7 @@ VSCode + ExtendScript Debugger拡張機能が必要。
             "request": "launch",
             "name": "Run in Premiere Pro",
             "script": "${workspaceFolder}/scripts/premiere/place_ranking_images.jsx",
-            "hostAppSpecifier": "premierepro-25.0"
+            "hostAppSpecifier": "premierepro-26.0"
         }
     ]
 }
@@ -885,10 +894,14 @@ Rename-Item 'cta_noaudio.mp4' 'cta.mp4'
 | 2026-01-24 | **動画音声の上書き問題を解決** - ffmpegで音声を事前削除（`-c:v copy -an`）。u---n.mp4とcta.mp4を音声なし版に差し替え |
 | 2026-01-24 | **講座化完了** - Module 01（プロダクションセットアップ）、Module 02（実践編）を `content/modules/premiere-pro-ranking-reel/` に作成 |
 | 2026-01-24 | **Module 02講座にスクショ追加** - CONTENT-GUIDEに従い、セクション4/5/トラブルシューティングに9枚のスクリーンショットを追加。実際の検証結果に基づいた内容に修正 |
+| 2026-01-26 | **スキル更新（Phase 6追加）** - `/ranking-reel`スキルにPhase 6「Premiere Pro連携準備」を追加。SRT生成後に`generate_placement_json.py`を自動実行、Premiere Pro起動確認を行う |
+| 2026-01-26 | **launch.json更新** - `hostAppSpecifier`を`premierepro-25.0`→`premierepro-26.0`に変更（Premiere Pro 2026対応） |
+| 2026-01-26 | **話者ルール明確化** - スキルに「CTAは必ず男性」ルールを追加。女性はツール名のみ、男性は解説・順位・CTAすべて |
+| 2026-01-26 | **SRT自動配置は非対応** - ExtendScriptのCaption APIでSRT自動配置を試みたが動作せず。SRT読み込みは引き続き手動 |
 
 ---
 
-**最終更新**: 2026-01-24
+**最終更新**: 2026-01-26
 **状態**: フロー確立済み・講座化完了
 
 **次に新しいランキングリールを作る場合**: 「新規ランキングリール制作フロー」セクションに従う

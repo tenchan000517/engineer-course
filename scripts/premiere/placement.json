@@ -3,33 +3,33 @@
     "type": "shared",
     "name": "telop_back",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\ランキングボード\\telop_back.png",
-    "track": "V13",
+    "track": "V14",
     "time": 0.0,
-    "duration": 74.54
+    "duration": 72.519
   },
   {
     "type": "shared",
     "name": "telop_cta_back",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\ランキングボード\\telop_cta_back.png",
-    "track": "V13",
-    "time": 74.54,
-    "duration": 7.198999999999998
+    "track": "V14",
+    "time": 72.519,
+    "duration": 8.559999999999988
   },
   {
     "type": "shared",
     "name": "rankingboard",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\ランキングボード\\rankingboard.png",
-    "track": "V5",
+    "track": "V4",
     "time": 0.0,
-    "duration": 74.54
+    "duration": 72.519
   },
   {
     "type": "shared",
     "name": "title_back",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\ランキングボード\\title_back.png",
-    "track": "V12",
+    "track": "V13",
     "time": 0.0,
-    "duration": 81.739
+    "duration": 81.079
   },
   {
     "type": "shared",
@@ -37,53 +37,53 @@
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\BGM\\Rise_of_the_New_Team.mp3",
     "track": "A3",
     "time": 0.0,
-    "duration": 81.739
+    "duration": 81.079
   },
   {
     "type": "avatar_still",
     "name": "avatar_still_Canva",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター静止画\\normal.png",
-    "track": "V4",
+    "track": "V3",
     "time": 0.0,
-    "duration": 0.657
-  },
-  {
-    "type": "avatar_still",
-    "name": "avatar_still_Nano Banana",
-    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター静止画\\normal.png",
-    "track": "V4",
-    "time": 15.135,
-    "duration": 1.1590000000000007
-  },
-  {
-    "type": "avatar_still",
-    "name": "avatar_still_Vrew",
-    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター静止画\\normal.png",
-    "track": "V4",
-    "time": 34.727,
-    "duration": 0.4820000000000064
-  },
-  {
-    "type": "avatar_still",
-    "name": "avatar_still_Fish Audio",
-    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター静止画\\normal.png",
-    "track": "V4",
-    "time": 41.843,
-    "duration": 1.026999999999994
+    "duration": 0.689
   },
   {
     "type": "avatar_still",
     "name": "avatar_still_Genspark",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター静止画\\normal.png",
-    "track": "V4",
-    "time": 54.011,
-    "duration": 0.9279999999999973
+    "track": "V3",
+    "time": 13.821,
+    "duration": 0.9269999999999996
+  },
+  {
+    "type": "avatar_still",
+    "name": "avatar_still_Vrew",
+    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター静止画\\normal.png",
+    "track": "V3",
+    "time": 31.707,
+    "duration": 0.5219999999999985
+  },
+  {
+    "type": "avatar_still",
+    "name": "avatar_still_Fish Audio",
+    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター静止画\\normal.png",
+    "track": "V3",
+    "time": 41.497,
+    "duration": 1.1739999999999995
+  },
+  {
+    "type": "avatar_still",
+    "name": "avatar_still_Nano Banana",
+    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター静止画\\normal.png",
+    "track": "V3",
+    "time": 53.737,
+    "duration": 1.0030000000000001
   },
   {
     "type": "avatar_video",
     "name": "avatar_intro",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター動画\\u---n.mp4",
-    "track": "V3",
+    "track": "V1",
     "time": 0.01,
     "loop": false
   },
@@ -91,19 +91,19 @@
     "type": "avatar_video",
     "name": "avatar_normal",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター動画\\normal.mp4",
-    "track": "V3",
+    "track": "V1",
     "time": -1,
     "loop": true,
-    "loop_until": 74.54
+    "loop_until": 72.519
   },
   {
     "type": "avatar_video",
     "name": "avatar_cta",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\アバター動画\\cta.mp4",
-    "track": "V3",
+    "track": "V1",
     "time": -1,
     "loop": true,
-    "loop_until": 81.739
+    "loop_until": 81.079
   },
   {
     "type": "ranking",
@@ -111,20 +111,20 @@
     "rank": "論外",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\AIロゴ\\Canva.png",
     "time": 0.0,
-    "duration": 74.54,
-    "track": "V6",
+    "duration": 72.519,
+    "track": "V5",
     "scale": 28.5,
     "x": 320.5,
     "y": 1525.0
   },
   {
     "type": "ranking",
-    "tool": "Nano Banana",
+    "tool": "Genspark",
     "rank": "2位",
-    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\AIロゴ\\Nanobanana.png",
-    "time": 15.135,
-    "duration": 59.40500000000001,
-    "track": "V7",
+    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\AIロゴ\\Genspark.png",
+    "time": 13.821,
+    "duration": 58.69800000000001,
+    "track": "V8",
     "scale": 28.5,
     "x": 320.5,
     "y": 755.0
@@ -134,9 +134,9 @@
     "tool": "Vrew",
     "rank": "4位",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\AIロゴ\\Vrew.png",
-    "time": 34.727,
-    "duration": 39.81300000000001,
-    "track": "V8",
+    "time": 31.707,
+    "duration": 40.812000000000005,
+    "track": "V6",
     "scale": 28.5,
     "x": 320.5,
     "y": 1265.5
@@ -146,31 +146,53 @@
     "tool": "Fish Audio",
     "rank": "3位",
     "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\AIロゴ\\FishAudio.png",
-    "time": 41.843,
-    "duration": 32.697,
-    "track": "V9",
+    "time": 41.497,
+    "duration": 31.022000000000006,
+    "track": "V7",
     "scale": 28.5,
     "x": 320.5,
     "y": 1008.0
   },
   {
     "type": "ranking",
-    "tool": "Genspark",
+    "tool": "Nano Banana",
     "rank": "1位",
-    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\AIロゴ\\Genspark.png",
-    "time": 54.011,
-    "duration": 20.529000000000003,
-    "track": "V10",
+    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\AIロゴ\\Nanobanana.png",
+    "time": 53.737,
+    "duration": 18.782000000000004,
+    "track": "V9",
     "scale": 28.5,
     "x": 320.5,
     "y": 494.5
   },
   {
+    "type": "prompt_screenshot",
+    "name": "prompt_screenshot_1",
+    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\ランキング_売れるクリエイティブAIツール_2026-01-26\\prompt_screenshot_1.png",
+    "track": "V10",
+    "time": 27.92,
+    "duration": 40.2,
+    "scale": 50,
+    "x": 740,
+    "y": 1373
+  },
+  {
+    "type": "prompt_screenshot",
+    "name": "prompt_screenshot_2",
+    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\ランキング_売れるクリエイティブAIツール_2026-01-26\\prompt_screenshot_2.png",
+    "track": "V11",
+    "time": 68.12,
+    "duration": 4.399000000000001,
+    "scale": 50,
+    "x": 740,
+    "y": 1373
+  },
+  {
     "type": "shared",
     "name": "narration",
-    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\ランキング_SNS_AIツール_2026-01-23\\audio_trimmed\\combined_all.mp3",
+    "path": "C:\\Instagramショート\\Instagram_Reels_Production\\ランキング_売れるクリエイティブAIツール_2026-01-26\\audio_trimmed\\combined_all.mp3",
     "track": "A1",
     "time": 0.0,
-    "duration": 81.739
+    "duration": 81.079
   }
 ]

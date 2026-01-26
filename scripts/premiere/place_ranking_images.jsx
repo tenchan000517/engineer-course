@@ -19,8 +19,13 @@
     var jsonPath = scriptFolder.fsName + "\\placement.json";
 
     // トラック番号マッピング（0始まり）
-    // ビデオトラック
+    // 新トラック構造（2026-01-26更新）
+    // V1: アバター動画, V2: 調整レイヤー, V3: アバター静止画
+    // V4: ランキングボード, V5: 論外, V6-V9: No.4〜No.1
+    // V10-V12: プロンプト・手順, V13: タイトル背景, V14: 字幕背景
     var VIDEO_TRACK_MAP = {
+        "V1": 0,
+        "V2": 1,
         "V3": 2,
         "V4": 3,
         "V5": 4,
@@ -31,7 +36,8 @@
         "V10": 9,
         "V11": 10,
         "V12": 11,
-        "V13": 12
+        "V13": 12,
+        "V14": 13
     };
 
     // オーディオトラック
@@ -86,6 +92,9 @@
                     break;
                 case 'avatar_video':
                     result = placeAvatarVideo(seq, p);
+                    break;
+                case 'prompt_screenshot':
+                    result = placeRankingIcon(seq, p);  // ランキングアイコンと同じ処理で配置
                     break;
                 default:
                     // 旧形式（typeなし）の場合はランキングアイコンとして処理

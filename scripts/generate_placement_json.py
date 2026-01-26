@@ -22,8 +22,21 @@ from pathlib import Path
 
 
 # === トラック設定 ===
-# V4: アバター静止画用、V6: 論外、V7〜V10: ランキングアイコン（No4〜No1）
-RANKING_TRACK_ORDER = ["V6", "V7", "V8", "V9", "V10", "V11", "V12"]
+# 新トラック構造（2026-01-26更新）
+# V1: アバター動画, V2: 調整レイヤー, V3: アバター静止画
+# V4: ランキングボード, V5: 論外, V6-V9: No.4〜No.1
+# V10-V12: プロンプト・手順, V13: タイトル背景, V14: 字幕背景
+
+# 順位 → トラックのマッピング
+RANK_TRACK_MAP = {
+    "論外": "V5",
+    "4位": "V6",
+    "3位": "V7",
+    "2位": "V8",
+    "1位": "V9",
+    "圧倒的1位": "V9"
+}
+PROMPT_TRACK_ORDER = ["V10", "V11", "V12"]  # プロンプト・手順①②③
 
 # === 順位キーワード → Y座標のマッピング ===
 RANK_Y_POSITIONS = {
@@ -42,39 +55,42 @@ RANKING_X = 320.5
 # === CTAトリガーワード ===
 CTA_TRIGGER = "今日紹介した"
 
+# === プロンプトスクショトリガー ===
+PROMPT_TRIGGER = "このプロンプト"
+
 # === 共有素材パス ===
 SHARED_FOLDER = "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材"
 
 SHARED_ASSETS = {
-    # テロップ背景（V13）
+    # 字幕背景（V14）
     "telop_back": {
         "path": f"{SHARED_FOLDER}\\ランキングボード\\telop_back.png",
-        "track": "V13",
+        "track": "V14",
         "timing": "start_to_cta"
     },
     "telop_cta_back": {
         "path": f"{SHARED_FOLDER}\\ランキングボード\\telop_cta_back.png",
-        "track": "V13",
+        "track": "V14",
         "timing": "cta_to_end"
     },
-    # ランキングボード（V5）
+    # ランキングボード（V4）
     "rankingboard": {
         "path": f"{SHARED_FOLDER}\\ランキングボード\\rankingboard.png",
-        "track": "V5",
+        "track": "V4",
         "timing": "start_to_cta"
     },
-    # タイトル背景（V12）
+    # タイトル背景（V13）
     "title_back": {
         "path": f"{SHARED_FOLDER}\\ランキングボード\\title_back.png",
-        "track": "V12",
+        "track": "V13",
         "timing": "start_to_end"
     },
-    # アバター動画（V3）- 特別処理（avatar_sequence）
+    # アバター動画（V1）- 特別処理（avatar_sequence）
     # ExtendScriptでループ配置を処理
-    # アバター静止画（V4）- 動的配置
+    # アバター静止画（V3）- 動的配置
     "avatar_still": {
         "path": f"{SHARED_FOLDER}\\アバター静止画\\normal.png",
-        "track": "V4",
+        "track": "V3",
         "timing": "dynamic"  # ツール名〜次の男性発話まで
     },
     # BGM（A3）
@@ -135,6 +151,39 @@ def find_cta_start_time(subtitles: list) -> float:
         if CTA_TRIGGER in sub['text']:
             return sub['start']
     return None
+
+
+def find_prompt_timings(subtitles: list) -> list:
+    """「このプロンプト」の出現タイミングを検出"""
+    timings = []
+    for sub in subtitles:
+        if PROMPT_TRIGGER in sub['text']:
+            timings.append({
+                'time': sub['start'],
+                'end': sub['end'],
+                'index': sub['index']
+            })
+    return timings
+
+
+def find_prompt_screenshots(project_path: Path) -> list:
+    """プロジェクトフォルダからプロンプトスクショを検索"""
+    screenshots = []
+    extensions = ['.png', '.jpg', '.jpeg']
+
+    for i in range(1, 10):  # prompt_screenshot_1 ~ 9
+        for ext in extensions:
+            filename = f"prompt_screenshot_{i}{ext}"
+            filepath = project_path / filename
+            if filepath.exists():
+                screenshots.append({
+                    'index': i,
+                    'path': wsl_to_windows_path(str(filepath)),
+                    'filename': filename
+                })
+                break
+
+    return screenshots
 
 
 def get_end_time(subtitles: list) -> float:
@@ -318,7 +367,7 @@ def generate_placement_json(project_folder: str):
         })
         print(f"  {mention['tool']}: {start:.2f}s ～ {end:.2f}s (長さ: {duration:.2f}s)")
 
-    # === 2.5. アバター動画シーケンス（V3）===
+    # === 2.5. アバター動画シーケンス（V1）===
     print("\n--- アバター動画シーケンス ---")
     # u---n.mp4: 0.01sから開始（最初から）
     avatar_video_start = 0.01
@@ -327,35 +376,35 @@ def generate_placement_json(project_folder: str):
         'type': 'avatar_video',
         'name': 'avatar_intro',
         'path': f"{SHARED_FOLDER}\\アバター動画\\u---n.mp4",
-        'track': 'V3',
+        'track': 'V1',
         'time': avatar_video_start,
         'loop': False  # ループなし、1回だけ
     })
-    print(f"  u---n.mp4: V3, {avatar_video_start:.2f}s から開始")
+    print(f"  u---n.mp4: V1, {avatar_video_start:.2f}s から開始")
 
     # normal.mp4: u---n.mp4終了直後 ～ CTA開始まで（ループ）
     placements.append({
         'type': 'avatar_video',
         'name': 'avatar_normal',
         'path': f"{SHARED_FOLDER}\\アバター動画\\normal.mp4",
-        'track': 'V3',
+        'track': 'V1',
         'time': -1,  # 前のクリップの直後（ExtendScriptで処理）
         'loop': True,
         'loop_until': cta_start_time
     })
-    print(f"  normal.mp4: V3, u---n終了後 ～ {cta_start_time:.2f}s までループ")
+    print(f"  normal.mp4: V1, u---n終了後 ～ {cta_start_time:.2f}s までループ")
 
     # cta.mp4: CTA開始 ～ 終了まで（ループ）
     placements.append({
         'type': 'avatar_video',
         'name': 'avatar_cta',
         'path': f"{SHARED_FOLDER}\\アバター動画\\cta.mp4",
-        'track': 'V3',
+        'track': 'V1',
         'time': -1,  # 前のクリップの直後（ExtendScriptで処理）
         'loop': True,
         'loop_until': end_time
     })
-    print(f"  cta.mp4: V3, normal終了後 ～ {end_time:.2f}s までループ")
+    print(f"  cta.mp4: V1, normal終了後 ～ {end_time:.2f}s までループ")
 
     # === 3. ランキングアイコン ===
     print("\n--- ランキングアイコン ---")
@@ -368,8 +417,11 @@ def generate_placement_json(project_folder: str):
             print(f"  警告: 画像マッピングなし: {tool}")
             continue
 
-        # トラック自動割り当て（出現順）
-        track = RANKING_TRACK_ORDER[i] if i < len(RANKING_TRACK_ORDER) else f"V{6 + i}"
+        # トラックを順位から取得
+        track = RANK_TRACK_MAP.get(rank, "V5")
+        if not track:
+            print(f"  警告: トラックマッピングなし: {rank}")
+            track = "V5"
 
         # Y座標を順位から取得
         y_position = RANK_Y_POSITIONS.get(rank, 1008.0)
@@ -393,7 +445,44 @@ def generate_placement_json(project_folder: str):
         })
         print(f"  {mention['time']:.2f}s: {tool} ({rank}) → {track}, Y={y_position}, 長さ={duration:.2f}s")
 
-    # === 4. ナレーション ===
+    # === 4. プロンプトスクショ（V10-V12）===
+    print("\n--- プロンプトスクショ ---")
+    prompt_timings = find_prompt_timings(subtitles)
+    prompt_screenshots = find_prompt_screenshots(project_path)
+
+    if prompt_screenshots:
+        for i, screenshot in enumerate(prompt_screenshots):
+            if i < len(prompt_timings) and i < len(PROMPT_TRACK_ORDER):
+                timing = prompt_timings[i]
+                track = PROMPT_TRACK_ORDER[i]
+                # 次のプロンプトまたはCTAまでの長さ
+                if i + 1 < len(prompt_timings):
+                    duration = prompt_timings[i + 1]['time'] - timing['time']
+                else:
+                    duration = cta_start_time - timing['time']
+
+                placements.append({
+                    'type': 'prompt_screenshot',
+                    'name': f"prompt_screenshot_{screenshot['index']}",
+                    'path': screenshot['path'],
+                    'track': track,
+                    'time': timing['time'],
+                    'duration': duration,
+                    'scale': 50,  # スケール（調整可能）
+                    'x': 740,     # プロンプトスクショ用X座標
+                    'y': 1373     # プロンプトスクショ用Y座標
+                })
+                print(f"  {screenshot['filename']}: {track}, {timing['time']:.2f}s ～ {timing['time'] + duration:.2f}s")
+            else:
+                print(f"  警告: {screenshot['filename']} に対応するタイミングまたはトラックがありません")
+    else:
+        if prompt_timings:
+            print(f"  「このプロンプト」が {len(prompt_timings)} 箇所見つかりましたが、スクショがありません")
+            print(f"  → prompt_screenshot_1.png, prompt_screenshot_2.png ... をプロジェクトフォルダに配置してください")
+        else:
+            print(f"  スクショなし、タイミングなし")
+
+    # === 5. ナレーション ===
     print("\n--- ナレーション ---")
     if narration:
         placements.append({

@@ -7,10 +7,10 @@ Whisperタイムスタンプ取得スクリプト (faster-whisper)
 SRT作成はClaude Codeが台本とJSONを組み合わせて行う。
 
 使い方:
-    C:\Users\tench\whisper-env\Scripts\python.exe scripts/whisper_timestamps.py <音声ファイルパス>
+    python whisper_timestamps.py <音声ファイルパス>
 
 例:
-    C:\Users\tench\whisper-env\Scripts\python.exe scripts/whisper_timestamps.py "content/scripts/ranking-sns-ai-tools-2026/audio_trimmed/combined_all_v7.mp3"
+    python whisper_timestamps.py "audio_trimmed/combined_all.mp3"
 """
 
 import sys

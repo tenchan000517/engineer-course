@@ -425,7 +425,7 @@ Fish Audio APIで音声を生成する場合は、以下のルールで整形す
 - 句読点（。、）を入れない
 - 改行しない（1つのセグメントは1行）
 - 息継ぎや間隔は不要（AIが自然に処理する）
-- **例外**: 「論外」の後は間が欲しいので句読点を入れる（例: 「うーん、論外。」）
+- **例外**: 順位（「論外」「2位」「3位」「4位」「1位」等）の後は間が欲しいので句読点と改行を入れる
 
 **例（NG）**:
 ```
@@ -436,12 +436,14 @@ Googleの最新画像AIで、完全無料で枚数制限もないので、心配
 
 **例（OK）**:
 ```
-2位Instagram投稿のビジュアル制作はこれ一択ですGoogleの最新画像AIで完全無料で枚数制限もないので心配なく使えます
+2位。
+Instagram投稿のビジュアル制作はこれ一択ですGoogleの最新画像AIで完全無料で枚数制限もないので心配なく使えます
 ```
 
-**例外（論外のみ間を入れる）**:
+**例外（順位の後は間を入れる）**:
 ```
-うーん、論外。Canvaを使っておけばOKと思っている人も多いのですが...
+うーん、論外。
+Canvaを使っておけばOKと思っている人も多いのですが...
 ```
 
 **セグメント分割**:
@@ -495,33 +497,27 @@ C:\Instagramショート\Instagram_Reels_Production\ランキング_{テーマ}_
 
 ### Step 17: Fish Audio音声生成
 
-#### 方法A: API経由（推奨）
+#### 方法A: スクリプト経由（推奨）
 
 ```bash
-# プロジェクトフォルダを変数に設定
-PROJECT="C:\Instagramショート\Instagram_Reels_Production\ランキング_{テーマ}_{日付}"
-
-# 男性ナレーション
-curl -s -X POST "https://api.fish.audio/v1/tts" \
-  -H "Authorization: Bearer $FISH_AUDIO_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"text": "読み上げテキスト", "reference_id": "b756350f646543bdb0b7e8df76bae3fd"}' \
-  -o "$PROJECT/audio/XX_male.mp3"
-
-# 女性ナレーション
-curl -s -X POST "https://api.fish.audio/v1/tts" \
-  -H "Authorization: Bearer $FISH_AUDIO_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"text": "読み上げテキスト", "reference_id": "88a17a7e26be43209ac73c51544df368"}' \
-  -o "$PROJECT/audio/XX_female.mp3"
+python C:\engineer-course\scripts\generate_narration_audio.py "{PROJECT_FOLDER}"
 ```
+
+**スクリプトの動作**:
+1. `narration.txt` を読み込む
+2. 「女性」「男性」を話者指定として認識（読み上げない）
+3. その後のテキストをナレーション内容として音声生成
+4. `audio/` フォルダに `01_female.mp3`, `02_male.mp3`, ... として保存
+
+**前提条件**:
+- `scripts/.env` に `FISH_AUDIO_API_KEY` が設定されていること
 
 #### 方法B: ブラウザUI経由
 
 1. https://fish.audio にアクセス
 2. 登録済みの声を選択
 3. テキストを貼り付けて生成
-4. ダウンロードして `$PROJECT/audio/` フォルダに保存
+4. ダウンロードして `{PROJECT_FOLDER}/audio/` フォルダに保存
 
 **ファイル命名規則**:
 - `01_female.mp3`, `02_male.mp3`, `03_female.mp3`, ...
