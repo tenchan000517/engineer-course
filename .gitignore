@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+*.key
 
 # debug
 npm-debug.log*
@@ -38,6 +39,12 @@ docs/archive/n8n-production/
 
 # GAS production code with credentials
 docs/archive/gas-production/
+
+# Instagram workflow運用ドキュメント
+docs/workflows/
+
+# Instagram特典例（他アカウント参考資料）
+docs/reference/instagram-tokuten/
 
 # vercel
 .vercel

@@ -1,0 +1,19 @@
+{
+  "id": "suno-intermediate",
+  "title": "中級編",
+  "description": "Extend ChainとPersonaで楽曲を精密に構築する",
+  "icon": "music",
+  "color": "orange",
+  "order": 2,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["suno"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "intermediate",
+    "topics": ["ai-music", "extend-chain", "persona", "suno-studio"]
+  },
+  "moduleCount": 4,
+  "isSubcourse": true,
+  "parentCategory": "suno"
+}

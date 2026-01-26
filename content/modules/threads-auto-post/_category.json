@@ -1,0 +1,18 @@
+{
+  "id": "threads-auto-post",
+  "title": "Threads自動投稿",
+  "description": "Threads公式APIを使った投稿自動化システムを構築。X・Instagramと連携したマルチプラットフォーム運用を実現。",
+  "icon": "threads",
+  "color": "gray",
+  "order": 2,
+  "tags": {
+    "language": ["python"],
+    "framework": ["threads", "meta-api"],
+    "editor": ["vscode"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "intermediate",
+    "topics": ["automation", "sns", "api", "threads"]
+  },
+  "moduleCount": 2,
+  "status": "draft"
+}

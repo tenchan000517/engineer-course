@@ -1,0 +1,19 @@
+{
+  "id": "viral-ranking-video",
+  "title": "バズるランキング動画講座",
+  "description": "Instagram/TikTokでバズる「ランキング形式動画」の台本作成から動画制作までの完全ガイド。男女掛け合い形式、認知的不協和、CTA設計など心理学的テクニックを活用。",
+  "icon": "video",
+  "color": "pink",
+  "order": 4,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["instagram", "tiktok", "sora2", "google-flow", "nanobanana"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "intermediate",
+    "topics": ["video-creation", "script-writing", "ranking-format", "viral-content"]
+  },
+  "moduleCount": 7,
+  "isSubcourse": true,
+  "parentCategory": "short-video-creation"
+}

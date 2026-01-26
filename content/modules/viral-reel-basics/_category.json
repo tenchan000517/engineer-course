@@ -1,0 +1,19 @@
+{
+  "id": "viral-reel-basics",
+  "title": "バズるリールとは",
+  "description": "リール全般に共通する心理学的テクニック、ターゲット分析、リサーチ方法、キャプション作成、アルゴリズムの基礎",
+  "icon": "lightbulb",
+  "color": "yellow",
+  "order": 1,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["instagram", "tiktok"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["psychology", "research", "caption", "algorithm", "viral-content"]
+  },
+  "moduleCount": 4,
+  "isSubcourse": true,
+  "parentCategory": "short-video-creation"
+}

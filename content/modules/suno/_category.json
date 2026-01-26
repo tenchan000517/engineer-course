@@ -13,7 +13,7 @@
     "level": "beginner",
     "topics": ["ai-music", "music-generation", "prompt-engineering"]
   },
-  "moduleCount": 1,
+  "moduleCount": 2,
   "hasSubcourses": true,
   "subcourses": [
     {
@@ -22,6 +22,13 @@
       "description": "Sunoの基本操作から楽曲生成まで",
       "moduleCount": 1,
       "level": "beginner"
+    },
+    {
+      "id": "suno-intermediate",
+      "title": "中級編",
+      "description": "Extend ChainとPersonaで楽曲を精密に構築する",
+      "moduleCount": 4,
+      "level": "intermediate"
     }
   ]
 }

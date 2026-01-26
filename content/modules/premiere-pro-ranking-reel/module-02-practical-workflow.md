@@ -1,4 +1,11 @@
-# 実践編: ExtendScript自動配置
+---
+title: "スクリプトで素材を自動配置する"
+order: 2
+duration: "20分"
+difficulty: "⭐⭐⭐☆☆"
+---
+
+# スクリプトで素材を自動配置する
 
 **所要時間**: 20分
 **難易度**: ⭐⭐⭐☆☆
@@ -141,6 +148,10 @@ Rename-Item 'cta_noaudio.mp4' 'cta.mp4'
 
 1. プロダクションパネルで `_SHARED_Resources` をダブルクリック
 
+_SHARED_Resourcesのプロジェクトパネル：
+
+![_SHARED_Resourcesプロジェクトパネル](/premiere-pro-ranking-reel/module-03-step01-shared-resources.png)
+
 ### Step 2-3: 新規プロジェクトを作成
 
 1. **ファイル** → **新規** → **プロジェクト** を選択
@@ -221,23 +232,52 @@ python C:\engineer-course\scripts\generate_placement_json.py "C:\Instagramショ
 
 ## セクション4: ExtendScript実行環境セットアップ
 
+Premiere Pro 2024以降では「ファイル → スクリプト」メニューが削除されました。VSCode + ExtendScript Debugger拡張機能を使用してスクリプトを実行します。
+
 ### Step 4-1: VSCode拡張機能をインストール
 
 1. VSCodeを開く
 2. 拡張機能パネル（Ctrl+Shift+X）を開く
-3. 「ExtendScript Debugger」を検索
-4. **Adobe製**のものをインストール
+3. 検索ボックスに「ExtendScript Debugger」と入力
+
+拡張機能の検索結果：
+
+![ExtendScript Debugger検索結果](/premiere-pro-ranking-reel/module-02-step01-extendscript-search.png)
+
+4. **Adobe製**（130K以上ダウンロード）の「ExtendScript Debugger」を選択
+5. 「インストール」ボタンをクリック
+
+インストール完了後の画面：
+
+![ExtendScript Debuggerインストール完了](/premiere-pro-ranking-reel/module-02-step02-extendscript-installed.png)
+
+「無効にする」「アンインストール」ボタンが表示されていれば、インストール成功です。
 
 ### Step 4-2: launch.jsonを作成
 
-1. スクリプトフォルダをVSCodeで開く
-2. 実行とデバッグパネル（Ctrl+Shift+D）を開く
-3. 「create a launch.json file」をクリック
-4. 「ExtendScript」を選択
+1. VSCodeでスクリプトフォルダ（`C:\engineer-course`）を開く
+2. 左サイドバーの「実行とデバッグ」アイコン（Ctrl+Shift+D）をクリック
+
+実行とデバッグパネル：
+
+![実行とデバッグパネル](/premiere-pro-ranking-reel/module-02-step03-run-debug-panel.png)
+
+3. 「create a launch.json file」リンクをクリック
+4. デバッガー選択で「**ExtendScript**」を選択
+
+デバッガー選択画面：
+
+![デバッガー選択](/premiere-pro-ranking-reel/module-02-step04-debugger-select.png)
+
+5. ホストアプリケーション選択で「**Adobe Premiere Pro premierepro-25.0**」を選択
+
+ホストアプリケーション選択画面：
+
+![ホストアプリケーション選択](/premiere-pro-ranking-reel/module-02-step05-host-application.png)
 
 ### Step 4-3: launch.jsonを編集
 
-`.vscode/launch.json` を以下の内容に置き換え：
+自動生成された `.vscode/launch.json` を以下の内容に置き換えます。**script** パスを正しく設定することが重要です。
 
 ```json
 {
@@ -255,13 +295,16 @@ python C:\engineer-course\scripts\generate_placement_json.py "C:\Instagramショ
 ```
 
 **hostAppSpecifier の値:**
-- Premiere Pro 2025: `premierepro-25.0`
-- Premiere Pro 2024: `premierepro-24.0`
+| Premiere Proバージョン | 値 |
+|----------------------|-----|
+| Premiere Pro 2025 | `premierepro-25.0` |
+| Premiere Pro 2024 | `premierepro-24.0` |
 
 ### チェックポイント
 
-- [ ] ExtendScript Debugger拡張機能がインストールされている
-- [ ] launch.jsonが作成されている
+- [ ] ExtendScript Debugger拡張機能がインストールされている（「無効にする」ボタンが表示）
+- [ ] launch.jsonが `.vscode` フォルダに作成されている
+- [ ] `script` パスが正しいスクリプトファイルを指している
 
 ---
 
@@ -273,30 +316,46 @@ python C:\engineer-course\scripts\generate_placement_json.py "C:\Instagramショ
 2. 複製したシーケンスをダブルクリックしてアクティブにする
 3. タイムラインパネルにシーケンスが表示されていることを確認
 
+**重要**: シーケンスがアクティブでない状態でスクリプトを実行するとエラーになります。
+
 ### Step 5-2: ExtendScriptを実行
 
-1. VSCodeでスクリプトフォルダを開く
+1. VSCodeでスクリプトフォルダ（`C:\engineer-course`）を開く
 2. **F5** を押す（または「実行とデバッグ」→「Run in Premiere Pro」）
-3. 完了ダイアログが表示されるまで待つ
+3. Premiere Proに接続され、スクリプトが実行される
+4. 完了ダイアログが表示されるまで待つ（数秒〜十数秒）
 
 ### Step 5-3: 配置結果を確認
 
-タイムラインに以下が配置されていることを確認：
+スクリプト実行完了ダイアログ：
 
-- V3: アバター動画（ループ配置）
-- V4: アバター静止画（ツール名タイミング）
-- V5: ランキングボード
-- V6〜V10: ランキングアイコン（順位順）
-- V12: タイトル背景
-- V13: テロップ背景
-- A1: ナレーション
-- A3: BGM
+![完了ダイアログ](/premiere-pro-ranking-reel/module-02-step06-complete-dialog.png)
+
+「成功: 5件」と表示されれば、ランキングアイコン5件が正常に配置されています。
+
+タイムラインの配置結果：
+
+![タイムライン配置結果](/premiere-pro-ranking-reel/module-02-step07-timeline-result.png)
+
+上記のように、各トラックに素材が配置されます：
+
+| トラック | 内容 |
+|----------|------|
+| V9 (No1) | Genspark.png（1位） |
+| V8 (No2) | FishAudio.png（2位相当） |
+| V7 (No3) | Vrew.png（3位相当） |
+| V6 (No4) | Nanobanana.png（4位相当） |
+| V5 (論外) | Canva.png |
+| V4 | ランキングボード |
+| V3 | アバター動画 |
+| A1 | ナレーション音声（波形が表示） |
 
 ### チェックポイント
 
-- [ ] 「完了!」ダイアログが表示された
-- [ ] 全ての素材がタイムラインに配置されている
-- [ ] BGMが正常に再生される（動画音声に上書きされていない）
+- [ ] 「完了!」ダイアログで「成功: 5件」と表示された
+- [ ] タイムラインにランキングアイコンが時系列順に配置されている
+- [ ] ナレーション音声の波形がA1トラックに表示されている
+- [ ] 再生してBGMが正常に聞こえる
 
 ---
 
@@ -330,7 +389,13 @@ python C:\engineer-course\scripts\generate_placement_json.py "C:\Instagramショ
 
 ### ExtendScript実行時に「Unexpected source request」エラー
 
-**問題**: VSCodeでF5を押すと「Unexpected source request [object Object]」エラー
+**問題**: VSCodeでF5を押すと以下のエラーが表示される
+
+エラー画面：
+
+![Unexpected source requestエラー](/premiere-pro-ranking-reel/module-02-error-unexpected-source.png)
+
+**原因**: launch.jsonで `script` パスまたは `hostAppSpecifier` が正しく設定されていない
 
 **解決方法**: launch.jsonで `script` と `hostAppSpecifier` を明示的に指定する
 
@@ -343,13 +408,23 @@ python C:\engineer-course\scripts\generate_placement_json.py "C:\Instagramショ
 
 ### 「debug session is already active」エラー
 
-**問題**: スクリプトを再実行しようとすると、デバッグセッションがアクティブというエラー
+**問題**: スクリプトを再実行しようとすると、以下のエラーダイアログが表示される
 
-**解決方法**: Shift+F5で前のセッションを停止してから再実行
+エラーダイアログ：
+
+![debug session is already activeエラー](/premiere-pro-ranking-reel/module-02-error-debug-session-active.png)
+
+**原因**: 前回のデバッグセッションが終了していない
+
+**解決方法**:
+1. **Shift+F5** を押して前のセッションを停止
+2. 再度 **F5** を押してスクリプトを実行
 
 ### 素材が「オフライン」と表示される
 
 **問題**: 配置した素材が「メディアオフライン」と表示される
+
+**原因**: プロジェクトパネルのビン内に古い同名ファイルが残っている
 
 **解決方法**:
 1. プロジェクトパネルで同名ファイルが複数ないか確認
@@ -360,7 +435,13 @@ python C:\engineer-course\scripts\generate_placement_json.py "C:\Instagramショ
 
 **問題**: BGMが再生されない、または動画音声だけが聞こえる
 
+**原因**: アバター動画の音声がBGMトラックを上書きしている
+
 **解決方法**: アバター動画（u---n.mp4、cta.mp4）から音声を削除してください（事前準備セクション参照）
+
+```bash
+ffmpeg -i input.mp4 -c:v copy -an output.mp4
+```
 
 ---
 

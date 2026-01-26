@@ -1,0 +1,19 @@
+{
+  "id": "kling-basics",
+  "title": "Klingで動画生成",
+  "description": "アカウント作成から動画生成の基本まで",
+  "icon": "video",
+  "color": "green",
+  "order": 1,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["kling", "kling-ai"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["ai-video", "image-to-video", "text-to-video", "audio-generation"]
+  },
+  "moduleCount": 3,
+  "isSubcourse": true,
+  "parentCategory": "kling"
+}

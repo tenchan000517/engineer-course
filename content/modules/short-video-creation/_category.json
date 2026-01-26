@@ -1,0 +1,34 @@
+{
+  "id": "short-video-creation",
+  "title": "バズるショート動画講座",
+  "description": "Instagram/TikTokでバズるショート動画の台本作成から動画制作、編集までの完全ガイド",
+  "icon": "video",
+  "color": "pink",
+  "order": 11,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["instagram", "tiktok", "premiere-pro"],
+    "editor": ["browser", "premiere-pro"],
+    "platform": ["windows", "mac"],
+    "level": "intermediate",
+    "topics": ["video-creation", "script-writing", "short-video", "viral-content"]
+  },
+  "moduleCount": 3,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "viral-reel-basics",
+      "title": "バズるリールとは",
+      "description": "リール全般に共通する心理学的テクニック、ターゲット分析、リサーチ方法、キャプション作成、アルゴリズムの基礎",
+      "moduleCount": 4,
+      "level": "beginner"
+    },
+    {
+      "id": "viral-ranking-video",
+      "title": "ランキングリール",
+      "description": "22ステップで作る男女掛け合い形式のランキング動画制作フロー",
+      "moduleCount": 7,
+      "level": "intermediate"
+    }
+  ]
+}

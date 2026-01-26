@@ -353,6 +353,8 @@ V10（プロンプト・手順）レイヤーは手動で挿入する。自動�
 
 **記録ルール**: スクショが共有されるたびに必ず追記する
 
+### Module 01用
+
 | # | パス | 内容（詳細に記載） | Module/Phase/Step | 講座使用 | 備考 |
 |---|------|-------------------|-------------------|----------|------|
 | 1 | `public/premiere-pro-ranking-reel/module-01-step01-home-screen.png` | Premiere Proホーム画面 | 事前検証 | 可 | - |
@@ -362,6 +364,27 @@ V10（プロンプト・手順）レイヤーは手動で挿入する。自動�
 | 5 | `public/premiere-pro-ranking-reel/module-01-step05-import-screen.jpg` | 読み込み画面 | 事前検証 | 不可 | - |
 | 6 | `public/premiere-pro-ranking-reel/module-01-step06-empty-project.png` | 空のプロジェクト | 事前検証 | 参考 | - |
 | 7 | `public/premiere-pro-ranking-reel/module-03-step01-shared-resources.png` | _SHARED_Resourcesプロジェクトパネル | Module 03/Phase 1/Step 1-1 | 可 | ビン構造確認 |
+
+### Module 02用（2026-01-24追加）
+
+| # | パス | 内容（詳細に記載） | Module/Phase/Step | 講座使用 |
+|---|------|-------------------|-------------------|----------|
+| 8 | `public/premiere-pro-ranking-reel/module-02-step01-extendscript-search.png` | VSCode拡張機能パネルでExtendScript Debugger検索 | Module 02/Section 4/Step 4-1 | **使用済み** |
+| 9 | `public/premiere-pro-ranking-reel/module-02-step02-extendscript-installed.png` | ExtendScript Debugger詳細画面（インストール完了） | Module 02/Section 4/Step 4-1 | **使用済み** |
+| 10 | `public/premiere-pro-ranking-reel/module-02-step03-run-debug-panel.png` | VSCode実行とデバッグパネル | Module 02/Section 4/Step 4-2 | **使用済み** |
+| 11 | `public/premiere-pro-ranking-reel/module-02-step04-debugger-select.png` | デバッガー選択画面（ExtendScript選択） | Module 02/Section 4/Step 4-2 | **使用済み** |
+| 12 | `public/premiere-pro-ranking-reel/module-02-step05-host-application.png` | ホストアプリケーション選択画面（Premiere Pro選択） | Module 02/Section 4/Step 4-2 | **使用済み** |
+| 13 | `public/premiere-pro-ranking-reel/module-02-step06-complete-dialog.png` | スクリプト実行完了ダイアログ（成功:5件） | Module 02/Section 5/Step 5-3 | **使用済み** |
+| 14 | `public/premiere-pro-ranking-reel/module-02-step07-timeline-result.png` | Premiere Proタイムライン配置結果 | Module 02/Section 5/Step 5-3 | **使用済み** |
+| 15 | `public/premiere-pro-ranking-reel/module-02-error-unexpected-source.png` | 「Unexpected source request」エラー | Module 02/トラブルシューティング | **使用済み** |
+| 16 | `public/premiere-pro-ranking-reel/module-02-error-debug-session-active.png` | 「debug session is already active」エラー | Module 02/トラブルシューティング | **使用済み** |
+
+### 使用しないスクリーンショット
+
+| パス（元ファイル） | 内容 | 理由 |
+|-------------------|------|------|
+| `9f47b6b82cd4f1223905222b646d25bb.png` | Premiere Pro「ウィンドウ→エクステンション」メニュー | 講座の文脈と合わない |
+| `721d6d98a801b63adce716f783c1bd0d.png` | VSCode .NET SDK/CMake関連通知 | 講座と無関係 |
 
 ---
 
@@ -861,6 +884,7 @@ Rename-Item 'cta_noaudio.mp4' 'cta.mp4'
 | 2026-01-24 | **動画音声の上書き問題発覚** - overwriteClip()で動画配置時、音声がBGM（A3）を上書き。次セッションで対応 |
 | 2026-01-24 | **動画音声の上書き問題を解決** - ffmpegで音声を事前削除（`-c:v copy -an`）。u---n.mp4とcta.mp4を音声なし版に差し替え |
 | 2026-01-24 | **講座化完了** - Module 01（プロダクションセットアップ）、Module 02（実践編）を `content/modules/premiere-pro-ranking-reel/` に作成 |
+| 2026-01-24 | **Module 02講座にスクショ追加** - CONTENT-GUIDEに従い、セクション4/5/トラブルシューティングに9枚のスクリーンショットを追加。実際の検証結果に基づいた内容に修正 |
 
 ---
 

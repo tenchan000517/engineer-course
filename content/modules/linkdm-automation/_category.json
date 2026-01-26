@@ -1,0 +1,19 @@
+{
+  "id": "linkdm-automation",
+  "title": "LinkDMでボタン付きDM自動配布",
+  "description": "LinkDM（Meta公式API準拠）を使ってコメントからDMを自動送信。「受け取りはコチラ」のようなボタン付きDMで特典配布の体験を向上。",
+  "icon": "instagram",
+  "color": "purple",
+  "order": 2,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["instagram", "meta-api", "linkdm"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "beginner",
+    "topics": ["dm-automation", "comment-trigger", "button-dm", "lead-generation"]
+  },
+  "moduleCount": 4,
+  "isSubcourse": true,
+  "parentCategory": "instagram"
+}

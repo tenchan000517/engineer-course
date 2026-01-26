@@ -1,3 +1,10 @@
+---
+title: "プロダクション機能でセットアップ"
+order: 1
+duration: "15分"
+difficulty: "⭐⭐☆☆☆"
+---
+
 # プロダクション機能でセットアップ
 
 **所要時間**: 15分
@@ -64,7 +71,13 @@ Premiere Proの「テンプレートとして保存」機能では、以下が�
 
 ### Step 1-1: 新規プロダクション作成
 
-Premiere Proを起動し、メニューから作成します。
+Premiere Proを起動します。
+
+Premiere Proホーム画面：
+
+![Premiere Proホーム画面](/premiere-pro-ranking-reel/module-01-step01-home-screen.png)
+
+メニューから作成します。
 
 1. **ファイル** → **新規** → **プロダクション** を選択
 
@@ -72,12 +85,28 @@ Premiere Proを起動し、メニューから作成します。
 
 プロダクション名と保存場所を設定します。
 
+新規プロジェクトダイアログ：
+
+![新規プロジェクトダイアログ](/premiere-pro-ranking-reel/module-01-step02-new-project-dialog.png)
+
 | 項目 | 設定値 |
 |------|--------|
 | プロダクション名 | `{YOUR_PRODUCTION_NAME}` |
 | 保存場所 | `{YOUR_PRODUCTION_PATH}` |
 
+プロジェクト名入力例：
+
+![プロジェクト名入力](/premiere-pro-ranking-reel/module-01-step03-project-name-input.png)
+
 **作成**をクリックしてプロダクションを作成します。
+
+作成後のフォルダ構造：
+
+![フォルダ構造](/premiere-pro-ranking-reel/module-01-step04-folder-structure.png)
+
+プロダクション作成後のプロジェクトパネル：
+
+![空のプロジェクト](/premiere-pro-ranking-reel/module-01-step06-empty-project.png)
 
 ### チェックポイント
 

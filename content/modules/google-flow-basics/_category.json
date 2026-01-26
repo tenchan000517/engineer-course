@@ -1,0 +1,19 @@
+{
+  "id": "google-flow-basics",
+  "title": "基礎編",
+  "description": "環境構築から企業PV制作まで",
+  "icon": "video",
+  "color": "purple",
+  "order": 1,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["google-flow", "veo", "nano-banana-pro"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["ai-video", "image-generation", "prompt-engineering"]
+  },
+  "moduleCount": 6,
+  "isSubcourse": true,
+  "parentCategory": "google-flow"
+}

@@ -1,5 +1,5 @@
 /**
- * Premiere Pro ExtendScript: ランキング画像自動配置
+ * Premiere Pro ExtendScript: ランキングリール素材自動配置
  *
  * 使い方:
  * 1. Premiere Proでプロジェクトを開く
@@ -8,7 +8,7 @@
  *
  * 前提条件:
  * - placement.json が同じフォルダにある
- * - 画像ファイルが指定パスに存在する
+ * - 素材ファイルが指定パスに存在する
  */
 
 (function() {
@@ -19,7 +19,10 @@
     var jsonPath = scriptFolder.fsName + "\\placement.json";
 
     // トラック番号マッピング（0始まり）
-    var TRACK_MAP = {
+    // ビデオトラック
+    var VIDEO_TRACK_MAP = {
+        "V3": 2,
+        "V4": 3,
         "V5": 4,
         "V6": 5,
         "V7": 6,
@@ -27,8 +30,21 @@
         "V9": 8,
         "V10": 9,
         "V11": 10,
-        "V12": 11
+        "V12": 11,
+        "V13": 12
     };
+
+    // オーディオトラック
+    var AUDIO_TRACK_MAP = {
+        "A1": 0,
+        "A2": 1,
+        "A3": 2,
+        "A4": 3
+    };
+
+    // フレームサイズ（正規化用）
+    var FRAME_WIDTH = 1080;
+    var FRAME_HEIGHT = 1920;
 
     // ========== メイン処理 ==========
 
@@ -54,12 +70,33 @@
         // 各配置を処理
         for (var i = 0; i < placements.length; i++) {
             var p = placements[i];
-            var result = placeImage(seq, p);
+            var result;
+
+            // typeによって処理を分岐
+            switch (p.type) {
+                case 'shared':
+                case 'avatar_still':
+                    result = placeMedia(seq, p);
+                    break;
+                case 'ranking':
+                    result = placeRankingIcon(seq, p);
+                    break;
+                case 'narration':
+                    result = placeNarration(seq, p);
+                    break;
+                case 'avatar_video':
+                    result = placeAvatarVideo(seq, p);
+                    break;
+                default:
+                    // 旧形式（typeなし）の場合はランキングアイコンとして処理
+                    result = placeRankingIcon(seq, p);
+            }
+
             if (result.success) {
                 successCount++;
             } else {
                 errorCount++;
-                errors.push(p.tool + ": " + result.error);
+                errors.push((p.name || p.tool || "不明") + ": " + result.error);
             }
         }
 
@@ -67,8 +104,10 @@
         var message = "完了!\n";
         message += "成功: " + successCount + " 件\n";
         message += "失敗: " + errorCount + " 件";
-        if (errors.length > 0) {
+        if (errors.length > 0 && errors.length <= 5) {
             message += "\n\nエラー詳細:\n" + errors.join("\n");
+        } else if (errors.length > 5) {
+            message += "\n\nエラー詳細（一部）:\n" + errors.slice(0, 5).join("\n") + "\n...他" + (errors.length - 5) + "件";
         }
         alert(message);
     }
@@ -97,11 +136,89 @@
     }
 
     /**
-     * 画像をインポートして指定位置に配置（スケール・座標・長さ設定）
+     * 共有素材・アバター静止画を配置
      */
-    function placeImage(seq, placement) {
+    function placeMedia(seq, placement) {
         try {
-            var imagePath = placement.image;
+            var mediaPath = placement.path;
+            var timeInSeconds = placement.time;
+            var trackName = placement.track;
+            var duration = placement.duration;
+
+            // ファイル存在確認
+            var mediaFile = new File(mediaPath);
+            if (!mediaFile.exists) {
+                return { success: false, error: "ファイルが見つかりません: " + mediaPath };
+            }
+
+            // トラック判定（ビデオ or オーディオ）
+            var isAudio = trackName.charAt(0) === 'A';
+            var trackIndex = isAudio ? AUDIO_TRACK_MAP[trackName] : VIDEO_TRACK_MAP[trackName];
+
+            if (trackIndex === undefined) {
+                return { success: false, error: "不明なトラック: " + trackName };
+            }
+
+            // メディアをプロジェクトにインポート
+            var importResult = app.project.importFiles(
+                [mediaPath],
+                true,
+                app.project.rootItem,
+                false
+            );
+
+            if (!importResult) {
+                return { success: false, error: "インポート失敗" };
+            }
+
+            // インポートしたアイテムを検索
+            var projectItem = findProjectItemByName(
+                app.project.rootItem,
+                mediaFile.name
+            );
+
+            if (!projectItem) {
+                return { success: false, error: "インポート後のアイテムが見つかりません" };
+            }
+
+            // タイムラインに配置
+            var track = isAudio ? seq.audioTracks[trackIndex] : seq.videoTracks[trackIndex];
+            if (!track) {
+                return { success: false, error: "トラックが存在しません: " + trackName };
+            }
+
+            // クリップを挿入
+            track.overwriteClip(projectItem, timeInSeconds);
+
+            // 配置したクリップを取得
+            var clip = findClipAtTime(track, timeInSeconds);
+
+            if (clip) {
+                // 長さを設定
+                if (duration && duration > 0) {
+                    var endTime = timeInSeconds + duration;
+                    clip.end = endTime;
+                }
+
+                // ボリューム設定（オーディオのみ）
+                if (isAudio && placement.volume !== undefined) {
+                    setClipVolume(clip, placement.volume);
+                }
+            }
+
+            return { success: true };
+
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * ランキングアイコンを配置（スケール・座標設定あり）
+     */
+    function placeRankingIcon(seq, placement) {
+        try {
+            var imagePath = placement.path || placement.image;
             var timeInSeconds = placement.time;
             var trackName = placement.track;
             var duration = placement.duration;
@@ -116,7 +233,7 @@
             }
 
             // トラック番号を取得
-            var trackIndex = TRACK_MAP[trackName];
+            var trackIndex = VIDEO_TRACK_MAP[trackName];
             if (trackIndex === undefined) {
                 return { success: false, error: "不明なトラック: " + trackName };
             }
@@ -152,7 +269,7 @@
             // クリップを挿入
             videoTrack.overwriteClip(projectItem, timeInSeconds);
 
-            // 配置したクリップを取得（最後に追加されたクリップ）
+            // 配置したクリップを取得
             var clip = findClipAtTime(videoTrack, timeInSeconds);
 
             if (clip) {
@@ -171,6 +288,205 @@
         } catch (e) {
             return { success: false, error: e.message };
         }
+    }
+
+    /**
+     * ナレーション音声を配置（連続配置）
+     */
+    var narrationEndTimes = { "A1": 0, "A2": 0 };  // トラックごとの終了時間を追跡
+
+    function placeNarration(seq, placement) {
+        try {
+            var audioPath = placement.path;
+            var trackName = placement.track;
+
+            // ファイル存在確認
+            var audioFile = new File(audioPath);
+            if (!audioFile.exists) {
+                return { success: false, error: "ファイルが見つかりません: " + audioPath };
+            }
+
+            // トラック番号を取得
+            var trackIndex = AUDIO_TRACK_MAP[trackName];
+            if (trackIndex === undefined) {
+                return { success: false, error: "不明なトラック: " + trackName };
+            }
+
+            // 音声をプロジェクトにインポート
+            var importResult = app.project.importFiles(
+                [audioPath],
+                true,
+                app.project.rootItem,
+                false
+            );
+
+            if (!importResult) {
+                return { success: false, error: "インポート失敗" };
+            }
+
+            // インポートしたアイテムを検索
+            var projectItem = findProjectItemByName(
+                app.project.rootItem,
+                audioFile.name
+            );
+
+            if (!projectItem) {
+                return { success: false, error: "インポート後のアイテムが見つかりません" };
+            }
+
+            // タイムラインに配置
+            var audioTrack = seq.audioTracks[trackIndex];
+            if (!audioTrack) {
+                return { success: false, error: "トラックが存在しません: " + trackName };
+            }
+
+            // ナレーションは番号順に連続配置
+            // 同じトラックの最後のクリップの終了位置から配置
+            var startTime = getTrackEndTime(audioTrack);
+
+            // クリップを挿入
+            audioTrack.overwriteClip(projectItem, startTime);
+
+            return { success: true };
+
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * アバター動画を配置（ループ対応）
+     */
+    function placeAvatarVideo(seq, placement) {
+        try {
+            var videoPath = placement.path;
+            var trackName = placement.track;
+            var startTime = placement.time;
+            var shouldLoop = placement.loop;
+            var loopUntil = placement.loop_until;
+
+            // ファイル存在確認
+            var videoFile = new File(videoPath);
+            if (!videoFile.exists) {
+                return { success: false, error: "ファイルが見つかりません: " + videoPath };
+            }
+
+            // トラック番号を取得
+            var trackIndex = VIDEO_TRACK_MAP[trackName];
+            if (trackIndex === undefined) {
+                return { success: false, error: "不明なトラック: " + trackName };
+            }
+
+            // 動画をプロジェクトにインポート
+            var importResult = app.project.importFiles(
+                [videoPath],
+                true,
+                app.project.rootItem,
+                false
+            );
+
+            if (!importResult) {
+                return { success: false, error: "インポート失敗" };
+            }
+
+            // インポートしたアイテムを検索
+            var projectItem = findProjectItemByName(
+                app.project.rootItem,
+                videoFile.name
+            );
+
+            if (!projectItem) {
+                return { success: false, error: "インポート後のアイテムが見つかりません" };
+            }
+
+            // タイムラインに配置
+            var videoTrack = seq.videoTracks[trackIndex];
+            if (!videoTrack) {
+                return { success: false, error: "トラックが存在しません: " + trackName };
+            }
+
+            // 開始時間を決定（-1の場合は前のクリップの直後）
+            var actualStartTime = startTime;
+            if (startTime < 0) {
+                actualStartTime = getTrackEndTime(videoTrack);
+            }
+
+            if (!shouldLoop) {
+                // ループなし：1回だけ配置
+                videoTrack.overwriteClip(projectItem, actualStartTime);
+                // 動画の音声がA1に配置されるので削除
+                removeAudioClipAtTime(seq, actualStartTime);
+            } else {
+                // ループあり：loopUntilまで繰り返し配置
+                var currentTime = actualStartTime;
+                var clipDuration = projectItem.getOutPoint().seconds - projectItem.getInPoint().seconds;
+
+                // クリップの長さが取得できない場合は5秒と仮定
+                if (!clipDuration || clipDuration <= 0) {
+                    clipDuration = 5.0;
+                }
+
+                while (currentTime < loopUntil) {
+                    videoTrack.overwriteClip(projectItem, currentTime);
+                    // 動画の音声がA1に配置されるので削除
+                    removeAudioClipAtTime(seq, currentTime);
+
+                    // 配置したクリップを取得して長さを確認
+                    var clip = findClipAtTime(videoTrack, currentTime);
+                    if (clip) {
+                        var actualDuration = clip.end.seconds - clip.start.seconds;
+                        currentTime = clip.end.seconds;
+
+                        // 最後のクリップがloopUntilを超える場合はトリム
+                        if (currentTime > loopUntil) {
+                            clip.end = loopUntil;
+                        }
+                    } else {
+                        currentTime += clipDuration;
+                    }
+                }
+            }
+
+            return { success: true };
+
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * 指定時間にあるA1の音声クリップを削除（動画の音声を除去）
+     */
+    function removeAudioClipAtTime(seq, timeInSeconds) {
+        try {
+            var audioTrack = seq.audioTracks[0];  // A1
+            if (!audioTrack) return;
+
+            // 指定時間付近のクリップを探して削除
+            for (var i = audioTrack.clips.numItems - 1; i >= 0; i--) {
+                var clip = audioTrack.clips[i];
+                if (Math.abs(clip.start.seconds - timeInSeconds) < 0.5) {
+                    clip.remove(false, false);
+                    break;
+                }
+            }
+        } catch (e) {
+            $.writeln("音声クリップ削除エラー: " + e.message);
+        }
+    }
+
+    /**
+     * トラックの最後のクリップの終了時間を取得
+     */
+    function getTrackEndTime(track) {
+        var endTime = 0;
+        for (var i = 0; i < track.clips.numItems; i++) {
+            var clipEnd = track.clips[i].end.seconds;
+            if (clipEnd > endTime) {
+                endTime = clipEnd;
+            }
+        }
+        return endTime;
     }
 
     /**
@@ -195,11 +511,16 @@
 
     /**
      * クリップのモーション（スケール・位置）を設定
+     * 位置は正規化値（0〜1）で設定
      */
     function setClipMotion(clip, scale, xPos, yPos) {
         try {
             // クリップのコンポーネントを取得
             var components = clip.components;
+
+            // ピクセル値を正規化（0〜1）に変換
+            var normalizedX = xPos / FRAME_WIDTH;
+            var normalizedY = yPos / FRAME_HEIGHT;
 
             for (var i = 0; i < components.numItems; i++) {
                 var component = components[i];
@@ -211,17 +532,25 @@
                     for (var j = 0; j < properties.numItems; j++) {
                         var prop = properties[j];
 
-                        // スケール
+                        // スケール（setValueで動作する）
                         if (prop.displayName === "スケール" || prop.displayName === "Scale") {
                             if (scale !== undefined) {
-                                prop.setValue(scale, true);
+                                try {
+                                    prop.setValue(scale, true);
+                                } catch (e1) {
+                                    $.writeln("スケール設定エラー: " + e1.message);
+                                }
                             }
                         }
 
-                        // 位置
+                        // 位置（正規化値で設定）
                         if (prop.displayName === "位置" || prop.displayName === "Position") {
                             if (xPos !== undefined && yPos !== undefined) {
-                                prop.setValue([xPos, yPos], true);
+                                try {
+                                    prop.setValue([normalizedX, normalizedY], true);
+                                } catch (e2) {
+                                    $.writeln("位置設定エラー: " + e2.message);
+                                }
                             }
                         }
                     }
@@ -229,8 +558,41 @@
                 }
             }
         } catch (e) {
-            // モーション設定に失敗してもエラーにしない（配置は成功している）
             $.writeln("モーション設定エラー: " + e.message);
+        }
+    }
+
+    /**
+     * クリップのボリュームを設定（dB）
+     */
+    function setClipVolume(clip, volumeDb) {
+        try {
+            var components = clip.components;
+
+            for (var i = 0; i < components.numItems; i++) {
+                var component = components[i];
+
+                // ボリュームエフェクトを探す
+                if (component.displayName === "ボリューム" || component.displayName === "Volume") {
+                    var properties = component.properties;
+
+                    for (var j = 0; j < properties.numItems; j++) {
+                        var prop = properties[j];
+
+                        if (prop.displayName === "レベル" || prop.displayName === "Level") {
+                            try {
+                                prop.setValue(volumeDb, true);
+                            } catch (e) {
+                                $.writeln("ボリューム設定エラー: " + e.message);
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        } catch (e) {
+            $.writeln("ボリューム設定エラー: " + e.message);
         }
     }
 

@@ -580,14 +580,16 @@ DM自動化 + イベント検知 = Enterprise必須（$42,000+/月）
 | 2026-01-06 | **Genspark特典ページ作成完了** - 3機能解説、プロンプト4種、スライド見本9枚、Nanobanana講座画像引用 | AI Assistant |
 | 2026-01-06 | **Discord CTAフッターコンポーネント作成** - `components/GiftDiscordCTA.tsx`、全特典ページに自動表示 | AI Assistant |
 | 2026-01-06 | **特典ページ作成ガイド作成** - `content/guides/gift-page-creation-guide.md` | AI Assistant |
+| 2026-01-06 | **エルグラム設定講座更新** - 新スクショ13枚追加、iOSのURL表示問題と対処法を追記 | AI Assistant |
+| 2026-01-06 | **動画作成フロー確定** - CANVA + Fish Audio + CANVA（テロップ追加）の2段階フロー | AI Assistant |
+| 2026-01-06 | **ランキング動画投稿完了** - Genspark投稿、エルグラム自動応答設定済み | AI Assistant |
+| 2026-01-06 | **E2Eテスト完了** - テストアカウントからコメント→DM自動配布成功 | AI Assistant |
 
 ---
 
 ## 現在のアクション
 
-**エルグラムの具体的な設定の実証**
-
-Genspark特典ページ（`/gift/genspark-guide`）が完成。次はエルグラムで実際にDM自動配布を設定して検証する。
+**エルグラムの設定完了 → 投稿してE2Eテスト**
 
 ### 完了した作業（2026-01-06）
 
@@ -602,13 +604,60 @@ Genspark特典ページ（`/gift/genspark-guide`）が完成。次はエルグ�
    - 全特典ページ（`/gift/[slug]`）に自動表示
    - Discord招待リンク: https://discord.gg/xQM6NgmwPk
 
+3. **エルグラム自動応答設定完了**
+   - 対象投稿: 「【2026年最新】仕事に使えるAIツ...」
+   - トリガー: 全てのコメントに反応
+   - DM内容:
+     ```
+     コメントありがとうございます！
+
+     今日紹介したGensparkの
+     ・すぐ使えるプロンプト4種
+     ・初心者ガイド
+
+     こちらからどうぞ👇
+     https://course.yumesuta.com/gift/genspark-guide
+
+     他の投稿はこちら👇
+     https://www.instagram.com/ten_urushibata/
+     ```
+   - 稼働回数: 1度のみ
+   - コメント返信: なし
+   - スケジュール: 常に反応
+
+4. **エルグラム設定講座を更新**
+   - 新スクショ13枚追加（投稿選択モーダル、メッセージタイプ選択等）
+   - iOSのURL表示問題と対処法を追記
+   - 「2つ以上のリンクを送信」でiOSでもテキスト表示される対策を記載
+
+5. **動画作成フロー確定**
+   ```
+   ① CANVA: ランキング部分 + BGM作成
+            ↓
+   ② Fish Audio: ナレーション作成
+            ↓
+   ③ CANVA: 統合
+            ↓
+   ④ ダウンロード
+            ↓
+   ⑤ CANVA: 画像・テロップ追加
+            ↓
+   ⑥ 完成
+   ```
+
+6. **ランキング動画投稿完了**
+   - 投稿: 「【2026年最新】仕事に使えるAIツ...」
+   - エルグラム自動応答: 設定済み
+
+7. **E2Eテスト完了**
+   - テストアカウントからコメント → DM自動配布成功
+
 ### 次のステップ
 
-1. **エルグラムでGenspark投稿の自動応答を設定**
-   - トリガーワード: 好きな季節
-   - DM内容: 特典URL（`/gift/genspark-guide`）
-2. **実際に投稿してE2E確認**
-3. **結果を記録**
+1. **Module 03（動画作成）を講座化**
+   - CANVA + Fish Audio + CANVA（テロップ追加）のフローを講座にまとめる
+2. **他の台本で横展開**
+   - 台本12本のうち残り11本を順次作成
 
 ### 参照すべきファイル
 
@@ -768,9 +817,14 @@ Voicy「0から始めるエンジニア生活」
 | `/instagram-dm-automation/module-02-step16-trigger-select.png` | トリガー選択画面 | セクション4 トリガー選択 | 可 |
 | `/instagram-dm-automation/module-02-step17-new-create-modal.png` | 新規作成モーダル | セクション4 管理名設定 | 可 |
 | `/instagram-dm-automation/module-02-step18-select-post.png` | 対象の投稿を選択 | セクション4 Step 1 | 可 |
+| `/instagram-dm-automation/module-02-step18a-select-post-modal.png` | 投稿選択モーダル | セクション4 Step 1（詳細） | 可 |
 | `/instagram-dm-automation/module-02-step19-keyword-setting.png` | キーワード設定 | セクション4 Step 2 | 可 |
 | `/instagram-dm-automation/module-02-step20-filter-setting.png` | 絞り込み設定 | セクション4 Step 3 | 可 |
+| `/instagram-dm-automation/module-02-step20a-filter-modal.png` | 絞り込み設定モーダル | セクション4 Step 3（詳細） | 可 |
 | `/instagram-dm-automation/module-02-step21-action-setting.png` | アクション設定 | セクション4 Step 4 | 可 |
+| `/instagram-dm-automation/module-02-step21a-message-type.png` | メッセージタイプ選択 | セクション4 Step 4（詳細） | 可 |
+| `/instagram-dm-automation/module-02-step21b-message-edit.png` | メッセージ編集画面 | セクション4 Step 4（詳細） | 可 |
+| `/instagram-dm-automation/module-02-step21c-url-setting.png` | URL設定画面 | セクション4 Step 4（詳細） | 可 |
 | `/instagram-dm-automation/module-02-step22-comment-reply.png` | 投稿内コメント返信 | セクション4 Step 5 | 可 |
 | `/instagram-dm-automation/module-02-step23-schedule-setting.png` | 稼働スケジュール | セクション4 Step 6 | 可 |
 
@@ -935,6 +989,25 @@ Instagram/TikTokでバズっているランキング形式動画を**心理学�
 - SNS投稿の台本作成時（この通りに作れば再現可能）
 - 特典配布用投稿の設計時
 - CTAキーワードの選定時
+
+---
+
+## Instagramプロフィール（確定版）
+
+```
+天ちゃん | AIで生産性を圧倒的に上げる
+\ 自分には何もない」を最強の武器に変える /
+▶︎ AI×プログラミングで仕事の単価を爆上
+▶︎ 離職率0%の組織作り×上場企業との取引実績
+▶︎ 漫画と図解で、挫折しないAI活用術
+👇一歩踏み出す勇気がもらえるコミュニティ
+```
+
+**ポイント：**
+- ターゲットの悩み「自分には何もない」を武器に変える訴求
+- 実績（離職率0%、上場企業取引）で信頼性
+- 「挫折しない」で初心者へのハードル下げ
+- CTAでコミュニティ誘導
 
 ---
 

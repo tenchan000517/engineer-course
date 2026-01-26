@@ -1,0 +1,19 @@
+{
+  "id": "sora2-basics",
+  "title": "基礎編",
+  "description": "環境構築からStoryboard、連続動画まで基本を学ぶ",
+  "icon": "video",
+  "color": "white",
+  "order": 1,
+  "tags": {
+    "language": ["nocode"],
+    "framework": ["sora2", "nano-banana-pro", "gemini"],
+    "editor": ["browser"],
+    "platform": ["windows", "mac"],
+    "level": "beginner",
+    "topics": ["ai-video", "image-generation", "prompt-engineering"]
+  },
+  "moduleCount": 5,
+  "isSubcourse": true,
+  "parentCategory": "sora2"
+}
