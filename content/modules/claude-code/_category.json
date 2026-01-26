@@ -1,0 +1,27 @@
+{
+  "id": "claude-code",
+  "title": "Claude Code",
+  "description": "Claude Codeの活用テクニック。会話ログの自動保存、カスタムエージェント、Hooksなど。",
+  "icon": "terminal",
+  "color": "orange",
+  "order": 20,
+  "tags": {
+    "language": ["python", "bash"],
+    "framework": ["claude-code"],
+    "editor": ["terminal", "vscode"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "intermediate",
+    "topics": ["automation", "cli", "productivity"]
+  },
+  "moduleCount": 2,
+  "hasSubcourses": true,
+  "subcourses": [
+    {
+      "id": "claude-code-log-export",
+      "title": "会話ログを自動保存する",
+      "description": "セッション終了時に会話ログをMarkdown形式で自動エクスポート。Hooksとスクリプトで実現。",
+      "moduleCount": 2,
+      "level": "intermediate"
+    }
+  ]
+}
