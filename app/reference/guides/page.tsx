@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getGuidesByCategory } from '@/lib/guides';
+import { getGuidesByCategory, salesSubCategories } from '@/lib/guides';
 import {
   ChevronLeft,
   BookOpen,
@@ -8,24 +8,39 @@ import {
   Anchor,
   BarChart3,
   Folder,
-  ArrowRight
+  ArrowRight,
+  Scroll,
+  DollarSign
 } from 'lucide-react';
 
 const categoryIcons: Record<string, React.ReactNode> = {
+  sales: <DollarSign className="w-6 h-6" />,
   automation: <Settings className="w-6 h-6" />,
   prompts: <FileText className="w-6 h-6" />,
   hooks: <Anchor className="w-6 h-6" />,
+  scripts: <Scroll className="w-6 h-6" />,
   analysis: <BarChart3 className="w-6 h-6" />,
   other: <Folder className="w-6 h-6" />,
 };
 
 const categoryColors: Record<string, string> = {
+  sales: 'bg-yellow-500',
   automation: 'bg-blue-500',
   prompts: 'bg-purple-500',
   hooks: 'bg-orange-500',
+  scripts: 'bg-pink-500',
   analysis: 'bg-green-500',
   other: 'bg-gray-500',
 };
+
+// salesサブカテゴリの色を取得
+function getGuideColor(guide: { category: string; subCategory?: string }): string {
+  if (guide.category === 'sales' && guide.subCategory) {
+    const subCat = salesSubCategories[guide.subCategory as keyof typeof salesSubCategories];
+    return subCat?.color || categoryColors.sales;
+  }
+  return categoryColors[guide.category] || categoryColors.other;
+}
 
 export default function GuidesPage() {
   const categories = getGuidesByCategory();
@@ -75,31 +90,56 @@ export default function GuidesPage() {
                   </span>
                 </div>
 
+                {/* salesカテゴリの場合はサブカテゴリ凡例を表示 */}
+                {category.id === 'sales' && (
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {Object.entries(salesSubCategories).map(([key, sub]) => (
+                      <div key={key} className="flex items-center gap-2">
+                        <span className={`w-3 h-3 rounded-full ${sub.color}`}></span>
+                        <span className="text-sm text-gray-600">{sub.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {/* ガイドカード */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {category.guides.map((guide) => (
-                    <Link
-                      key={guide.slug}
-                      href={`/reference/guides/${guide.slug}`}
-                      className="block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden"
-                    >
-                      {/* カードヘッダー */}
-                      <div className={`${categoryColors[category.id] || 'bg-gray-500'} p-4 text-white`}>
-                        <h3 className="text-lg font-bold line-clamp-2">{guide.title}</h3>
-                      </div>
+                  {category.guides.map((guide) => {
+                    const cardColor = getGuideColor(guide);
+                    const subCatInfo = guide.subCategory
+                      ? salesSubCategories[guide.subCategory as keyof typeof salesSubCategories]
+                      : null;
 
-                      {/* カードボディ */}
-                      <div className="p-4">
-                        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                          {guide.description || 'ガイドを表示'}
-                        </p>
-                        <div className={`flex items-center justify-center gap-2 ${categoryColors[category.id] || 'bg-gray-500'} hover:opacity-90 text-white font-medium py-2 px-4 rounded-lg transition-colors`}>
-                          詳細を見る
-                          <ArrowRight className="w-4 h-4" />
+                    return (
+                      <Link
+                        key={guide.slug}
+                        href={`/reference/guides/${guide.slug}`}
+                        className="block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden"
+                      >
+                        {/* カードヘッダー */}
+                        <div className={`${cardColor} p-4 text-white`}>
+                          {/* サブカテゴリバッジ */}
+                          {subCatInfo && (
+                            <span className="inline-block bg-white/20 text-white text-xs px-2 py-1 rounded mb-2">
+                              {guide.order}. {subCatInfo.name}
+                            </span>
+                          )}
+                          <h3 className="text-lg font-bold line-clamp-2">{guide.title}</h3>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+
+                        {/* カードボディ */}
+                        <div className="p-4">
+                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                            {guide.description || 'ガイドを表示'}
+                          </p>
+                          <div className={`flex items-center justify-center gap-2 ${cardColor} hover:opacity-90 text-white font-medium py-2 px-4 rounded-lg transition-colors`}>
+                            詳細を見る
+                            <ArrowRight className="w-4 h-4" />
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ))}
