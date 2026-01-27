@@ -46,6 +46,9 @@ docs/workflows/
 # Instagram特典例（他アカウント参考資料）
 docs/reference/instagram-tokuten/
 
+# Instagram特典分析ファイル（アカウント名含む）
+docs/reference/guides/ANALYSIS-*.md
+
 # vercel
 .vercel
 

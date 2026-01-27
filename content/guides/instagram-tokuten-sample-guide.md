@@ -150,27 +150,6 @@ cp /mnt/c/Users/tench/Downloads/{画像ファイル} docs/reference/instagram-to
 
 ---
 
-## 既存サンプル一覧
-
-| フォルダ | 内容 | 言語 |
-|----------|------|------|
-| SakiSNS | リールの型6選、AIフック等 | 日本語 |
-| NatsumiAI | 理想の自分インスタ等 | 日本語 |
-| mio_ai_insta | AKOOL、ChatGPTリール台本等 | 日本語 |
-| pigu_gpt | Threadsアフィリエイト | 日本語 |
-| waigo_ai | Kling Motion Control | 中国語→日本語 |
-| headhome | Recast Studio | 中国語→日本語 |
-| calix_kr | AIインフルエンサー | 韓国語→日本語 |
-| miyu_ai | モンスターASMR | 日本語 |
-| sakura_kossori | 鉄球衝突AI動画の作り方 | 日本語 |
-| nextpiece | AI分身（虛擬分身）生成教學 | 中国語（繁体字）→日本語 |
-| saki_aideai | ChatGPT魔法のフレーズ3選 | 日本語 |
-| ayane_insta | アカウント添削動画 | 日本語 |
-| timkoda_ | Master AI for Money | 英語 |
-| reelda_ | 必須AIツール（初心者vsプロ比較） | 英語 |
-
----
-
 ## ガイド・分析ファイル一覧
 
 ### 自動化・ワークフロー
@@ -194,13 +173,6 @@ cp /mnt/c/Users/tench/Downloads/{画像ファイル} docs/reference/instagram-to
 |----------|------|
 | `instagram-ai-hook-100-guide.md` | AI冒頭フック100選（テキスト系・7カテゴリ） |
 | `instagram-visual-hook-100-guide.md` | 映像フック100選（ビジュアル系・AIツール別） |
-
-### 分析・リサーチ
-
-| ファイル | 内容 |
-|----------|------|
-| `ANALYSIS-tokuten-types.md` | 28サンプルから抽出した33型の分析 |
-| `ANALYSIS-meta-prompt-output.md` | メタプロンプト形式の分析結果+6プロンプト |
 
 ---
 
