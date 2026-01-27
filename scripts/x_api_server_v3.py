@@ -63,19 +63,57 @@ def post_tweet():
 
 @app.route('/thread', methods=['POST'])
 def post_thread():
-    """スレッド投稿"""
+    """スレッド投稿（image_promptがあれば1ツイート目に画像付き）"""
     try:
         data = request.get_json()
         tweets = data.get('tweets', [])
+        image_prompt = data.get('image_prompt', '')
 
         if not tweets or len(tweets) == 0:
             return jsonify({'error': 'tweets array is required'}), 400
+
+        media_id = None
+
+        # image_promptがあれば画像生成
+        if image_prompt:
+            gen_response = genai_client.models.generate_content(
+                model="gemini-3-pro-image-preview",
+                contents=image_prompt,
+                config=types.GenerateContentConfig(
+                    response_modalities=['IMAGE'],
+                    image_config=types.ImageConfig(aspect_ratio='1:1')
+                )
+            )
+
+            image_data = None
+            for part in gen_response.candidates[0].content.parts:
+                if part.inline_data is not None:
+                    image_data = part.inline_data.data
+                    break
+
+            if image_data:
+                with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp_file:
+                    tmp_file.write(image_data)
+                    tmp_path = tmp_file.name
+
+                try:
+                    media = api_v1.media_upload(filename=tmp_path)
+                    media_id = media.media_id
+                finally:
+                    os.unlink(tmp_path)
 
         results = []
         previous_tweet_id = None
 
         for i, tweet_text in enumerate(tweets):
-            if previous_tweet_id:
+            if i == 0 and media_id:
+                # 1ツイート目: 画像付き
+                response = client.create_tweet(
+                    text=tweet_text,
+                    media_ids=[media_id]
+                )
+            elif previous_tweet_id:
+                # 2ツイート目以降: リプライ
                 response = client.create_tweet(
                     text=tweet_text,
                     in_reply_to_tweet_id=previous_tweet_id
@@ -88,14 +126,22 @@ def post_thread():
             results.append({
                 'index': i + 1,
                 'tweet_id': tweet_id,
-                'text': tweet_text
+                'text': tweet_text,
+                'has_image': i == 0 and media_id is not None
             })
 
-        return jsonify({
+        first_tweet_id = results[0]['tweet_id'] if results else None
+
+        response_data = {
             'success': True,
+            'tweet_id': first_tweet_id,
             'thread_count': len(results),
             'tweets': results
-        })
+        }
+        if media_id:
+            response_data['media_id'] = str(media_id)
+
+        return jsonify(response_data)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -273,10 +319,10 @@ def health():
 if __name__ == '__main__':
     print("X API Server v3 starting on http://localhost:5000")
     print("Endpoints:")
-    print("  POST /post            - 単一ツイート投稿")
-    print("  POST /thread          - スレッド投稿")
-    print("  POST /generate-image  - 画像生成（Nanobanana）")
-    print("  POST /post-with-image - 画像付きツイート投稿")
+    print("  POST /post              - 単一ツイート投稿")
+    print("  POST /thread            - スレッド投稿（image_promptあれば画像付き）")
+    print("  POST /generate-image    - 画像生成（Nanobanana）")
+    print("  POST /post-with-image   - 画像付きツイート投稿")
     print("  POST /generate-and-post - 画像生成+投稿を一括実行")
-    print("  GET  /health          - ヘルスチェック")
+    print("  GET  /health            - ヘルスチェック")
     app.run(host='0.0.0.0', port=5000)

@@ -12,7 +12,42 @@
 |------|------|
 | 件数 | 60件/月（2件/日） |
 | ソース | 公式サイトのニュース/ブログ/アップデートページ |
-| 出力 | `step3_news_posts.json` |
+| 出力 | `{{PROJECT_DIR}}/step3_news_posts.json` |
+
+---
+
+## Step 0: 初期化
+
+### 0.1 システム日時確認（必須）
+
+1. 現在のシステム日時を取得して**必ず出力**すること
+
+```
+出力例:
+今日: 2026-01-27
+```
+
+### 0.2 ディレクトリ確認・作成
+
+1. `C:\Instagram_AI\X_Research\` 配下の当日ディレクトリを確認
+2. 当日ディレクトリ内に `step3_news_posts.json` が**既にあれば**次の連番へ
+3. パス: `C:\Instagram_AI\X_Research\YYYYMMDD_XX\`
+4. 以降、このディレクトリを `{{PROJECT_DIR}}` とする
+
+```
+例:
+- 20260127_01/step3_news_posts.json が既にある → 20260127_02 を使用
+- 20260127_01 にアナウンスファイルが無い → 20260127_01 を使用
+- 当日ディレクトリ無し → 20260127_01 を作成
+```
+
+**各タイプのチェックファイル:**
+
+| タイプ | チェックするファイル |
+|--------|---------------------|
+| アナウンス | `step3_news_posts.json` |
+| 画像付き | `step4_image_posts.json` |
+| スレッド | `step5_thread_posts.json` |
 
 ---
 
@@ -106,8 +141,6 @@
 
 詳細はこちら
 {記事URL}
-
-#AI #{ツール名} #アップデート
 ```
 
 ### パターンB: 資料紹介型
@@ -133,18 +166,81 @@
   "total": 60,
   "posts": [
     {
-      "post_id": "NEWS-001",
+      "post_id": "20260127-001",
+      "pattern": "announcement",
       "tool_name": "Claude",
       "source_url": "https://www.anthropic.com/news/specific-article",
       "source_title": "記事タイトル",
-      "text": "投稿本文",
-      "hashtags": ["#AI", "#Claude", "#アップデート"],
-      "char_count": 280,
-      "is_top_page": false
+      "content": "投稿本文"
     }
   ]
 }
 ```
+
+**post_id形式**: `YYYYMMDD-XXX`（例: 20260127-001）
+
+**必須フィールド（GAS/n8n対応）**:
+
+| フィールド | 内容 | n8n参照 |
+|-----------|------|---------|
+| post_id | 一意のID | `$json.post_id` |
+| pattern | `announcement` 固定 | フィルタ条件 |
+| tool_name | ツール名 | - |
+| content | 投稿本文 | `$json.content` |
+
+**省略可能フィールド（GASがデフォルト値を設定）**:
+
+| フィールド | GASデフォルト | 備考 |
+|-----------|--------------|------|
+| status | `READY` | n8nが`READY`を取得 |
+| tweet_count | `1` | announcementは1 |
+| angle | 空文字 | 未使用 |
+| scheduled_date | 空文字 | 未使用 |
+| image_prompt | 空文字 | アナウンスでは不要 |
+| reply_content | 空文字 | 任意（リプライ用） |
+
+---
+
+## シャッフル処理（必須）
+
+生成後、同じツールが連続しないようにシャッフルする。
+
+### 理由
+
+- ツールごとにまとめて生成すると同じツールが連続する
+- 投稿の多様性を確保するため分散配置が必要
+
+### アルゴリズム
+
+1. 残り投稿数が多いツールを優先的に選択
+2. ただし前回と同じツールは避ける
+3. post_idを `YYYYMMDD-001` から再採番
+
+### 実行方法
+
+```python
+# 連続を避けながら配置
+shuffled = []
+last_tool = None
+
+while any(tool_groups.values()):
+    available = [t for t in sorted_tools if tool_groups[t] and t != last_tool]
+    if not available:
+        available = [t for t in sorted_tools if tool_groups[t]]
+    available.sort(key=lambda x: len(tool_groups[x]), reverse=True)
+    chosen_tool = available[0]
+    shuffled.append(tool_groups[chosen_tool].pop(0))
+    last_tool = chosen_tool
+
+# post_id再採番
+for i, post in enumerate(shuffled, 1):
+    post['post_id'] = f"YYYYMMDD-{i:03d}"
+```
+
+### 確認事項
+
+- [ ] 同じツールが連続していない
+- [ ] post_idが `YYYYMMDD-001` 形式で連番
 
 ---
 

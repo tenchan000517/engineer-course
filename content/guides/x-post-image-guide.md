@@ -15,7 +15,54 @@
 | 形式 | **要約** + バナー画像 |
 | URL | なし |
 | ツール | Nano Banana Pro |
-| 出力 | `step4_image_posts.json` |
+| 出力 | `{{PROJECT_DIR}}/step4_image_posts.json` |
+
+---
+
+## Step 0: 初期化
+
+### 0.1 システム日時確認（必須）
+
+1. 現在のシステム日時を取得して**必ず出力**すること
+
+```
+出力例:
+今日: 2026-01-27
+```
+
+### 0.2 ディレクトリ確認・作成
+
+1. `C:\Instagram_AI\X_Research\` 配下の当日ディレクトリを確認
+2. 当日ディレクトリ内に `step4_image_posts.json` が**既にあれば**次の連番へ
+3. パス: `C:\Instagram_AI\X_Research\YYYYMMDD_XX\`
+4. 以降、このディレクトリを `{{PROJECT_DIR}}` とする
+
+```
+例:
+- 20260127_01/step4_image_posts.json が既にある → 20260127_02 を使用
+- 20260127_01 に画像付きファイルが無い → 20260127_01 を使用
+- 当日ディレクトリ無し → 20260127_01 を作成
+```
+
+**各タイプのチェックファイル:**
+
+| タイプ | チェックするファイル |
+|--------|---------------------|
+| アナウンス | `step3_news_posts.json` |
+| 画像付き | `step4_image_posts.json` |
+| スレッド | `step5_thread_posts.json` |
+
+### 0.3 ソース参照（必須）
+
+**同じディレクトリ内の `step3_news_posts.json` を参照する**
+
+```
+参照元: {{PROJECT_DIR}}/step3_news_posts.json
+```
+
+各投稿の `source_url` から記事を取得し、要約を作成する。
+
+**注意**: アナウンス投稿が先に生成されている必要がある。
 
 ---
 
@@ -147,17 +194,56 @@ Boltのパワーユーザー Jakub Skrzypczak氏が、サイトのヒーロー�
   "total": 60,
   "posts": [
     {
-      "post_id": "IMG-001",
+      "post_id": "20260127-I001",
+      "pattern": "image",
       "tool_name": "Bolt",
-      "source_url": "https://bolt.new/blog/...",
-      "title": "【Bolt】ウェブサイトに動画を組み込む4つのデザイン手法",
-      "summary_text": "（要約全文）",
-      "image_prompt": "（ビジュアル指示）",
-      "hashtags": ["#AI", "#Bolt"]
+      "content": "【Bolt】ウェブサイトに動画を組み込む4つのデザイン手法\n\n（要約全文）",
+      "image_prompt": "（画像生成プロンプト）"
     }
   ]
 }
 ```
+
+**post_id形式**: `YYYYMMDD-IXXX`（例: 20260127-I001）
+- `I` = Image の識別子
+- アナウンス（`YYYYMMDD-XXX`）と区別
+
+**必須フィールド（GAS/n8n対応）**:
+
+| フィールド | 内容 | n8n参照 |
+|-----------|------|---------|
+| post_id | 一意のID | `$json.post_id` |
+| pattern | `image` 固定 | フィルタ条件 |
+| tool_name | ツール名 | - |
+| content | 要約テキスト（投稿本文） | `$json.content` |
+| image_prompt | 画像生成プロンプト | `$json.image_prompt` |
+
+**省略可能フィールド（GASがデフォルト値を設定）**:
+
+| フィールド | GASデフォルト | 備考 |
+|-----------|--------------|------|
+| status | `READY` | n8nが`READY`を取得 |
+| tweet_count | `1` | image/announcementは1 |
+| angle | 空文字 | 未使用 |
+| scheduled_date | 空文字 | 未使用 |
+| reply_content | 空文字 | 画像投稿では不要 |
+
+---
+
+## シャッフル処理（必須）
+
+生成後、同じツールが連続しないようにシャッフルする。
+
+### アルゴリズム
+
+1. 残り投稿数が多いツールを優先的に選択
+2. ただし前回と同じツールは避ける
+3. post_idを `YYYYMMDD-I001` から再採番
+
+### 確認事項
+
+- [ ] 同じツールが連続していない
+- [ ] post_idが `YYYYMMDD-I001` 形式で連番
 
 ---
 
