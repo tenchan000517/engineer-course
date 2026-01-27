@@ -25,8 +25,8 @@ export const salesSubCategories = {
 
 // salesガイドのサブカテゴリ・順序・説明マッピング
 const salesGuideConfig: Record<string, { subCategory: keyof typeof salesSubCategories; order: number; description: string }> = {
-  'sns-profile-strategy': { subCategory: 'foundation', order: 1, description: 'プロフィール設計からコンテンツ戦略まで。集客の土台を作る' },
-  'ai-monetization-strategy': { subCategory: 'foundation', order: 2, description: 'AI活用で収益を最大化する戦略設計' },
+  'sns-profile-strategy': { subCategory: 'foundation', order: 1, description: 'プロフィール+ハイライト8個の完全設計。集客の土台' },
+  'ai-monetization-strategy': { subCategory: 'foundation', order: 2, description: 'AI活用で収益を最大化する戦略設計。3人の専門家が解説' },
   'instagram-tokuten-page-guide': { subCategory: 'product', order: 3, description: '無料特典ページの完全設計。リード獲得の入口' },
   'instagram-paid-course-guide': { subCategory: 'product', order: 4, description: '有料講座3層設計。価格帯別の商品ラインナップ' },
   'instagram-premium-program-guide': { subCategory: 'product', order: 5, description: '30万円高額プログラムの設計と販売戦略' },
