@@ -30,198 +30,152 @@ audio/01.mp3, 02.mp3, ...（各セグメント音声）
 audio_trimmed/01.mp3, 02.mp3, ...（トルツメ済み）
     ↓ faster-whisper
 audio_trimmed/01.json, 02.json, ...（単語タイムスタンプ）
-    ↓ Claude Code
-telop.txt（テロップ分割）
-    ↓ スクリプト（オフセット計算）
-subtitle.srt（字幕ファイル）
-    ↓ + 画像パスマッピング
-placement.json（Premiere Pro配置データ）
+    ↓ create_tutorial_srt.py ★完成★
+subtitle.srt + placement.json（同時生成）
     ↓ ExtendScript JSX
 Premiere Pro タイムライン自動構築
 ```
 
 ---
 
-## Premiere Pro レイヤー構造（ランキングリール参考）
+## 解説リール用トラック構造（確定）
 
-### ビデオトラック（14トラック）
-
-| トラック | 用途 |
-|---------|------|
-| V1 | アバター動画 |
-| V2 | 調整レイヤー |
-| V3 | アバター静止画 |
-| V4 | ランキングボード |
-| V5 | 論外 |
-| V6-V9 | No.4〜No.1 |
-| V10-V12 | プロンプト・手順スクリーンショット |
-| V13 | タイトル背景 |
-| V14 | 字幕背景 |
-
-### オーディオトラック（4トラック）
-
-| トラック | 用途 |
-|---------|------|
-| A1 | 男性ナレーション |
-| A2 | 女性ナレーション |
-| A3 | BGM |
-| A4 | 効果音 |
-
-### 解説リール用トラック構造（要定義）
-
-解説リールはランキングリールと異なるトラック構造が必要。以下は想定案：
-
-| トラック | 用途 |
-|---------|------|
-| V1 | フック動画（ASMR動画等） |
-| V2 | 制作物静止画 |
-| V3 | UI静止画（ツール操作画面） |
-| V4 | 完成動画ウィンドウ |
-| V5 | トリガーワード静止画 |
-| V6 | 字幕背景 |
-| A1 | 男性ナレーション |
-| A2 | BGM |
-| A3 | 効果音 |
+| トラック | 用途 | 備考 |
+|---------|------|------|
+| V1 | アバター動画 | シーンごとに切り替え＆ループ |
+| V3 | フック動画（Window） | 0-5秒 |
+| V4 | UI静止画① | ステップ1 |
+| V5 | UI静止画② | ステップ2 |
+| V6 | 完成動画（Window） | completion.mp4 |
+| V7 | トリガーワード静止画 | CTA |
+| V14 | 字幕背景 | 全体 |
+| A1 | ナレーション | 連続配置 |
+| A3 | BGM | 全体 |
+| A4 | 効果音・SE | 各タイミング |
 
 ---
 
-## placement.json の構造
+## アバター動画のシーン切り替え
 
-### JSXスクリプト
+### シーン→アバター動画マッピング
 
-`scripts/premiere/place_ranking_images.jsx` がplacement.jsonを読み込んで自動配置する。
+| セグメント | アバター動画 | 長さ |
+|-----------|-------------|------|
+| 行1（導入） | normal.mp4（5秒） | ループ |
+| 行2（ステップ1） | ランダム（10秒） | 切り捨て |
+| 行3（ステップ2） | ランダム（10秒） | 切り捨て |
+| 行4（ステップ2続き） | ランダム（10秒） | 切り捨て |
+| 行5（完成） | normal.mp4（5秒） | 切り捨て |
+| 行6-7（CTA） | cta.mp4（5秒） | ループ |
 
-### 素材タイプ
+### ランダム動画プール
+
+毎回シャッフルして選択（重複なし）:
+- pc_back.mp4（パソコン・バックショット）
+- bench_reading.mp4（公園ベンチで雑誌）
+- sofa_reading.mp4（ソファーで本）
+- cooking.mp4（料理）
+- cleaning.mp4（お掃除）
+
+---
+
+## placement.json の新type
+
+### 解説リール用type（実装済み）
 
 | type | 処理 | 設定項目 |
 |------|------|----------|
-| `shared` | 共有素材配置 | path, time, track, duration, volume |
-| `avatar_still` | アバター静止画 | path, time, track, duration |
-| `ranking` | ランキングアイコン | path, time, track, duration, scale, x, y |
-| `narration` | ナレーション音声（連続配置） | path, track |
-| `avatar_video` | アバター動画（ループ対応） | path, track, time, loop, loop_until |
-| `prompt_screenshot` | プロンプトスクリーンショット | path, time, track, duration, scale, x, y |
-
-### 解説リール用に必要な新type（要定義）
-
-| type | 処理 | 設定項目 |
-|------|------|----------|
-| `hook_video` | フック動画 | path, track, time, duration |
-| `product_image` | 制作物静止画 | path, track, time, duration |
-| `ui_screenshot` | UI静止画 | path, track, time, duration, scale, x, y |
-| `completion_video` | 完成動画 | path, track, time, duration |
-| `trigger_image` | トリガーワード静止画 | path, track, time, duration |
+| `avatar_video` | アバター動画配置（time指定） | path, track, time, duration |
+| `hook_video` | フック動画（Window） | path, track, time, duration |
+| `ui` | UI静止画 | path, track, time, duration |
+| `completion` | 完成動画 | path, track, time, duration |
+| `trigger` | トリガーワード静止画 | path, track, time, duration |
+| `se` | 効果音 | path, track, time |
+| `narration` | ナレーション（time指定対応） | path, track, time |
 
 ---
 
-## 現在のガイドの問題点
+## 2026-02-03 セッションで完了した作業
 
-### 1. script.txt → narration.txt の変換ルールが不十分
+### create_tutorial_srt.py（完成）
 
-**現状**: 「セクションごとに1行にまとめる」「句読点は自然さを保つ」としか書いていない
+**パス**: `scripts/create_tutorial_srt.py`
 
-**必要なこと**: 台本のどの部分がどの編集点に対応するかの判断基準を明確にする
+**機能**:
+- SRT + placement.json を同時生成
+- アバター動画のシーン切り替え＆ループ配置
+- ランダム動画の自動選択
+- SE自動配置
+- フック動画5秒固定
 
-**具体的に不足しているルール**:
-- 台本のどのセクション見出し（【冒頭フック】【ステップ1】等）がどの編集点になるか
-- 同一セクション内でさらに分割が必要な場合の基準（映像が変わるタイミング）
-- フックにナレーションを入れない理由と、その代わりに何を入れるか
+**使用方法**:
+```bash
+python create_tutorial_srt.py "C:\path\to\project_folder"
+```
 
-### 2. 編集点と映像の対応表がテンプレート化されていない
+**出力**:
+- `subtitle.srt`（44エントリ）
+- `placement.json`（27配置）
 
-**現状**: モンスターASMRの具体例のみ記載
+### SE素材を共有フォルダに配置
 
-**必要なこと**: 汎用的なテンプレート（テーマやステップ数が変わっても適用できる）
+**パス**: `C:\Instagramショート\Instagram_Reels_Production\共有素材\SE\`
 
-### 3. placement.json生成フローが存在しない
+| ファイル | 用途 | トリガー |
+|----------|------|----------|
+| decision.mp3 | UI静止画表示時 | ステップ切り替え |
+| complete.mp3 | 完成動画表示時 | 完成演出 |
+| typing.mp3 | トリガーワード表示時 | CTA |
 
-**現状**: narration.txt → SRTまでのフローはあるが、placement.json生成のフローがない
+### アバター動画を共有フォルダに追加
 
-**必要なこと**: SRTのタイムスタンプを元にplacement.jsonを生成するスクリプトまたはルール
+**パス**: `C:\Instagramショート\Instagram_Reels_Production\共有素材\アバター動画\`
 
----
+| ファイル | 内容 | 長さ |
+|----------|------|------|
+| normal.mp4 | ノーマル | 5秒 |
+| cta.mp4 | CTA用 | 5秒 |
+| work.mp4 | パソコン（横アングル） | 5秒 |
+| pc_back.mp4 | パソコン（バックショット） | 10秒 |
+| bench_reading.mp4 | 公園ベンチで雑誌 | 10秒 |
+| sofa_reading.mp4 | ソファーで本 | 10秒 |
+| cooking.mp4 | 料理 | 10秒 |
+| cleaning.mp4 | お掃除 | 10秒 |
 
-## 今回のセッションで完了した作業
+### モンスターASMRプロジェクト素材
 
-### モンスターASMR Phase 6（全完了）
+**パス**: `C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27\`
 
-| Step | 内容 | 状態 |
-|------|------|------|
-| 24 | Fish Audio音声生成 | 完了（7セグメント） |
-| 25 | 音声部分修正 | スキップ（問題なし） |
-| 26 | 音声トルツメ | 完了 |
-| 27 | Whisperタイムスタンプ | 完了（個別処理） |
-| 28 | テロップテキスト作成 | 完了（51行） |
-| 29 | テロップ修正 | 完了 |
-| 30 | SRT作成 | 完了（45エントリ） |
-
-### 作成したスクリプト
-
-| スクリプト | パス | 用途 |
-|-----------|------|------|
-| `generate_tutorial_narration.py` | `scripts/` | 解説リール音声生成（男性単一話者、行ごとにセグメント） |
-| `trim_audio.py` | `scripts/` | 音声トルツメ（前後無音削除） |
-| `whisper_tutorial_timestamps.py` | `scripts/` | 個別Whisperタイムスタンプ取得 |
-
-### ガイド更新
-
-| セクション | 変更内容 |
-|-----------|----------|
-| Phase 6 | ランキングリール参照を削除。独自フローに書き換え |
-| ナレーション用フォーマット | 完全刷新（編集点の概念、セクション構造表、例、ポイント、重要性の説明） |
-| テロップ分割ルール | 新規追加（7つの鉄則、解説リール固有ポイント、分割プロンプト） |
-| ランキングリールとの違い | 話者を「1声（男性）」に修正 |
-
----
-
-## 今回のセッションで得た教訓
-
-### 原則
-
-1. **ガイドファースト**: ガイドに書いてからコマンド実行。ガイドに書いていないことは実行しない
-2. **スタンドアローン**: 解説リールガイドは独自のフローを持つ。ランキングリールガイドを参照しない
-3. **既存スクリプトを壊さない**: 解説リール用は新規スクリプトを作成（whisper_timestamps.py → whisper_tutorial_timestamps.py）
-4. **環境の確認**: WSL環境ではWindowsコマンド（ffmpeg.exe）やwhisper-env仮想環境を使用
-
-### ランキングリールとの差異
-
-| 項目 | ランキングリール | 解説リール |
-|------|-----------------|------------|
-| 話者 | 2声（女性+男性） | 1声（男性） |
-| narration.txt形式 | 話者指定行あり（「女性」「男性」） | 話者指定行なし |
-| 音声結合 | combined_all.mp3に結合 | **結合不要**（個別処理） |
-| Whisper処理 | 結合ファイル1つを処理 | 各ファイルを**個別に処理** |
-| SRTタイムスタンプ | 結合音声の絶対時間 | 各セグメントのオフセット計算 |
-| 音声生成スクリプト | `generate_narration_audio.py` | `generate_tutorial_narration.py` |
-| Whisperスクリプト | `whisper_timestamps.py` | `whisper_tutorial_timestamps.py` |
-| 編集点 | 話者切り替え | セクション切り替え（映像変化） |
+| ファイル | 状態 |
+|----------|------|
+| hook.mp4 | ✅ 配置済み |
+| completion.mp4 | ✅ 配置済み |
+| ui_01.png | ✅ 配置済み |
+| ui_02.png | ✅ 配置済み |
+| trigger.png | ✅ 配置済み |
+| subtitle.srt | ✅ 生成済み（44エントリ） |
+| placement.json | ✅ 生成済み（27配置） |
 
 ---
 
-## 次のアクション
+## 次のアクション（最優先）
 
-### 優先度高
+### 1. JSXスクリプトを更新
 
-1. **script.txt → narration.txt 変換ルールの定義**
-   - 台本のセクション見出しと編集点の対応表
-   - 同一セクション内の分割基準
-   - 汎用テンプレート化
+**ファイル**: `scripts/premiere/place_ranking_images.jsx`
 
-2. **解説リール用placement.json生成フロー**
-   - SRTタイムスタンプ + 画像パスマッピング → placement.json
-   - 解説リール用JSXスクリプト（または既存スクリプトの拡張）
+**追加が必要なtype対応**:
+- `avatar_video`（time指定で配置、ループなし）
+- `hook_video`
+- `ui`
+- `completion`
+- `trigger`
+- `se`
+- `narration`（time指定がある場合はその時間から開始）
 
-3. **解説リール用Premiere Proトラック構造の確定**
-   - ランキングリールの14トラックを参考に定義
+### 2. Premiere Proで動作検証
 
-### 優先度中
-
-4. **テロップ分割の短すぎ問題への対策**
-   - 2文字テロップが一瞬で消える問題（「これ」「まず」等）
-   - 最小表示時間ルールの追加検討
-
-5. **SRT作成スクリプト化**（`create_tutorial_srt.py`）
-   - 現在は手動計算。スクリプト化して自動化
+モンスターASMRプロジェクトでJSXを実行し、正しく配置されるか確認。
 
 ---
 
@@ -229,35 +183,27 @@ Premiere Pro タイムライン自動構築
 
 | ファイル | 内容 |
 |----------|------|
-| `content/guides/tutorial-reel-script-guide.md` | 解説リール台本作成ガイド |
+| `scripts/create_tutorial_srt.py` | **SRT + placement.json生成（完成）** |
 | `scripts/generate_tutorial_narration.py` | 解説リール音声生成 |
 | `scripts/trim_audio.py` | 音声トルツメ |
 | `scripts/whisper_tutorial_timestamps.py` | 個別Whisperタイムスタンプ |
-| `scripts/premiere/place_ranking_images.jsx` | Premiere Pro自動配置（ランキングリール用） |
-| `docs/archive/premiere-pro-ranking-reel-workflow.md` | Premiere Proワークフロー |
-| `content/guides/scripts-ranking-videos.md` | ランキング動画台本集（12本） |
+| `scripts/premiere/place_ranking_images.jsx` | Premiere Pro自動配置（**要更新**） |
+| `content/guides/tutorial-reel-script-guide.md` | 解説リール台本作成ガイド |
 
 ---
 
-## プロジェクトフォルダ
+## ランキングリールとの差異
 
-`C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27\`
-
-### ファイル一覧
-
-| ファイル | 状態 |
-|----------|------|
-| `hook_prompts.txt` | 完了 |
-| `script.txt` | 完了 |
-| `tokuten_draft.md` | 完了 |
-| `caption.txt` | 完了 |
-| `narration.txt` | 完了（7行、編集点付き） |
-| `audio/01.mp3`〜`07.mp3` | 完了（Fish Audio生成） |
-| `audio_trimmed/01.mp3`〜`07.mp3` | 完了（トルツメ済み） |
-| `audio_trimmed/01.json`〜`07.json` | 完了（Whisperタイムスタンプ） |
-| `telop.txt` | 完了（51行） |
-| `subtitle.srt` | 完了（45エントリ） |
+| 項目 | ランキングリール | 解説リール |
+|------|-----------------|------------|
+| 話者 | 2声（女性+男性） | 1声（男性） |
+| アバター動画 | 1種類をループ | **シーンごとに切り替え** |
+| ランダム動画 | なし | **5種類からランダム選択** |
+| フック | 「論外」で開始 | **5秒動画** |
+| SE | なし | **3種類（decision/complete/typing）** |
+| SRT+placement生成 | 手動 | **create_tutorial_srt.pyで自動** |
 
 ---
 
-**最終更新**: 2026-01-28
+**最終更新**: 2026-02-03
+**次のアクション**: JSXスクリプト更新 → Premiere Pro動作検証
