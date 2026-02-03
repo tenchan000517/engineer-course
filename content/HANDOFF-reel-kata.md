@@ -58,10 +58,12 @@
 | ナレーション用フォーマット | **完了** | 2声（対話形式）と1声（単独）の両対応 |
 | AIツール名表記リスト | **完了** | `docs/archive/ai-tool-name-list.md`（SRT表記/ナレーション表記） |
 | AIロゴ配置 | **完了** | `C:\Instagramショート\Instagram_Reels_Production\共有素材\AIロゴ\`（34ファイル） |
-| 音声トルツメスクリプト | **完了** | `C:\engineer-course\scripts\trim_with_margin.sh` |
+| 音声トルツメスクリプト | **完了** | `scripts/trim_with_margin.sh`（ランキング）、`scripts/trim_audio.py`（解説） |
 | SRT作成フロー設計 | **完了** | WhisperはJSON出力のみ、SRT作成はClaude Code |
 | Whisper実証検証 | **完了** | faster-whisper使用、単語レベルタイムスタンプ取得確認 |
-| タイムスタンプ取得スクリプト | **完了** | `C:\engineer-course\scripts\whisper_timestamps.py` |
+| タイムスタンプ取得スクリプト | **完了** | `scripts/whisper_timestamps.py`（ランキング）、`scripts/whisper_tutorial_timestamps.py`（解説） |
+| 解説リール音声生成スクリプト | **完了** | `scripts/generate_tutorial_narration.py` |
+| 解説リールPhase 6独自フロー | **完了** | ランキングリール参照を廃止、スタンドアローン化 |
 | 台本保存ステップ追加 | **完了** | ガイドStep 7で`script.txt`として保存 |
 | テロップ分割ルール確定 | **完了** | 7つの鉄則 + 分割プロンプト（ガイドStep 21に追記） |
 
@@ -72,7 +74,7 @@
 | SRT作成検証 | **途中** | Claude Codeが台本+JSONからSRT作成する実証が未完了 |
 | 非プロンプト系ツールのテスト | **途中** | Vrew、Fish Audio等の「使い方」生成テストが未完了 |
 | 台本の型の再定義（YouTube動画系） | **完了** | 14パート構造を定義 |
-| 解説系リールの検証 | **途中** | ガイド作成完了、実際の制作フロー検証中 |
+| 解説系リールの検証 | **途中** | モンスターASMR Phase 6完了（音声生成→SRT作成）。**次: ナレーション作成ガイド改善**。詳細: `content/HANDOFF-tutorial-reel-narration.md` |
 | ランキングリール特典表現変更 | **途中** | 「このプロンプトを～」→「キャプションにあるプロンプトを～」に変更予定。ガイド全体の見直しが必要 |
 
 ### 未着手
@@ -236,7 +238,7 @@
 | ファイル | 内容 | 状態 |
 |----------|------|------|
 | `content/guides/ranking-reel-script-guide.md` | **ランキングリール台本作成ガイド** | 最新（22ステップのフロー、Whisper対応） |
-| `content/guides/tutorial-reel-script-guide.md` | **解説系リール台本作成ガイド** | 最新（30ステップのフロー、AIフック映像対応） |
+| `content/guides/tutorial-reel-script-guide.md` | **解説系リール台本作成ガイド** | 最新（30ステップ、キャプション構造・ですます調・CTA形式・空行ルール追加済み） |
 | `docs/archive/ai-tool-name-list.md` | **AIツール名表記リスト** | SRT表記/ナレーション表記（カタカナ） |
 | `docs/archive/ai-logo-mapping.md` | **AIロゴ対応表** | ファイル名→ツール名のマッピング |
 | `docs/archive/reel-formats.md` | **リールフォーマット一覧** | 比較・アフレコ・トーク・解説系 |
@@ -250,6 +252,9 @@
 | `content/research/premiere-pro-mogrt-guide.md` | **モーショングラフィックステンプレート（.mogrt）作成ガイド** | 生データ保存 |
 | `content/research/premiere-pro-complete-template-guide.md` | **完全プロジェクトテンプレート作成ガイド** | 生データ保存 |
 | `docs/archive/premiere-pro-ranking-reel-workflow.md` | **Premiere Proランキングリール制作ワークフロー** | 10フェーズの完全手順 |
+| `content/HANDOFF-tutorial-reel-narration.md` | **解説リールナレーション改善HANDOFF** | 編集点の本質、placement.json構造、教訓、次アクション |
+| `content/guides/scripts-ranking-videos.md` | **ランキング動画台本集** | 12本の台本 |
+| `scripts/premiere/place_ranking_images.jsx` | **Premiere Pro自動配置スクリプト** | placement.jsonを読み込んで配置 |
 
 ---
 
@@ -335,7 +340,10 @@ C:\Users\tench\whisper-env\Scripts\python.exe C:\engineer-course\scripts\whisper
    - 検証ポイント: タイミングの精度、ツール名変換
    - **分割ルールの確定**: 現状「1行8文字、最大2行」は曖昧。検証しながら調整して確定する
 4. ~~**解説系リール台本作成ガイドを作成する**~~ - **完了** `content/guides/tutorial-reel-script-guide.md`
-5. **解説系リールの検証** - 実際の制作フローで検証中
+5. **解説リールナレーション作成ガイド改善** - 詳細: `content/HANDOFF-tutorial-reel-narration.md`
+   - script.txt→narration.txt変換ルールの定義（編集点の判断基準）
+   - 解説リール用placement.json生成フロー
+   - 解説リール用Premiere Proトラック構造の確定
 6. **ランキングリールガイドの見直し** - 特典表現変更に伴う全体見直し
    - 変更内容: 「このプロンプトを～」→「キャプションにあるプロンプトを～」
    - 理由: 特典の受け取り導線を明確化
@@ -402,8 +410,10 @@ C:\Users\tench\whisper-env\Scripts\python.exe C:\engineer-course\scripts\whisper
 | 2026-01-23 | SRT作成フロー整理。WhisperはJSON出力のみに変更（`whisper_timestamps.py`）。SRT作成はClaude Codeが台本+JSONで行う。ガイドStep 7追加（台本保存）、Step 20-21修正 |
 | 2026-01-27 | 解説系リール台本作成ガイド作成（30ステップ）。AIフック映像プロンプト生成、台本作成プロンプト、特典用プロンプト生成プロンプト追加 |
 | 2026-01-27 | ランキングリール特典表現変更予定を追記（「このプロンプトを～」→「キャプションにあるプロンプトを～」）。画像自動挿入アイデアを追記 |
+| 2026-01-28 | 解説系リール台本作成ガイド更新（キャプション構造、ですます調ルール、CTA形式、空行ルール）。モンスターASMRでPhase 5まで検証完了 |
+| 2026-01-28 | モンスターASMR Phase 6完了。解説リール専用スクリプト3つ作成（generate_tutorial_narration.py, trim_audio.py, whisper_tutorial_timestamps.py）。Phase 6を独自フローに書き換え（ランキングリール参照を廃止）。ナレーション用フォーマット・テロップ分割ルール刷新。詳細HANDOFF作成（`HANDOFF-tutorial-reel-narration.md`） |
 
 ---
 
-**最終更新**: 2026-01-27
-**次のアクション**: 解説系リール検証、ランキングリールガイド見直し、画像自動挿入検証
+**最終更新**: 2026-01-28
+**次のアクション**: 解説リールナレーション作成ガイド改善（詳細: `content/HANDOFF-tutorial-reel-narration.md`）、ランキングリールガイド見直し

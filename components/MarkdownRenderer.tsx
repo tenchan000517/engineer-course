@@ -47,7 +47,7 @@ function CodeBlock({ children, ...props }: React.HTMLAttributes<HTMLPreElement> 
       >
         {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
       </button>
-      <pre className="my-4 rounded-lg overflow-hidden overflow-x-auto max-w-full bg-gray-900 p-4" {...props}>
+      <pre className="my-4 rounded-lg overflow-hidden max-w-full bg-gray-900 p-4 whitespace-pre-wrap break-words" {...props}>
         {children}
       </pre>
     </div>
