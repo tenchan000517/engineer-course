@@ -42,14 +42,13 @@ def main():
         output_path = trimmed_folder / mp3_file.name
         print(f"{mp3_file.name}...", end=" ")
 
+        # 中間の無音も削除（0.3秒以上の無音を削除）
         cmd = [
             "ffmpeg", "-y",
             "-i", str(mp3_file),
             "-af",
             "silenceremove=start_periods=1:start_silence=0.1:start_threshold=-50dB,"
-            "areverse,"
-            "silenceremove=start_periods=1:start_silence=0.1:start_threshold=-50dB,"
-            "areverse",
+            "silenceremove=stop_periods=-1:stop_duration=0.3:stop_threshold=-50dB",
             str(output_path),
         ]
 

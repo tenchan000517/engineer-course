@@ -282,30 +282,32 @@ detect_step_info(text, tool_mapping, prev_step_number)
 
 ---
 
-## 次のアクション（最優先）
+## 音声パイプライン実行コマンド（Claude Code用）
 
-### 1. 音声再生成
+**重要: WSLにffmpeg/Whisperがないため、powershell.exe経由で実行すること**
+
+### 1. 音声再生成（WSLから直接実行可能）
 
 ```bash
-python C:\engineer-course\scripts\generate_tutorial_narration.py "C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27"
+python3 /mnt/c/engineer-course/scripts/generate_tutorial_narration.py "/mnt/c/Instagramショート/Instagram_Reels_Production/チュートリアル_モンスターASMR_2026-01-27"
 ```
 
-### 2. 音声トルツメ
+### 2. 音声トルツメ（powershell.exe経由）
 
 ```bash
-python C:\engineer-course\scripts\trim_audio.py "C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27"
+powershell.exe -Command "python C:\engineer-course\scripts\trim_audio.py 'C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27'"
 ```
 
-### 3. Whisperタイムスタンプ再取得
+### 3. Whisperタイムスタンプ再取得（powershell.exe経由）
 
 ```bash
-C:\Users\tench\whisper-env\Scripts\python.exe C:\engineer-course\scripts\whisper_tutorial_timestamps.py "C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27"
+powershell.exe -Command "C:\Users\tench\whisper-env\Scripts\python.exe C:\engineer-course\scripts\whisper_tutorial_timestamps.py 'C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27'"
 ```
 
-### 4. SRT + placement.json 再生成
+### 4. SRT + placement.json 再生成（powershell.exe経由）
 
 ```bash
-python C:\engineer-course\scripts\create_tutorial_srt.py "C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27"
+powershell.exe -Command "python C:\engineer-course\scripts\create_tutorial_srt.py 'C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27'"
 ```
 
 ### 5. Premiere Pro で確認
@@ -485,19 +487,74 @@ cta_trigger → cta.mp4
 
 ---
 
+## 2026-02-08 セッション（BGM音量修正）
+
+### 完了した作業
+
+1. **BGM音量修正** ✅
+   - -8dB (40%) → **-40dB (1%)** に変更
+   - `create_tutorial_srt.py` line 773
+
+2. **JSX setClipVolume関数修正** ✅
+   - `setTimeVarying(false)` を追加（必須の呼び出し）
+   - インデックス直接指定 `components[0].properties[1]` を優先（Adobe推奨）
+   - デバッグログ強化
+
+3. **ナレーション修正** ✅
+   - 「ステップ１ナノバナナで」→「ステップ1、ナノバナナで」
+   - 読点追加で数字を明確に発音させる
+
+4. **ガイド更新** ✅
+   - Phase 6に `powershell.exe -Command` 実行方法を明記
+   - WSLからの実行パターンを追加
+
+### 音量設定リファレンス
+
+| dB | リニア値 | 用途 |
+|----|---------|------|
+| 0dB | 1.0 (100%) | 元音量 |
+| -10dB | 0.316 (32%) | SE |
+| -40dB | 0.01 (1%) | **BGM（現在）** |
+
+---
+
+## 2026-02-08 セッション（ナレーション最適化）
+
+### 完了した作業
+
+1. **トルツメ強化** ✅
+   - 中間の無音も削除するように修正（`stop_periods=-1:stop_duration=0.3`）
+   - `scripts/trim_audio.py` 更新
+
+2. **ステップ番号をひらがなに変更** ✅
+   - 数字（1,2,3）→ ひらがな（いち、に、さん）
+   - TTSが数字を安定して読むため
+   - `create_tutorial_srt.py` にひらがなパターン検出を追加
+
+3. **漢字→アルファベット接続問題解決** ✅
+   - 直接接続するとTTSが文字を飲み込む
+   - スペースを入れることで解決（例: ステップさん ASMR）
+
+4. **ガイド更新** ✅
+   - ナレーション基本ルールにひらがな使用を明記
+   - 例文をすべてひらがなに更新
+
+### ナレーションルール（確定版）
+
+- 句読点・スペースは排除
+- ステップ番号はひらがな（いち、に、さん）
+- 漢字/ひらがな→アルファベット直接接続時はスペースを入れる
+
+---
+
 ## 次のアクション
 
-### 1. BGMとSEの音量調整（次セッション）
+### 1. SE音量調整（必要に応じて）
 
-- BGM音量の最適化
-- SE音量の最適化
-
-### 2. Premiere Pro動作確認
-
-- 導入イラスト配置確認
-- 全体タイミング確認
+- 現在-10dB (32%)
 
 ---
 
 **最終更新**: 2026-02-08
-**現在のステータス**: 導入イラスト機能追加完了、次セッションでBGM/SE音量調整
+**現在のステータス**: ナレーション最適化完了、モンスターASMRプロジェクト47.35秒
+**現在のステータス**: BGM音量-40dB、ナレーション再生成完了、Premiere Pro確認待ち

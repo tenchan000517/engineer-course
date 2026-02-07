@@ -1085,6 +1085,7 @@
 
     /**
      * クリップのボリュームを設定（dB指定 → リニア変換）
+     * 参考: https://community.adobe.com/t5/premiere-pro/adjust-audio-levels-of-a-clip-with-extendscript/td-p/10072237
      */
     function setClipVolume(clip, volumeDb) {
         try {
@@ -1092,8 +1093,36 @@
             var linearValue = dbToLinear(volumeDb);
             $.writeln("[setClipVolume] " + volumeDb + "dB -> リニア値: " + linearValue);
 
+            // 方法1: インデックス直接指定（Adobe推奨パターン）
+            // オーディオクリップは通常 components[0].properties[1] がボリュームレベル
+            if (components.numItems > 0) {
+                var volumeComponent = components[0];
+                $.writeln("[setClipVolume] コンポーネント[0]: " + volumeComponent.displayName);
+
+                if (volumeComponent.properties.numItems > 1) {
+                    var levelProp = volumeComponent.properties[1];
+                    $.writeln("[setClipVolume] プロパティ[1]: " + levelProp.displayName);
+
+                    try {
+                        // 重要: setTimeVarying(false)を先に呼ぶ必要がある
+                        levelProp.setTimeVarying(false);
+                        $.writeln("[setClipVolume] setTimeVarying(false) 完了");
+
+                        $.writeln("[setClipVolume] 設定前: " + levelProp.getValue());
+                        levelProp.setValue(linearValue, true);
+                        $.writeln("[setClipVolume] 設定後: " + levelProp.getValue());
+                        return;  // 成功
+                    } catch (e) {
+                        $.writeln("[setClipVolume] インデックス方式エラー: " + e.message);
+                    }
+                }
+            }
+
+            // 方法2: 名前検索（フォールバック）
+            $.writeln("[setClipVolume] 名前検索でフォールバック...");
             for (var i = 0; i < components.numItems; i++) {
                 var component = components[i];
+                $.writeln("[setClipVolume] コンポーネント[" + i + "]: " + component.displayName);
 
                 // ボリュームエフェクトを探す（日本語・英語両対応）
                 if (component.displayName === "ボリューム" ||
@@ -1105,12 +1134,14 @@
 
                     for (var j = 0; j < properties.numItems; j++) {
                         var prop = properties[j];
+                        $.writeln("[setClipVolume] プロパティ[" + j + "]: " + prop.displayName);
 
                         if (prop.displayName === "レベル" ||
                             prop.displayName === "Level" ||
                             prop.displayName.indexOf("レベル") >= 0 ||
                             prop.displayName.indexOf("Level") >= 0) {
                             try {
+                                prop.setTimeVarying(false);
                                 $.writeln("[setClipVolume] 設定前: " + prop.getValue());
                                 prop.setValue(linearValue, true);
                                 $.writeln("[setClipVolume] 設定後: " + prop.getValue());

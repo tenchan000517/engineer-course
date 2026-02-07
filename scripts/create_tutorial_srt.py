@@ -245,11 +245,21 @@ def detect_step_info(text, tool_mapping, prev_step_number=0):
     """
     step_number = None
 
-    # 「ステップN」パターンを検出（全角・半角数字対応）
+    # 「ステップN」パターンを検出（全角・半角・漢数字・ひらがな対応）
     step_patterns = [
         r'ステップ(\d+)',  # 半角数字
         r'ステップ([１２３４５６７８９０]+)',  # 全角数字
+        r'ステップ([一二三四五六七八九十]+)',  # 漢数字
+        r'ステップ(いち|に|さん|し|ご|ろく|なな|はち|きゅう|じゅう)',  # ひらがな
     ]
+
+    # 漢数字→半角数字変換
+    kanji_to_han = {'一': '1', '二': '2', '三': '3', '四': '4', '五': '5',
+                    '六': '6', '七': '7', '八': '8', '九': '9', '十': '10'}
+
+    # ひらがな→半角数字変換
+    hiragana_to_han = {'いち': '1', 'に': '2', 'さん': '3', 'し': '4', 'ご': '5',
+                       'ろく': '6', 'なな': '7', 'はち': '8', 'きゅう': '9', 'じゅう': '10'}
 
     for pattern in step_patterns:
         match = re.search(pattern, text)
@@ -257,7 +267,18 @@ def detect_step_info(text, tool_mapping, prev_step_number=0):
             num_str = match.group(1)
             # 全角数字を半角に変換
             zen_to_han = str.maketrans('１２３４５６７８９０', '1234567890')
-            step_number = int(num_str.translate(zen_to_han))
+            num_str = num_str.translate(zen_to_han)
+            # 漢数字を半角に変換
+            if num_str in kanji_to_han:
+                step_number = int(kanji_to_han[num_str])
+            # ひらがなを半角に変換
+            elif num_str in hiragana_to_han:
+                step_number = int(hiragana_to_han[num_str])
+            else:
+                try:
+                    step_number = int(num_str)
+                except ValueError:
+                    continue
             break
 
     # 「まず」「次に」「そして」パターンを検出
@@ -762,7 +783,7 @@ def create_placement_json(project_folder, segment_times, total_duration):
     placements.extend(avatar_placements)
 
     # 4. BGM（A3）- フック後から開始（フック動画には独自の音声があるため）
-    # 音量は-8dB（ナレーションより小さく、でも聞こえるレベル）
+    # 音量は-40dB（約1%、ほぼ聞こえないバックグラウンドレベル）
     placements.append({
         "type": "shared",
         "name": "bgm",
@@ -770,7 +791,7 @@ def create_placement_json(project_folder, segment_times, total_duration):
         "track": "A3",
         "time": HOOK_DURATION,
         "duration": total_duration - HOOK_DURATION,
-        "volume": -8
+        "volume": -40
     })
 
     # 5. 各セグメントのWindow映像とSE
