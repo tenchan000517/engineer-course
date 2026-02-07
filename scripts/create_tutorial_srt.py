@@ -41,8 +41,10 @@ SE_TYPING = os.path.join(SHARED_BASE, "SE", "typing.mp3")
 # 字幕背景（解説リール用）
 TELOP_BACK_PATH = os.path.join(SHARED_BASE, "ランキングボード", "telop_back_tutorial.png")
 
-# ツール名画像（AIロゴフォルダ）
-TOOL_NAME_BASE = os.path.join(SHARED_BASE, "AIロゴ")
+# ツール名画像（AIロゴフォルダ）- Windows/WSL両対応
+_TOOL_NAME_BASE_WIN = os.path.join(SHARED_BASE, "AIロゴ")
+_TOOL_NAME_BASE_WSL = "/mnt/c/Instagramショート/Instagram_Reels_Production/共有素材/AIロゴ"
+TOOL_NAME_BASE = _TOOL_NAME_BASE_WSL if os.path.exists(_TOOL_NAME_BASE_WSL) else _TOOL_NAME_BASE_WIN
 # ツール名リスト（Windows/WSL両対応）
 _TOOL_LIST_WIN = r"C:\engineer-course\docs\archive\ai-tool-name-list.md"
 _TOOL_LIST_WSL = "/mnt/c/engineer-course/docs/archive/ai-tool-name-list.md"
@@ -150,6 +152,31 @@ SEGMENT_PATTERNS = {
 
 # 後方互換のためのSEGMENT_MAPPING（空、動的検出に移行）
 SEGMENT_MAPPING = {}
+
+# 導入トリガー（訴求タイプ別）
+INTRO_TRIGGERS = {
+    "buzz": r"今やれば",           # バズ系
+    "income": r"で月",             # 収益系
+    "efficiency": r"削減|効率",    # 効率化系（削減効果の文言を検出）
+    "skill": r"誰でもプロ級の",    # スキル系
+}
+
+# 導入イラスト（訴求タイプ別）- 共有素材（Windows/WSL両対応）
+_INTRO_IMAGE_BASE_WSL = "/mnt/c/Instagramショート/Instagram_Reels_Production/共有素材/導入イラスト"
+_INTRO_IMAGE_BASE = _INTRO_IMAGE_BASE_WSL if os.path.exists(_INTRO_IMAGE_BASE_WSL) else os.path.join(SHARED_BASE, "導入イラスト")
+INTRO_IMAGES = {
+    "buzz": os.path.join(_INTRO_IMAGE_BASE, "intro_buzz.png"),
+    "income": os.path.join(_INTRO_IMAGE_BASE, "intro_income.png"),
+    "efficiency": os.path.join(_INTRO_IMAGE_BASE, "intro_efficiency.png"),
+    "skill": os.path.join(_INTRO_IMAGE_BASE, "intro_skill.png"),
+}
+
+# 導入画像設定
+INTRO_IMAGE_SETTINGS = {
+    "scale": 60,
+    "x": 540,
+    "y": 1450
+}
 
 # SE種類→ファイルパス
 SE_FILES = {
@@ -338,11 +365,82 @@ def find_trigger_timestamps(words):
     return result
 
 
+def find_intro_trigger_timestamp(words, narration_text):
+    """
+    導入セグメントのトリガータイムスタンプを検出
+
+    訴求タイプ別トリガー:
+    - バズ系: 「今やれば」→「狙えます」まで
+    - 収益系: 「で月」→「です」まで
+    - 効率化系: 「削減」「効率」→「です」まで
+    - スキル系: 「誰でもプロ級の」→「です」まで
+
+    戻り値: (float or None, float or None, str or None)（トリガー開始時間, 文終了時間, 訴求タイプ）
+    """
+    # 訴求タイプを判定してトリガーパターンを決定
+    trigger_pattern = None
+    detected_appeal_type = None
+    for appeal_type, pattern in INTRO_TRIGGERS.items():
+        if re.search(pattern, narration_text):
+            trigger_pattern = pattern
+            detected_appeal_type = appeal_type
+            break
+
+    if trigger_pattern is None:
+        return None, None, None
+
+    # 文字を結合してパターン検索（開始時間と終了時間を両方記録）
+    buffer_text = ""
+    buffer_start_times = []
+    buffer_end_times = []
+
+    for word_data in words:
+        word = word_data.get("word", "").strip()
+        word_start = word_data.get("start")
+        word_end = word_data.get("end")
+
+        for char in word:
+            buffer_text += char
+            buffer_start_times.append(word_start)
+            buffer_end_times.append(word_end)
+
+    # トリガーパターンを検索
+    match = re.search(trigger_pattern, buffer_text)
+    if match and match.start() < len(buffer_start_times):
+        trigger_start = buffer_start_times[match.start()]
+
+        # トリガー位置以降で文末（「ます」「です」）を探す
+        sentence_end_pattern = r'(ます|です|ません)'
+        remaining_text = buffer_text[match.start():]
+        sentence_match = re.search(sentence_end_pattern, remaining_text)
+
+        if sentence_match:
+            sentence_end_idx = match.start() + sentence_match.end() - 1
+            if sentence_end_idx < len(buffer_end_times):
+                sentence_end = buffer_end_times[sentence_end_idx]
+                return trigger_start, sentence_end, detected_appeal_type
+
+        # 文末が見つからない場合はトリガー開始のみ返す
+        return trigger_start, None, detected_appeal_type
+
+    return None, None, detected_appeal_type
+
+
 def load_whisper_json(json_path):
-    """WhisperのJSONファイルを読み込み、セグメントの長さを返す"""
+    """WhisperのJSONファイルを読み込み、セグメントの長さを返す
+
+    優先順位:
+    1. duration（実際のMP3ファイル長）← タイミング精度のため
+    2. 最後のセグメントのend時間（フォールバック）
+    """
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
+    # 実際のMP3ファイル長を優先使用（累積誤差防止）
+    if "duration" in data:
+        return data["duration"]
+
+    # フォールバック: Whisperセグメント終了時間
     if "segments" in data and len(data["segments"]) > 0:
         last_segment = data["segments"][-1]
         return last_segment["end"]
@@ -614,14 +712,14 @@ def create_placement_json(project_folder, segment_times, total_duration):
                 print(f"  セグメント{seg_num}: {seg_type} 検出")
                 break
 
-    # 1. 字幕背景（V14）- 全体
+    # 1. 字幕背景（V14）- フック後から終了まで
     placements.append({
         "type": "shared",
         "name": "telop_back",
         "path": to_windows_path(TELOP_BACK_PATH),
         "track": "V14",
-        "time": 0.0,
-        "duration": total_duration
+        "time": HOOK_DURATION,
+        "duration": total_duration - HOOK_DURATION
     })
 
     # 2. フック動画（V3）- 0-5秒（Windowとして上に表示）
@@ -676,12 +774,14 @@ def create_placement_json(project_folder, segment_times, total_duration):
     })
 
     # 5. 各セグメントのWindow映像とSE
-    # まずtriggerの開始時間を取得（completionの終了時間として使用）
+    # cta_first（「今日紹介した」）とtriggerの開始時間を取得
+    cta_first_start_time = None
     trigger_start_time = None
     for seg_num, seg_type in detected_segments.items():
-        if seg_type == "cta_trigger":
+        if seg_type == "cta_first":
+            cta_first_start_time = segment_times.get(seg_num, {}).get("start")
+        elif seg_type == "cta_trigger":
             trigger_start_time = segment_times.get(seg_num, {}).get("start")
-            break
 
     # audio_trimmedフォルダのパス
     audio_trimmed_folder = os.path.join(project_folder, "audio_trimmed")
@@ -766,7 +866,7 @@ def create_placement_json(project_folder, segment_times, total_duration):
                         "track": "V4",
                         "time": prompt_start_time,
                         "duration": prompt_end_time - prompt_start_time,
-                        "scale": 100,
+                        "scale": 90,
                         "x": 540,
                         "y": 1266
                     })
@@ -795,7 +895,7 @@ def create_placement_json(project_folder, segment_times, total_duration):
                     "track": "V4",
                     "time": actual_ui_start,
                     "duration": end_time - actual_ui_start,
-                    "scale": 100,
+                    "scale": 90,
                     "x": 540,
                     "y": 1266
                 })
@@ -827,6 +927,51 @@ def create_placement_json(project_folder, segment_times, total_duration):
         if seg_type == "cta_first":
             continue
 
+        # 導入セグメント: 訴求タイプ別イラストをV4に配置（トリガー検出）
+        if seg_type == "intro":
+            # Whisperからトリガータイムスタンプと訴求タイプを取得
+            json_path = os.path.join(audio_trimmed_folder, f"{seg_num:02d}.json")
+            intro_trigger_time = None
+            sentence_end_time = None
+            appeal_type = None
+            if os.path.exists(json_path) and seg_num <= len(narration_lines):
+                words = load_whisper_words(json_path)
+                narration_text = narration_lines[seg_num - 1]
+                intro_trigger_time, sentence_end_time, appeal_type = find_intro_trigger_timestamp(words, narration_text)
+
+            if appeal_type is not None:
+                # 訴求タイプに対応する共有イラストを使用
+                intro_path = INTRO_IMAGES.get(appeal_type)
+                appeal_names = {"buzz": "バズ系", "income": "収益系", "efficiency": "効率化系", "skill": "スキル系"}
+
+                if intro_path and os.path.exists(intro_path):
+                    if intro_trigger_time is not None:
+                        intro_start = start_time + intro_trigger_time
+                        # 文終了時間があればそこまで、なければセグメント終了まで
+                        if sentence_end_time is not None:
+                            intro_end = start_time + sentence_end_time
+                        else:
+                            intro_end = end_time
+                        intro_duration = intro_end - intro_start
+                        placements.append({
+                            "type": "intro",
+                            "name": f"intro_{appeal_type}",
+                            "path": to_windows_path(intro_path),
+                            "track": "V4",
+                            "time": intro_start,
+                            "duration": intro_duration,
+                            "scale": INTRO_IMAGE_SETTINGS["scale"],
+                            "x": INTRO_IMAGE_SETTINGS["x"],
+                            "y": INTRO_IMAGE_SETTINGS["y"]
+                        })
+                        print(f"  導入画像: {appeal_names.get(appeal_type)} ({intro_start:.2f}秒〜{intro_end:.2f}秒)")
+                    else:
+                        print(f"  警告: 導入トリガー「{INTRO_TRIGGERS.get(appeal_type)}」のタイムスタンプが取得できませんでした")
+                else:
+                    print(f"  警告: 導入イラストが見つかりません: {intro_path}")
+            else:
+                print(f"  注意: 訴求タイプが検出できませんでした（導入イラストなし）")
+
         # Window映像配置
         asset_name = config.get("asset")
         if asset_name:
@@ -842,9 +987,9 @@ def create_placement_json(project_folder, segment_times, total_duration):
                 # completion_previewはステップ1開始まで表示
                 elif config["type"] == "completion_preview" and step1_start_time:
                     duration = step1_start_time - start_time
-                # completionはtrigger開始まで表示
-                elif config["type"] == "completion" and trigger_start_time:
-                    duration = trigger_start_time - start_time
+                # completionはCTA開始（「今日紹介した」）まで表示
+                elif config["type"] == "completion" and cta_first_start_time:
+                    duration = cta_first_start_time - start_time
 
                 entry = {
                     "type": config["type"],
