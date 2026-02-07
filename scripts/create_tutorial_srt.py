@@ -40,7 +40,10 @@ TELOP_BACK_PATH = os.path.join(SHARED_BASE, "ランキングボード", "telop_b
 
 # ツール名画像（既存の画像配置用）
 TOOL_NAME_BASE = os.path.join(SHARED_BASE, "ツール名")
-AI_TOOL_NAME_LIST_PATH = r"C:\engineer-course\docs\archive\ai-tool-name-list.md"
+# ツール名リスト（Windows/WSL両対応）
+_TOOL_LIST_WIN = r"C:\engineer-course\docs\archive\ai-tool-name-list.md"
+_TOOL_LIST_WSL = "/mnt/c/engineer-course/docs/archive/ai-tool-name-list.md"
+AI_TOOL_NAME_LIST_PATH = _TOOL_LIST_WSL if os.path.exists(_TOOL_LIST_WSL) else _TOOL_LIST_WIN
 
 # ツール名画像のスケール・位置（V4トラック）
 TOOL_NAME_SCALE = 100
@@ -200,19 +203,20 @@ def detect_tool_name(text, tool_mapping):
     return None
 
 
-def detect_step_info(text, tool_mapping):
+def detect_step_info(text, tool_mapping, prev_step_number=0):
     """
-    テキストから「ステップN」パターンとツール名を検出
+    テキストから「ステップN」または「まず」「次に」パターンとツール名を検出
     戻り値: (step_number, tool_info) または (None, None)
     tool_info = {"filename": "...", "display": "..."} または None
     """
+    step_number = None
+
     # 「ステップN」パターンを検出（全角・半角数字対応）
     step_patterns = [
         r'ステップ(\d+)',  # 半角数字
         r'ステップ([１２３４５６７８９０]+)',  # 全角数字
     ]
 
-    step_number = None
     for pattern in step_patterns:
         match = re.search(pattern, text)
         if match:
@@ -221,6 +225,15 @@ def detect_step_info(text, tool_mapping):
             zen_to_han = str.maketrans('１２３４５６７８９０', '1234567890')
             step_number = int(num_str.translate(zen_to_han))
             break
+
+    # 「まず」「次に」「そして」パターンを検出
+    if step_number is None:
+        if re.search(r'^まず', text):
+            step_number = 1
+        elif re.search(r'^次に', text):
+            step_number = prev_step_number + 1 if prev_step_number else 2
+        elif re.search(r'^そして', text):
+            step_number = prev_step_number + 1 if prev_step_number else 2
 
     if step_number is None:
         return None, None
@@ -524,11 +537,13 @@ def create_placement_json(project_folder, segment_times, total_duration):
     # 動的セグメント検出
     detected_steps = {}  # セグメント番号→{"step": ステップ番号, "tool": ツール情報}
     detected_segments = {}  # セグメント番号→セグメントタイプ（"intro", "completion", "cta_first", "cta_trigger"）
+    prev_step_number = 0  # 前回検出されたステップ番号
 
     for seg_num, line in enumerate(narration_lines, start=1):
         # ステップ検出
-        step_number, tool_info = detect_step_info(line, tool_mapping)
+        step_number, tool_info = detect_step_info(line, tool_mapping, prev_step_number)
         if step_number is not None:
+            prev_step_number = step_number  # 次回のために記録
             detected_steps[seg_num] = {
                 "step": step_number,
                 "tool": tool_info

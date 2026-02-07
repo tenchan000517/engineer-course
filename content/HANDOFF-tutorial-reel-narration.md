@@ -205,5 +205,142 @@ python create_tutorial_srt.py "C:\path\to\project_folder"
 
 ---
 
-**最終更新**: 2026-02-03
-**次のアクション**: → `HANDOFF-tutorial-reel-jsx.md` 参照（未解決問題あり）
+## 2026-02-07 セッションで実装した機能
+
+### 動的切り替えロジック（3段階/2段階）
+
+**実装ファイル**: `scripts/create_tutorial_srt.py`
+
+ナレーションの発話タイミングに基づいて、画像切り替えを動的に制御：
+
+| ステップ種類 | 段階 | トリガー | 切り替え |
+|-------------|------|----------|----------|
+| プロンプト系 | 3段階 | 「キャプション」「プロンプト」 | ツール名→プロンプトスクショ→UI/成果物 |
+| 手順系（〜して検出） | 2段階 | 「して」「したら」「すると」等 | ツール名→UI |
+| 手順系（検出なし） | 2段階 | デフォルト1.5秒 | ツール名→UI |
+
+### 新機能・追加関数
+
+```python
+# Whisperワードレベルタイムスタンプ読み込み
+load_whisper_words(json_path)
+
+# トリガー検出（発話タイミング取得）
+find_trigger_timestamps(words)
+  → tool_end: 「〜で」の終了時間
+  → prompt_start: 「キャプション」の開始時間
+  → step_start: 「〜して」の終了時間
+
+# ステップパターン拡張
+detect_step_info(text, tool_mapping, prev_step_number)
+  → 「ステップN」「まず」「次に」「そして」対応
+```
+
+### 新素材ファイル
+
+| ファイル | 用途 | 表示タイミング |
+|----------|------|---------------|
+| `prompt_01.png` | ステップ1プロンプトスクショ | 「キャプションにある〜」発話時 |
+| `prompt_02.png` | ステップ2プロンプトスクショ | 「キャプションにある〜」発話時 |
+
+### JSX更新
+
+`scripts/premiere/place_ranking_images.jsx` に `prompt` タイプ追加
+
+---
+
+## モンスターASMRプロジェクト 現在の状態
+
+**パス**: `C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27\`
+
+### 素材状況
+
+| ファイル | 状態 | 備考 |
+|----------|------|------|
+| hook.mp4 | ✅ | フック動画 |
+| completion.mp4 | ✅ | 完成動画 |
+| ui_01.png | ✅ | ステップ1 UI |
+| ui_02.png | ✅ | ステップ2 UI |
+| ui_03.png | ✅ | ステップ3 UI |
+| trigger.png | ✅ | トリガーワード |
+| prompt_01.png | ✅ 新規追加 | ステップ1プロンプトスクショ |
+| prompt_02.png | ✅ 新規追加 | ステップ2プロンプトスクショ |
+| narration.txt | ✅ 更新済み | 3ステップ構成に変更 |
+| audio/*.mp3 | ❌ 要再生成 | 古いナレーション |
+
+### 更新後のナレーション（narration.txt）
+
+```
+これ、見たことありますか?海外でバズってるモンスターASMRなんですが、日本ではまだ誰もやってないんです。今やれば100万再生も狙えます。しかも作り方は超簡単です。今から30秒で解説します。
+ステップ１ナノバナナで、キャプションにあるプロンプトを使って、手のひらサイズの果物に赤ちゃん顔がついた生き物の画像を作ります。
+ステップ２クリングで、キャプションにあるプロンプトを使って、開始フレームにこの画像を入れます。
+ステップ３ASMRモードをオンにして、キャプションの音声プロンプトでサクサク音を指定して動画を生成すれば完成です。
+これだけで本格的なモンスターASMR動画ができます。
+今日紹介したモンスターASMRの作り方をまとめました。ほしい人は
+モンスターとコメントしてください。
+```
+
+---
+
+## 次のアクション（最優先）
+
+### 1. 音声再生成
+
+```bash
+python C:\engineer-course\scripts\generate_tutorial_narration.py "C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27"
+```
+
+### 2. 音声トルツメ
+
+```bash
+python C:\engineer-course\scripts\trim_audio.py "C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27"
+```
+
+### 3. Whisperタイムスタンプ再取得
+
+```bash
+C:\Users\tench\whisper-env\Scripts\python.exe C:\engineer-course\scripts\whisper_tutorial_timestamps.py "C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27"
+```
+
+### 4. SRT + placement.json 再生成
+
+```bash
+python C:\engineer-course\scripts\create_tutorial_srt.py "C:\Instagramショート\Instagram_Reels_Production\チュートリアル_モンスターASMR_2026-01-27"
+```
+
+### 5. Premiere Pro で確認
+
+- JSX実行（placement.json選択）
+- 3段階切り替えが正しく動作するか確認
+  - ステップ1: ツール名→prompt_01.png→ui_01.png
+  - ステップ2: ツール名→prompt_02.png→ui_02.png
+  - ステップ3: UI→ui_03.png（手順系2段階）
+
+---
+
+## 期待される動作
+
+### ステップ1（プロンプト系3段階）
+```
+「ステップ１ナノバナナで、キャプションにあるプロンプトを使って、...画像を作ります」
+├─ ツール名画像 ─┤├─ prompt_01.png ─┤├─ ui_01.png ─────────┤
+  「〜で」        「キャプション〜」    残り
+```
+
+### ステップ2（プロンプト系3段階）
+```
+「ステップ２クリングで、キャプションにあるプロンプトを使って、...入れます」
+├─ ツール名画像 ─┤├─ prompt_02.png ─┤├─ ui_02.png ─────────┤
+```
+
+### ステップ3（手順系2段階）
+```
+「ステップ３ASMRモードをオンにして、...完成です」
+├─ ui_03.png ───────────────────────────────────────────┤
+  （ツール名なし、手順系）
+```
+
+---
+
+**最終更新**: 2026-02-07
+**次のアクション**: 音声再生成 → Whisper → create_tutorial_srt.py → Premiere Pro確認
