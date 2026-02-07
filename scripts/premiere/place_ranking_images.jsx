@@ -1,22 +1,54 @@
 /**
- * Premiere Pro ExtendScript: ランキングリール素材自動配置
+ * Premiere Pro ExtendScript: リール素材自動配置
+ *
+ * 対応リール形式:
+ * - ランキングリール（従来機能）
+ * - 解説リール（2026-02-03追加）
  *
  * 使い方:
  * 1. Premiere Proでプロジェクトを開く
  * 2. シーケンスをアクティブにする
  * 3. VSCodeからF5で実行（ExtendScript Debugger使用）
+ * 4. ファイル選択ダイアログで placement.json を選択
  *
  * 前提条件:
- * - placement.json が同じフォルダにある
  * - 素材ファイルが指定パスに存在する
+ *
+ * 対応type一覧:
+ * [共通]
+ * - shared: 共有素材配置
+ * - avatar_still: アバター静止画
+ * - avatar_video: アバター動画（time/duration指定、ループ対応）
+ * - narration: ナレーション音声（連続配置、time指定対応）
+ *
+ * [ランキングリール]
+ * - ranking: ランキングアイコン（スケール・座標設定）
+ * - prompt_screenshot: プロンプトスクリーンショット
+ *
+ * [解説リール]
+ * - hook_video: フック動画
+ * - ui: UI静止画
+ * - completion: 完成動画
+ * - trigger: トリガーワード静止画
+ * - se: 効果音
  */
 
 (function() {
     // ========== 設定 ==========
 
-    // JSONファイルのパス（スクリプトと同じフォルダ）
-    var scriptFolder = (new File($.fileName)).parent;
-    var jsonPath = scriptFolder.fsName + "\\placement.json";
+    // placement.jsonをファイル選択ダイアログで選択
+    var jsonFile = File.openDialog(
+        "placement.json を選択してください",
+        "JSON Files:*.json",
+        false
+    );
+
+    if (!jsonFile) {
+        alert("キャンセルされました");
+        return;
+    }
+
+    var jsonPath = jsonFile.fsName;
 
     // トラック番号マッピング（0始まり）
     // 新トラック構造（2026-01-26更新）
@@ -80,12 +112,10 @@
 
             // typeによって処理を分岐
             switch (p.type) {
+                // 共通type
                 case 'shared':
                 case 'avatar_still':
                     result = placeMedia(seq, p);
-                    break;
-                case 'ranking':
-                    result = placeRankingIcon(seq, p);
                     break;
                 case 'narration':
                     result = placeNarration(seq, p);
@@ -93,9 +123,31 @@
                 case 'avatar_video':
                     result = placeAvatarVideo(seq, p);
                     break;
-                case 'prompt_screenshot':
-                    result = placeRankingIcon(seq, p);  // ランキングアイコンと同じ処理で配置
+
+                // ランキングリール用type
+                case 'ranking':
+                    result = placeRankingIcon(seq, p);
                     break;
+                case 'prompt_screenshot':
+                    result = placeRankingIcon(seq, p);
+                    break;
+
+                // 解説リール用type
+                case 'hook_video':
+                    result = placeHookVideo(seq, p);
+                    break;
+                case 'hook_audio':
+                    result = placeHookAudio(seq, p);
+                    break;
+                case 'ui':
+                case 'completion':
+                case 'trigger':
+                    result = placeMedia(seq, p);
+                    break;
+                case 'se':
+                    result = placeSoundEffect(seq, p);
+                    break;
+
                 default:
                     // 旧形式（typeなし）の場合はランキングアイコンとして処理
                     result = placeRankingIcon(seq, p);
@@ -107,6 +159,16 @@
                 errorCount++;
                 errors.push((p.name || p.tool || "不明") + ": " + result.error);
             }
+        }
+
+        // ========== A1基準で終了時間を調整 ==========
+        // ナレーション（A1）の実際の終了時間を取得し、他の要素をそれに合わせる
+        var actualEndTime = getTrackEndTime(seq.audioTracks[0]);  // A1
+        $.writeln("[メイン] A1の実際の終了時間: " + actualEndTime + "秒");
+
+        if (actualEndTime > 0) {
+            // 終了時間を合わせるべき要素を延長
+            extendTracksToEndTime(seq, actualEndTime);
         }
 
         // 結果を表示
@@ -153,6 +215,7 @@
             var timeInSeconds = placement.time;
             var trackName = placement.track;
             var duration = placement.duration;
+            var muteAudio = placement.mute_audio;
 
             // ファイル存在確認
             var mediaFile = new File(mediaPath);
@@ -199,6 +262,11 @@
             // クリップを挿入
             track.overwriteClip(projectItem, timeInSeconds);
 
+            // 動画の場合、音声がA1に自動配置されるので削除（mute_audio指定時）
+            if (!isAudio && muteAudio) {
+                removeAudioClipAtTime(seq, timeInSeconds);
+            }
+
             // 配置したクリップを取得
             var clip = findClipAtTime(track, timeInSeconds);
 
@@ -206,11 +274,13 @@
                 // 長さを設定
                 if (duration && duration > 0) {
                     var endTime = timeInSeconds + duration;
-                    clip.end = endTime;
+                    $.writeln("[placeMedia] " + placement.name + ": duration=" + duration + "秒, endTime=" + endTime + "秒");
+                    setClipEndTime(clip, endTime);
                 }
 
                 // ボリューム設定（オーディオのみ）
                 if (isAudio && placement.volume !== undefined) {
+                    $.writeln("[placeMedia] " + placement.name + ": volume=" + placement.volume + "dB");
                     setClipVolume(clip, placement.volume);
                 }
             }
@@ -285,7 +355,8 @@
                 // 長さを設定
                 if (duration && duration > 0) {
                     var endTime = timeInSeconds + duration;
-                    clip.end = endTime;
+                    $.writeln("[placeRankingIcon] " + (placement.name || placement.tool) + ": endTime=" + endTime + "秒");
+                    setClipEndTime(clip, endTime);
                 }
 
                 // スケールと位置を設定（モーションエフェクト経由）
@@ -300,14 +371,15 @@
     }
 
     /**
-     * ナレーション音声を配置（連続配置）
+     * ナレーション音声を配置（連続配置、time指定対応）
+     * - time指定あり: 指定時間から開始
+     * - time指定なし: 前のクリップの直後から連続配置
      */
-    var narrationEndTimes = { "A1": 0, "A2": 0 };  // トラックごとの終了時間を追跡
-
     function placeNarration(seq, placement) {
         try {
             var audioPath = placement.path;
             var trackName = placement.track;
+            var specifiedTime = placement.time;  // 解説リール用: 最初のナレーションの開始時間
 
             // ファイル存在確認
             var audioFile = new File(audioPath);
@@ -349,9 +421,15 @@
                 return { success: false, error: "トラックが存在しません: " + trackName };
             }
 
-            // ナレーションは番号順に連続配置
-            // 同じトラックの最後のクリップの終了位置から配置
-            var startTime = getTrackEndTime(audioTrack);
+            // 開始時間を決定
+            var startTime;
+            if (specifiedTime !== undefined && specifiedTime >= 0) {
+                // time指定あり: 指定時間から開始
+                startTime = specifiedTime;
+            } else {
+                // time指定なし: 同じトラックの最後のクリップの終了位置から配置
+                startTime = getTrackEndTime(audioTrack);
+            }
 
             // クリップを挿入
             audioTrack.overwriteClip(projectItem, startTime);
@@ -364,13 +442,18 @@
     }
 
     /**
-     * アバター動画を配置（ループ対応）
+     * アバター動画を配置
+     *
+     * 2つのモードに対応:
+     * 1. ランキングリール用（ループモード）: loop: true, loop_until: 秒数
+     * 2. 解説リール用（単発モード）: time: 秒数, duration: 秒数
      */
     function placeAvatarVideo(seq, placement) {
         try {
             var videoPath = placement.path;
             var trackName = placement.track;
             var startTime = placement.time;
+            var duration = placement.duration;
             var shouldLoop = placement.loop;
             var loopUntil = placement.loop_until;
 
@@ -414,19 +497,15 @@
                 return { success: false, error: "トラックが存在しません: " + trackName };
             }
 
-            // 開始時間を決定（-1の場合は前のクリップの直後）
+            // 開始時間を決定（未指定または-1の場合は前のクリップの直後）
             var actualStartTime = startTime;
-            if (startTime < 0) {
+            if (startTime === undefined || startTime < 0) {
                 actualStartTime = getTrackEndTime(videoTrack);
             }
 
-            if (!shouldLoop) {
-                // ループなし：1回だけ配置
-                videoTrack.overwriteClip(projectItem, actualStartTime);
-                // 動画の音声がA1に配置されるので削除
-                removeAudioClipAtTime(seq, actualStartTime);
-            } else {
-                // ループあり：loopUntilまで繰り返し配置
+            // モード判定: loopがtrueならランキングリール用、それ以外は解説リール用
+            if (shouldLoop && loopUntil !== undefined) {
+                // ランキングリール用: ループ配置
                 var currentTime = actualStartTime;
                 var clipDuration = projectItem.getOutPoint().seconds - projectItem.getInPoint().seconds;
 
@@ -443,16 +522,245 @@
                     // 配置したクリップを取得して長さを確認
                     var clip = findClipAtTime(videoTrack, currentTime);
                     if (clip) {
-                        var actualDuration = clip.end.seconds - clip.start.seconds;
                         currentTime = clip.end.seconds;
 
                         // 最後のクリップがloopUntilを超える場合はトリム
                         if (currentTime > loopUntil) {
-                            clip.end = loopUntil;
+                            $.writeln("[placeAvatarVideo loop] トリム: " + loopUntil + "秒");
+                            setClipEndTime(clip, loopUntil);
                         }
                     } else {
                         currentTime += clipDuration;
                     }
+                }
+            } else {
+                // 解説リール用: 単発配置（duration指定で長さ調整）
+                videoTrack.overwriteClip(projectItem, actualStartTime);
+                // 動画の音声がA1に配置されるので削除
+                removeAudioClipAtTime(seq, actualStartTime);
+
+                // durationが指定されている場合はクリップの長さを調整
+                if (duration !== undefined && duration > 0) {
+                    var clip = findClipAtTime(videoTrack, actualStartTime);
+                    if (clip) {
+                        $.writeln("[placeAvatarVideo] " + placement.name + ": endTime=" + (actualStartTime + duration) + "秒");
+                        setClipEndTime(clip, actualStartTime + duration);
+                    }
+                }
+            }
+
+            return { success: true };
+
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * 効果音（SE）を配置
+     * 解説リール用: decision, complete, typing など
+     */
+    function placeSoundEffect(seq, placement) {
+        try {
+            var audioPath = placement.path;
+            var trackName = placement.track;
+            var startTime = placement.time;
+            var volume = placement.volume;
+
+            // ファイル存在確認
+            var audioFile = new File(audioPath);
+            if (!audioFile.exists) {
+                return { success: false, error: "ファイルが見つかりません: " + audioPath };
+            }
+
+            // トラック番号を取得
+            var trackIndex = AUDIO_TRACK_MAP[trackName];
+            if (trackIndex === undefined) {
+                return { success: false, error: "不明なトラック: " + trackName };
+            }
+
+            // 音声をプロジェクトにインポート
+            var importResult = app.project.importFiles(
+                [audioPath],
+                true,
+                app.project.rootItem,
+                false
+            );
+
+            if (!importResult) {
+                return { success: false, error: "インポート失敗" };
+            }
+
+            // インポートしたアイテムを検索
+            var projectItem = findProjectItemByName(
+                app.project.rootItem,
+                audioFile.name
+            );
+
+            if (!projectItem) {
+                return { success: false, error: "インポート後のアイテムが見つかりません" };
+            }
+
+            // タイムラインに配置
+            var audioTrack = seq.audioTracks[trackIndex];
+            if (!audioTrack) {
+                return { success: false, error: "トラックが存在しません: " + trackName };
+            }
+
+            // 指定時間に配置
+            audioTrack.overwriteClip(projectItem, startTime);
+
+            // ボリューム設定があれば適用
+            if (volume !== undefined) {
+                var clip = findClipAtTime(audioTrack, startTime);
+                if (clip) {
+                    $.writeln("[placeSoundEffect] " + placement.name + ": volume=" + volume + "dB");
+                    setClipVolume(clip, volume);
+                }
+            }
+
+            return { success: true };
+
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * フック動画を配置（映像のみ、音声は別途hook_audioで配置）
+     */
+    function placeHookVideo(seq, placement) {
+        try {
+            var videoPath = placement.path;
+            var trackName = placement.track;
+            var startTime = placement.time;
+            var duration = placement.duration;
+
+            // ファイル存在確認
+            var videoFile = new File(videoPath);
+            if (!videoFile.exists) {
+                return { success: false, error: "ファイルが見つかりません: " + videoPath };
+            }
+
+            // トラック番号を取得
+            var trackIndex = VIDEO_TRACK_MAP[trackName];
+            if (trackIndex === undefined) {
+                return { success: false, error: "不明なトラック: " + trackName };
+            }
+
+            // 動画をプロジェクトにインポート
+            var importResult = app.project.importFiles(
+                [videoPath],
+                true,
+                app.project.rootItem,
+                false
+            );
+
+            if (!importResult) {
+                return { success: false, error: "インポート失敗" };
+            }
+
+            // インポートしたアイテムを検索
+            var projectItem = findProjectItemByName(
+                app.project.rootItem,
+                videoFile.name
+            );
+
+            if (!projectItem) {
+                return { success: false, error: "インポート後のアイテムが見つかりません" };
+            }
+
+            // タイムラインに配置
+            var videoTrack = seq.videoTracks[trackIndex];
+            if (!videoTrack) {
+                return { success: false, error: "トラックが存在しません: " + trackName };
+            }
+
+            // クリップを挿入
+            videoTrack.overwriteClip(projectItem, startTime);
+
+            // 動画の音声がA1に自動配置されるので削除
+            removeAudioClipAtTime(seq, startTime);
+
+            // 配置したクリップを取得
+            var clip = findClipAtTime(videoTrack, startTime);
+
+            if (clip) {
+                // 長さを設定
+                if (duration && duration > 0) {
+                    $.writeln("[placeHookVideo] endTime=" + (startTime + duration) + "秒");
+                    setClipEndTime(clip, startTime + duration);
+                }
+            }
+
+            return { success: true };
+
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    }
+
+    /**
+     * フック動画の音声を別トラック（A2）に配置
+     * 注意: 動画ファイルを音声トラックに配置すると、映像も自動配置されるので削除する
+     */
+    function placeHookAudio(seq, placement) {
+        try {
+            var videoPath = placement.path;
+            var trackName = placement.track;
+            var startTime = placement.time;
+            var duration = placement.duration;
+
+            // ファイル存在確認
+            var videoFile = new File(videoPath);
+            if (!videoFile.exists) {
+                return { success: false, error: "ファイルが見つかりません: " + videoPath };
+            }
+
+            // トラック番号を取得
+            var trackIndex = AUDIO_TRACK_MAP[trackName];
+            if (trackIndex === undefined) {
+                return { success: false, error: "不明なトラック: " + trackName };
+            }
+
+            // 動画をプロジェクトにインポート（既にインポート済みの場合はスキップされる）
+            var importResult = app.project.importFiles(
+                [videoPath],
+                true,
+                app.project.rootItem,
+                false
+            );
+
+            // インポートしたアイテムを検索
+            var projectItem = findProjectItemByName(
+                app.project.rootItem,
+                videoFile.name
+            );
+
+            if (!projectItem) {
+                return { success: false, error: "インポート後のアイテムが見つかりません" };
+            }
+
+            // タイムラインに配置（音声トラック）
+            var audioTrack = seq.audioTracks[trackIndex];
+            if (!audioTrack) {
+                return { success: false, error: "トラックが存在しません: " + trackName };
+            }
+
+            // クリップを挿入
+            audioTrack.overwriteClip(projectItem, startTime);
+
+            // 動画ファイルを音声トラックに配置すると、映像が自動配置されるので削除
+            // V3（index=2）は除外（hook_videoで意図的に配置済み）
+            removeVideoClipAtTime(seq, startTime, VIDEO_TRACK_MAP["V3"]);
+
+            // 配置したクリップを取得
+            var clip = findClipAtTime(audioTrack, startTime);
+
+            if (clip) {
+                // 長さを設定
+                if (duration && duration > 0) {
+                    setClipEndTime(clip, startTime + duration);
                 }
             }
 
@@ -485,6 +793,52 @@
     }
 
     /**
+     * 指定時間にある映像クリップを削除（特定トラックを除外可能）
+     * hook_audio配置時に自動追加される映像を除去
+     * @param excludeTrackIndex 除外するトラックインデックス（0始まり）、省略可
+     */
+    function removeVideoClipAtTime(seq, timeInSeconds, excludeTrackIndex) {
+        try {
+            // 全ビデオトラックをチェック（V1〜V14）
+            for (var t = 0; t < seq.videoTracks.numTracks; t++) {
+                // 除外トラックはスキップ
+                if (excludeTrackIndex !== undefined && t === excludeTrackIndex) {
+                    continue;
+                }
+
+                var videoTrack = seq.videoTracks[t];
+                if (!videoTrack) continue;
+
+                // 指定時間付近のクリップを探して削除
+                for (var i = videoTrack.clips.numItems - 1; i >= 0; i--) {
+                    var clip = videoTrack.clips[i];
+                    if (Math.abs(clip.start.seconds - timeInSeconds) < 0.5) {
+                        $.writeln("[removeVideoClipAtTime] V" + (t + 1) + "から削除: " + clip.start.seconds + "秒");
+                        clip.remove(false, false);
+                        break;
+                    }
+                }
+            }
+        } catch (e) {
+            $.writeln("[removeVideoClipAtTime] エラー: " + e.message);
+        }
+    }
+
+    /**
+     * クリップの終了時間を設定（秒数指定）
+     * Premiere ProのTime形式に対応
+     */
+    function setClipEndTime(clip, endTimeSeconds) {
+        try {
+            // 方法1: 直接秒数で設定
+            clip.end = endTimeSeconds;
+            $.writeln("clip.end設定: " + endTimeSeconds + "秒 -> 結果: " + clip.end.seconds + "秒");
+        } catch (e) {
+            $.writeln("clip.end設定エラー: " + e.message);
+        }
+    }
+
+    /**
      * トラックの最後のクリップの終了時間を取得
      */
     function getTrackEndTime(track) {
@@ -496,6 +850,68 @@
             }
         }
         return endTime;
+    }
+
+    /**
+     * A1の終了時間に合わせて、各トラックの最後のクリップを延長
+     * 対象: V1(アバター), V7(トリガー), V14(字幕背景), A3(BGM)
+     */
+    function extendTracksToEndTime(seq, endTime) {
+        $.writeln("[extendTracksToEndTime] 終了時間を " + endTime + "秒 に統一");
+
+        // 延長対象のビデオトラック
+        var videoTracksToExtend = [
+            { index: VIDEO_TRACK_MAP["V1"], name: "V1 (avatar)" },
+            { index: VIDEO_TRACK_MAP["V7"], name: "V7 (trigger)" },
+            { index: VIDEO_TRACK_MAP["V14"], name: "V14 (telop_back)" }
+        ];
+
+        // 延長対象のオーディオトラック
+        var audioTracksToExtend = [
+            { index: AUDIO_TRACK_MAP["A3"], name: "A3 (BGM)" }
+        ];
+
+        // ビデオトラックの最後のクリップを延長
+        for (var i = 0; i < videoTracksToExtend.length; i++) {
+            var trackInfo = videoTracksToExtend[i];
+            var track = seq.videoTracks[trackInfo.index];
+            if (track && track.clips.numItems > 0) {
+                var lastClip = getLastClipOnTrack(track);
+                if (lastClip && lastClip.end.seconds < endTime) {
+                    $.writeln("[extendTracksToEndTime] " + trackInfo.name + ": " + lastClip.end.seconds + "秒 -> " + endTime + "秒");
+                    setClipEndTime(lastClip, endTime);
+                }
+            }
+        }
+
+        // オーディオトラックの最後のクリップを延長
+        for (var i = 0; i < audioTracksToExtend.length; i++) {
+            var trackInfo = audioTracksToExtend[i];
+            var track = seq.audioTracks[trackInfo.index];
+            if (track && track.clips.numItems > 0) {
+                var lastClip = getLastClipOnTrack(track);
+                if (lastClip && lastClip.end.seconds < endTime) {
+                    $.writeln("[extendTracksToEndTime] " + trackInfo.name + ": " + lastClip.end.seconds + "秒 -> " + endTime + "秒");
+                    setClipEndTime(lastClip, endTime);
+                }
+            }
+        }
+    }
+
+    /**
+     * トラック上の最後のクリップを取得
+     */
+    function getLastClipOnTrack(track) {
+        var lastClip = null;
+        var latestEnd = 0;
+        for (var i = 0; i < track.clips.numItems; i++) {
+            var clip = track.clips[i];
+            if (clip.end.seconds > latestEnd) {
+                latestEnd = clip.end.seconds;
+                lastClip = clip;
+            }
+        }
+        return lastClip;
     }
 
     /**
@@ -572,36 +988,55 @@
     }
 
     /**
-     * クリップのボリュームを設定（dB）
+     * dBをリニアスケールに変換
+     * Premiere Proは音量をリニアスケール（1.0 = 0dB）で管理
+     */
+    function dbToLinear(db) {
+        return Math.pow(10, db / 20);
+    }
+
+    /**
+     * クリップのボリュームを設定（dB指定 → リニア変換）
      */
     function setClipVolume(clip, volumeDb) {
         try {
             var components = clip.components;
+            var linearValue = dbToLinear(volumeDb);
+            $.writeln("[setClipVolume] " + volumeDb + "dB -> リニア値: " + linearValue);
 
             for (var i = 0; i < components.numItems; i++) {
                 var component = components[i];
 
-                // ボリュームエフェクトを探す
-                if (component.displayName === "ボリューム" || component.displayName === "Volume") {
+                // ボリュームエフェクトを探す（日本語・英語両対応）
+                if (component.displayName === "ボリューム" ||
+                    component.displayName === "Volume" ||
+                    component.displayName.indexOf("ボリューム") >= 0 ||
+                    component.displayName.indexOf("Volume") >= 0) {
+
                     var properties = component.properties;
 
                     for (var j = 0; j < properties.numItems; j++) {
                         var prop = properties[j];
 
-                        if (prop.displayName === "レベル" || prop.displayName === "Level") {
+                        if (prop.displayName === "レベル" ||
+                            prop.displayName === "Level" ||
+                            prop.displayName.indexOf("レベル") >= 0 ||
+                            prop.displayName.indexOf("Level") >= 0) {
                             try {
-                                prop.setValue(volumeDb, true);
+                                $.writeln("[setClipVolume] 設定前: " + prop.getValue());
+                                prop.setValue(linearValue, true);
+                                $.writeln("[setClipVolume] 設定後: " + prop.getValue());
                             } catch (e) {
-                                $.writeln("ボリューム設定エラー: " + e.message);
+                                $.writeln("[setClipVolume] setValue エラー: " + e.message);
                             }
-                            break;
+                            return;  // 設定完了
                         }
                     }
-                    break;
                 }
             }
+            $.writeln("[setClipVolume] ボリュームコンポーネントが見つかりませんでした");
         } catch (e) {
-            $.writeln("ボリューム設定エラー: " + e.message);
+            $.writeln("[setClipVolume] エラー: " + e.message);
         }
     }
 
