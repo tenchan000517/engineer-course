@@ -27,6 +27,9 @@ from glob import glob
 # フック動画の長さ（秒）
 HOOK_DURATION = 5.0
 
+# 終了余白（秒）- ブツ切れ防止
+END_PADDING = 0.5
+
 # 共有素材パス
 SHARED_BASE = r"C:\Instagramショート\Instagram_Reels_Production\共有素材"
 AVATAR_VIDEO_BASE = os.path.join(SHARED_BASE, "アバター動画")
@@ -38,15 +41,15 @@ SE_TYPING = os.path.join(SHARED_BASE, "SE", "typing.mp3")
 # 字幕背景（解説リール用）
 TELOP_BACK_PATH = os.path.join(SHARED_BASE, "ランキングボード", "telop_back_tutorial.png")
 
-# ツール名画像（既存の画像配置用）
-TOOL_NAME_BASE = os.path.join(SHARED_BASE, "ツール名")
+# ツール名画像（AIロゴフォルダ）
+TOOL_NAME_BASE = os.path.join(SHARED_BASE, "AIロゴ")
 # ツール名リスト（Windows/WSL両対応）
 _TOOL_LIST_WIN = r"C:\engineer-course\docs\archive\ai-tool-name-list.md"
 _TOOL_LIST_WSL = "/mnt/c/engineer-course/docs/archive/ai-tool-name-list.md"
 AI_TOOL_NAME_LIST_PATH = _TOOL_LIST_WSL if os.path.exists(_TOOL_LIST_WSL) else _TOOL_LIST_WIN
 
 # ツール名画像のスケール・位置（V4トラック）
-TOOL_NAME_SCALE = 100
+TOOL_NAME_SCALE = 60
 TOOL_NAME_X = 540
 TOOL_NAME_Y = 1266
 
@@ -129,14 +132,14 @@ SEGMENT_PATTERNS = {
         "scale": 40, "x": 536, "y": 640
     },
     "cta_first": {
-        "pattern": r"今日紹介した|ほしい人は",
+        "pattern": r"今日紹介した",
         "type": "none",
         "asset": None,
         "track": None,
         "se": None
     },
     "cta_trigger": {
-        "pattern": r"コメントしてください",
+        "pattern": r"ほしい人は|コメントしてください",
         "type": "trigger",
         "asset": "trigger",
         "track": "V7",
@@ -182,8 +185,12 @@ def load_tool_name_mapping():
                 srt_name = parts[1]  # 英語名（SRT表記）
                 narration_name = parts[2]  # カタカナ名
                 if srt_name and narration_name:
-                    # ファイル名形式に変換（小文字、スペース→アンダースコア）
-                    filename = srt_name.lower().replace(" ", "_")
+                    # ファイル名形式に変換（AIロゴフォルダの命名規則に合わせる）
+                    # 例: "Nano Banana" → "Nanobanana", "Kling" → "Kling"
+                    filename = srt_name.replace(" ", "")
+                    # 先頭大文字、残りは小文字に統一
+                    if len(filename) > 1:
+                        filename = filename[0].upper() + filename[1:].lower()
                     mapping[narration_name] = {
                         "filename": filename,
                         "display": srt_name
@@ -273,6 +280,9 @@ def find_trigger_timestamps(words):
     """
     ワードリストからトリガータイムスタンプを検出
 
+    Whisperは日本語を文字単位で分割することがあるため、
+    連続する文字を結合してパターン検索を行う。
+
     戻り値: {
         "tool_end": float or None,      # 「〜で」の終了時間
         "prompt_start": float or None,  # 「キャプション」の開始時間
@@ -291,24 +301,39 @@ def find_trigger_timestamps(words):
     # 手順系トリガー（「〜して」パターン）
     step_triggers = re.compile(r'(して|したら|すると|してから|した後)$')
 
+    # 文字を結合してパターン検索用のバッファ
+    # 各エントリ: (結合文字列, 開始インデックス, 開始時間)
+    buffer_text = ""
+    buffer_start_times = []  # 各文字の開始時間を記録
+
     for i, word_data in enumerate(words):
         word = word_data.get("word", "").strip()
+        word_start = word_data.get("start")
+        word_end = word_data.get("end")
 
-        # 「で」の検出（ツール名の後）
-        if word == "で" and result["tool_end"] is None:
-            result["tool_end"] = word_data.get("end")
+        # バッファに追加
+        for char in word:
+            buffer_text += char
+            buffer_start_times.append(word_start)
 
-        # プロンプト系トリガー検出
-        for trigger in prompt_triggers:
-            if trigger in word and result["prompt_start"] is None:
-                result["prompt_start"] = word_data.get("start")
-                break
+        # 「で、」または「で」の検出（ツール名の後）
+        if (word == "で" or word == "で、") and result["tool_end"] is None:
+            result["tool_end"] = word_end
+
+        # プロンプト系トリガー検出（結合文字列から検索）
+        if result["prompt_start"] is None:
+            for trigger in prompt_triggers:
+                idx = buffer_text.find(trigger)
+                if idx >= 0:
+                    # トリガーの開始位置の時間を取得
+                    result["prompt_start"] = buffer_start_times[idx]
+                    break
 
         # 手順系トリガー検出（「〜して」など）
         if step_triggers.search(word) and result["step_start"] is None:
             # プロンプト系が既に検出されていなければ手順系として扱う
             if result["prompt_start"] is None:
-                result["step_start"] = word_data.get("end")
+                result["step_start"] = word_end
 
     return result
 
@@ -432,10 +457,19 @@ def to_windows_path(path):
     return path.replace("/", "\\")
 
 
-def create_avatar_placements(segment_times, total_duration):
-    """アバター動画の配置を生成（V1トラック、シーンごとに切り替え）"""
+def create_avatar_placements(segment_times, total_duration, detected_segments=None, detected_steps=None):
+    """アバター動画の配置を生成（V1トラック、シーンごとに切り替え）
+
+    動的にセグメントタイプに基づいてアバター動画を割り当て:
+    - intro → normal
+    - step（ステップセグメント） → random
+    - completion → normal
+    - cta_first → cta（「今日紹介した」からCTA開始）
+    - cta_trigger → cta
+    """
     placements = []
-    used_random_videos = []  # 使用済みランダム動画を追跡
+    detected_segments = detected_segments or {}
+    detected_steps = detected_steps or {}
 
     # 利用可能なランダム動画をシャッフル
     available_random = RANDOM_AVATAR_VIDEOS.copy()
@@ -449,7 +483,22 @@ def create_avatar_placements(segment_times, total_duration):
 
     for seg_num in sorted(segment_times.keys()):
         times = segment_times[seg_num]
-        avatar_type = SCENE_AVATAR_MAPPING.get(seg_num, "normal")
+
+        # 動的にアバタータイプを決定
+        if seg_num in detected_steps:
+            # ステップセグメント → ランダム動画
+            avatar_type = "random"
+        elif seg_num in detected_segments:
+            seg_type = detected_segments[seg_num]
+            if seg_type in ("cta_first", "cta_trigger"):
+                # CTA系 → cta動画（「今日紹介した」からCTA開始）
+                avatar_type = "cta"
+            else:
+                # intro, completion → normal
+                avatar_type = "normal"
+        else:
+            # フォールバック: 静的マッピングを使用
+            avatar_type = SCENE_AVATAR_MAPPING.get(seg_num, "normal")
 
         # ランダム動画の場合、未使用のものを選択
         if avatar_type == "random":
@@ -608,8 +657,10 @@ def create_placement_json(project_folder, segment_times, total_duration):
     if step1_start_time is None:
         step1_start_time = segment_times.get(2, {}).get("start")  # フォールバック
 
-    # 3. アバター動画（V1）- シーンごとに切り替え＆ループ
-    avatar_placements = create_avatar_placements(segment_times, total_duration)
+    # 3. アバター動画（V1）- シーンごとに切り替え＆ループ（動的割り当て）
+    avatar_placements = create_avatar_placements(
+        segment_times, total_duration, detected_segments, detected_steps
+    )
     placements.extend(avatar_placements)
 
     # 4. BGM（A3）- フック後から開始（フック動画には独自の音声があるため）
@@ -899,21 +950,26 @@ def main():
 
         print(f"  単語数: {len(words)}, 長さ: {segment_duration:.2f}秒")
 
+        # 浮動小数点誤差を減らすため丸める
+        start_time = round(current_offset, 2)
+        end_time = round(current_offset + segment_duration, 2)
+
         segment_times[seg_num] = {
-            "start": current_offset,
-            "end": current_offset + segment_duration
+            "start": start_time,
+            "end": end_time
         }
 
         if i < len(telop_segments):
             telop_lines = telop_segments[i]
-            entries = calculate_telop_timestamps(telop_lines, words, current_offset)
+            entries = calculate_telop_timestamps(telop_lines, words, start_time)
             all_srt_entries.extend(entries)
             print(f"  テロップ行数: {len(telop_lines)}, SRTエントリ数: {len(entries)}")
 
-        current_offset += segment_duration
+        current_offset = end_time
 
-    total_duration = current_offset
-    print(f"\n総時間: {total_duration:.2f}秒")
+    # 終了余白を追加（ブツ切れ防止）
+    total_duration = round(current_offset + END_PADDING, 2)
+    print(f"\n総時間: {total_duration:.2f}秒（終了余白{END_PADDING}秒含む）")
 
     # SRTファイル出力
     srt_path = os.path.join(project_folder, "subtitle.srt")
@@ -932,10 +988,8 @@ def main():
     print(f"  配置数: {len(placements)}")
 
     # アバター動画の割り当て表示
-    print("\nアバター動画の割り当て:")
-    for seg_num in sorted(segment_times.keys()):
-        avatar_type = SCENE_AVATAR_MAPPING.get(seg_num, "normal")
-        print(f"  セグメント {seg_num}: {avatar_type}")
+    # ※動的割り当て: intro/completion/cta_first→normal, step→random, cta_trigger→cta
+    print("\nアバター動画: 動的割り当て完了")
 
     print("\n完了!")
 
