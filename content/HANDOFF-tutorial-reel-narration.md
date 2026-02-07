@@ -160,17 +160,17 @@ python create_tutorial_srt.py "C:\path\to\project_folder"
 
 ## 次のアクション（最優先）
 
-### 1. JSXスクリプトを更新
+### 1. JSXスクリプトを更新 ✅ 完了（2026-02-03）
 
 **ファイル**: `scripts/premiere/place_ranking_images.jsx`
 
-**追加が必要なtype対応**:
-- `avatar_video`（time指定で配置、ループなし）
-- `hook_video`
-- `ui`
-- `completion`
-- `trigger`
-- `se`
+**追加したtype対応**:
+- `avatar_video`（time/duration指定で配置、ループモードも維持）
+- `hook_video` → placeMedia
+- `ui` → placeMedia
+- `completion` → placeMedia
+- `trigger` → placeMedia
+- `se` → placeSoundEffect（新規関数）
 - `narration`（time指定がある場合はその時間から開始）
 
 ### 2. Premiere Proで動作検証
@@ -187,7 +187,7 @@ python create_tutorial_srt.py "C:\path\to\project_folder"
 | `scripts/generate_tutorial_narration.py` | 解説リール音声生成 |
 | `scripts/trim_audio.py` | 音声トルツメ |
 | `scripts/whisper_tutorial_timestamps.py` | 個別Whisperタイムスタンプ |
-| `scripts/premiere/place_ranking_images.jsx` | Premiere Pro自動配置（**要更新**） |
+| `scripts/premiere/place_ranking_images.jsx` | Premiere Pro自動配置（**更新済み**） |
 | `content/guides/tutorial-reel-script-guide.md` | 解説リール台本作成ガイド |
 
 ---
@@ -206,4 +206,4 @@ python create_tutorial_srt.py "C:\path\to\project_folder"
 ---
 
 **最終更新**: 2026-02-03
-**次のアクション**: JSXスクリプト更新 → Premiere Pro動作検証
+**次のアクション**: → `HANDOFF-tutorial-reel-jsx.md` 参照（未解決問題あり）

@@ -141,7 +141,9 @@
                     break;
                 case 'ui':
                 case 'completion':
+                case 'completion_preview':
                 case 'trigger':
+                case 'tool_name':
                     result = placeMedia(seq, p);
                     break;
                 case 'se':
@@ -282,6 +284,19 @@
                 if (isAudio && placement.volume !== undefined) {
                     $.writeln("[placeMedia] " + placement.name + ": volume=" + placement.volume + "dB");
                     setClipVolume(clip, placement.volume);
+                }
+
+                // スケール・位置設定（ビデオのみ）
+                if (!isAudio && (placement.scale !== undefined || placement.x !== undefined || placement.y !== undefined)) {
+                    $.writeln("[placeMedia] " + placement.name + ": scale=" + placement.scale + ", x=" + placement.x + ", y=" + placement.y);
+                    setClipMotion(clip, placement.scale, placement.x, placement.y);
+                }
+
+                // クロップ設定（ビデオのみ）
+                if (!isAudio && (placement.crop_left !== undefined || placement.crop_right !== undefined ||
+                    placement.crop_top !== undefined || placement.crop_bottom !== undefined)) {
+                    $.writeln("[placeMedia] " + placement.name + ": crop L=" + placement.crop_left + ", R=" + placement.crop_right + ", T=" + placement.crop_top + ", B=" + placement.crop_bottom);
+                    setClipCrop(clip, placement.crop_left, placement.crop_right, placement.crop_top, placement.crop_bottom);
                 }
             }
 
@@ -539,12 +554,19 @@
                 // 動画の音声がA1に配置されるので削除
                 removeAudioClipAtTime(seq, actualStartTime);
 
-                // durationが指定されている場合はクリップの長さを調整
-                if (duration !== undefined && duration > 0) {
-                    var clip = findClipAtTime(videoTrack, actualStartTime);
-                    if (clip) {
+                // 配置したクリップを取得
+                var clip = findClipAtTime(videoTrack, actualStartTime);
+                if (clip) {
+                    // durationが指定されている場合はクリップの長さを調整
+                    if (duration !== undefined && duration > 0) {
                         $.writeln("[placeAvatarVideo] " + placement.name + ": endTime=" + (actualStartTime + duration) + "秒");
                         setClipEndTime(clip, actualStartTime + duration);
+                    }
+
+                    // スケール・位置設定
+                    if (placement.scale !== undefined || placement.y !== undefined) {
+                        $.writeln("[placeAvatarVideo] " + placement.name + ": scale=" + placement.scale + ", y=" + placement.y);
+                        setClipMotion(clip, placement.scale, placement.x, placement.y);
                     }
                 }
             }
@@ -690,6 +712,12 @@
                 if (duration && duration > 0) {
                     $.writeln("[placeHookVideo] endTime=" + (startTime + duration) + "秒");
                     setClipEndTime(clip, startTime + duration);
+                }
+
+                // スケール設定
+                if (placement.scale !== undefined) {
+                    $.writeln("[placeHookVideo] scale=" + placement.scale);
+                    setClipMotion(clip, placement.scale, placement.x, placement.y);
                 }
             }
 
@@ -984,6 +1012,65 @@
             }
         } catch (e) {
             $.writeln("モーション設定エラー: " + e.message);
+        }
+    }
+
+    /**
+     * クリップのクロップを設定（%指定）
+     * Premiere Proのクロップエフェクトを使用
+     */
+    function setClipCrop(clip, left, right, top, bottom) {
+        try {
+            var components = clip.components;
+
+            for (var i = 0; i < components.numItems; i++) {
+                var component = components[i];
+
+                // クロップエフェクトを探す
+                if (component.displayName === "クロップ" || component.displayName === "Crop") {
+                    var properties = component.properties;
+
+                    for (var j = 0; j < properties.numItems; j++) {
+                        var prop = properties[j];
+
+                        // 左
+                        if ((prop.displayName === "左" || prop.displayName === "Left") && left !== undefined) {
+                            try {
+                                prop.setValue(left, true);
+                            } catch (e) {
+                                $.writeln("クロップ左設定エラー: " + e.message);
+                            }
+                        }
+                        // 右
+                        if ((prop.displayName === "右" || prop.displayName === "Right") && right !== undefined) {
+                            try {
+                                prop.setValue(right, true);
+                            } catch (e) {
+                                $.writeln("クロップ右設定エラー: " + e.message);
+                            }
+                        }
+                        // 上
+                        if ((prop.displayName === "上" || prop.displayName === "Top") && top !== undefined) {
+                            try {
+                                prop.setValue(top, true);
+                            } catch (e) {
+                                $.writeln("クロップ上設定エラー: " + e.message);
+                            }
+                        }
+                        // 下
+                        if ((prop.displayName === "下" || prop.displayName === "Bottom") && bottom !== undefined) {
+                            try {
+                                prop.setValue(bottom, true);
+                            } catch (e) {
+                                $.writeln("クロップ下設定エラー: " + e.message);
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        } catch (e) {
+            $.writeln("クロップ設定エラー: " + e.message);
         }
     }
 
