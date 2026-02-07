@@ -35,14 +35,14 @@ SE_DECISION = os.path.join(SHARED_BASE, "SE", "decision.mp3")
 SE_COMPLETE = os.path.join(SHARED_BASE, "SE", "complete.mp3")
 SE_TYPING = os.path.join(SHARED_BASE, "SE", "typing.mp3")
 
-# 字幕背景
-TELOP_BACK_PATH = os.path.join(SHARED_BASE, "ランキングボード", "telop_back.png")
+# 字幕背景（解説リール用）
+TELOP_BACK_PATH = os.path.join(SHARED_BASE, "ランキングボード", "telop_back_tutorial.png")
 
-# ツール名画像
+# ツール名画像（既存の画像配置用）
 TOOL_NAME_BASE = os.path.join(SHARED_BASE, "ツール名")
 AI_TOOL_NAME_LIST_PATH = r"C:\engineer-course\docs\archive\ai-tool-name-list.md"
 
-# ツール名画像のスケール・位置（V4と同じ）
+# ツール名画像のスケール・位置（V4トラック）
 TOOL_NAME_SCALE = 100
 TOOL_NAME_X = 540
 TOOL_NAME_Y = 1266
@@ -154,7 +154,15 @@ SE_FILES = {
 
 
 def load_tool_name_mapping():
-    """ai-tool-name-list.mdからカタカナ→英語のマッピングを読み込む"""
+    """ai-tool-name-list.mdからカタカナ→英語のマッピングを読み込む
+
+    戻り値: {
+        "カタカナ名": {
+            "filename": "ファイル名形式",
+            "display": "SRT表記（表示用）"
+        }
+    }
+    """
     mapping = {}
     if not os.path.exists(AI_TOOL_NAME_LIST_PATH):
         print(f"警告: ツール名リストが見つかりません: {AI_TOOL_NAME_LIST_PATH}")
@@ -168,28 +176,35 @@ def load_tool_name_mapping():
         if "|" in line and "SRT表記" not in line and "---" not in line:
             parts = [p.strip() for p in line.split("|")]
             if len(parts) >= 3:
-                srt_name = parts[1]  # 英語名
+                srt_name = parts[1]  # 英語名（SRT表記）
                 narration_name = parts[2]  # カタカナ名
                 if srt_name and narration_name:
                     # ファイル名形式に変換（小文字、スペース→アンダースコア）
                     filename = srt_name.lower().replace(" ", "_")
-                    mapping[narration_name] = filename
+                    mapping[narration_name] = {
+                        "filename": filename,
+                        "display": srt_name
+                    }
 
     return mapping
 
 
 def detect_tool_name(text, tool_mapping):
-    """テキストからツール名を検出し、ファイル名を返す"""
-    for katakana_name, filename in tool_mapping.items():
+    """テキストからツール名を検出し、ツール情報を返す
+
+    戻り値: {"filename": "...", "display": "..."} または None
+    """
+    for katakana_name, tool_info in tool_mapping.items():
         if katakana_name in text:
-            return filename
+            return tool_info
     return None
 
 
 def detect_step_info(text, tool_mapping):
     """
     テキストから「ステップN」パターンとツール名を検出
-    戻り値: (step_number, tool_filename) または (None, None)
+    戻り値: (step_number, tool_info) または (None, None)
+    tool_info = {"filename": "...", "display": "..."} または None
     """
     # 「ステップN」パターンを検出（全角・半角数字対応）
     step_patterns = [
@@ -211,9 +226,9 @@ def detect_step_info(text, tool_mapping):
         return None, None
 
     # ツール名を検出
-    tool_filename = detect_tool_name(text, tool_mapping)
+    tool_info = detect_tool_name(text, tool_mapping)
 
-    return step_number, tool_filename
+    return step_number, tool_info
 
 
 def load_narration_lines(project_folder):
@@ -226,6 +241,63 @@ def load_narration_lines(project_folder):
         lines = [line.strip() for line in f.readlines() if line.strip()]
 
     return lines
+
+
+def load_whisper_words(json_path):
+    """WhisperのJSONファイルからワードリストを取得"""
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    words = []
+    if "segments" in data:
+        for segment in data["segments"]:
+            if "words" in segment:
+                words.extend(segment["words"])
+    return words
+
+
+def find_trigger_timestamps(words):
+    """
+    ワードリストからトリガータイムスタンプを検出
+
+    戻り値: {
+        "tool_end": float or None,      # 「〜で」の終了時間
+        "prompt_start": float or None,  # 「キャプション」の開始時間
+        "step_start": float or None     # 「〜して」系の開始時間
+    }
+    """
+    result = {
+        "tool_end": None,
+        "prompt_start": None,
+        "step_start": None
+    }
+
+    # プロンプト系トリガー
+    prompt_triggers = ["キャプション", "プロンプト"]
+
+    # 手順系トリガー（「〜して」パターン）
+    step_triggers = re.compile(r'(して|したら|すると|してから|した後)$')
+
+    for i, word_data in enumerate(words):
+        word = word_data.get("word", "").strip()
+
+        # 「で」の検出（ツール名の後）
+        if word == "で" and result["tool_end"] is None:
+            result["tool_end"] = word_data.get("end")
+
+        # プロンプト系トリガー検出
+        for trigger in prompt_triggers:
+            if trigger in word and result["prompt_start"] is None:
+                result["prompt_start"] = word_data.get("start")
+                break
+
+        # 手順系トリガー検出（「〜して」など）
+        if step_triggers.search(word) and result["step_start"] is None:
+            # プロンプト系が既に検出されていなければ手順系として扱う
+            if result["prompt_start"] is None:
+                result["step_start"] = word_data.get("end")
+
+    return result
 
 
 def load_whisper_json(json_path):
@@ -450,19 +522,19 @@ def create_placement_json(project_folder, segment_times, total_duration):
     narration_lines = load_narration_lines(project_folder)
 
     # 動的セグメント検出
-    detected_steps = {}  # セグメント番号→{"step": ステップ番号, "tool": ツールファイル名}
+    detected_steps = {}  # セグメント番号→{"step": ステップ番号, "tool": ツール情報}
     detected_segments = {}  # セグメント番号→セグメントタイプ（"intro", "completion", "cta_first", "cta_trigger"）
 
     for seg_num, line in enumerate(narration_lines, start=1):
         # ステップ検出
-        step_number, tool_filename = detect_step_info(line, tool_mapping)
+        step_number, tool_info = detect_step_info(line, tool_mapping)
         if step_number is not None:
             detected_steps[seg_num] = {
                 "step": step_number,
-                "tool": tool_filename
+                "tool": tool_info
             }
-            tool_info = tool_filename if tool_filename else "（ツール未検出）"
-            print(f"  セグメント{seg_num}: ステップ{step_number} 検出 - {tool_info}")
+            tool_display = tool_info.get("display") if tool_info else "（ツール未検出）"
+            print(f"  セグメント{seg_num}: ステップ{step_number} 検出 - {tool_display}")
             continue
 
         # 固定セグメントパターン検出
@@ -545,41 +617,108 @@ def create_placement_json(project_folder, segment_times, total_duration):
             trigger_start_time = segment_times.get(seg_num, {}).get("start")
             break
 
+    # audio_trimmedフォルダのパス
+    audio_trimmed_folder = os.path.join(project_folder, "audio_trimmed")
+
     for seg_num, times in segment_times.items():
         start_time = times["start"]
         end_time = times["end"]
         duration = end_time - start_time
 
-        tool_name_duration = 1.5  # ツール名表示時間（秒）
-        actual_ui_start = start_time
-
         # 動的ステップ処理: ステップN が検出されたセグメント
         if seg_num in detected_steps:
-            step_info = detected_steps[seg_num]
-            step_number = step_info["step"]
-            tool_filename = step_info["tool"]
+            step_data = detected_steps[seg_num]
+            step_number = step_data["step"]
+            tool_info = step_data["tool"]
+            tool_filename = tool_info.get("filename") if tool_info else None
 
-            # ツール名画像を配置
+            # Whisper JSONからワードレベルタイムスタンプを取得
+            json_path = os.path.join(audio_trimmed_folder, f"{seg_num:02d}.json")
+            triggers = {"tool_end": None, "prompt_start": None, "step_start": None}
+            if os.path.exists(json_path):
+                words = load_whisper_words(json_path)
+                triggers = find_trigger_timestamps(words)
+
+            # 切り替えタイミングを計算
+            # デフォルト: 2段階（ツール名 → UI）
+            tool_end_time = start_time + (triggers["tool_end"] or 1.5)
+            prompt_start_time = None
+            step_trigger_time = None
+
+            # プロンプト系: 3段階（ツール名 → プロンプトスクショ → UI/成果物）
+            if triggers["prompt_start"]:
+                prompt_start_time = start_time + triggers["prompt_start"]
+                print(f"  セグメント{seg_num}: プロンプト系3段階検出")
+
+            # 手順系: 「〜して」パターンがあれば3段階
+            elif triggers["step_start"]:
+                step_trigger_time = start_time + triggers["step_start"]
+                print(f"  セグメント{seg_num}: 手順系3段階検出（〜して）")
+
+            else:
+                print(f"  セグメント{seg_num}: 2段階（デフォルト）")
+
+            # 1. ツール名画像を配置
             if tool_filename:
                 tool_path = os.path.join(TOOL_NAME_BASE, f"{tool_filename}.png")
                 if os.path.exists(tool_path):
+                    # ツール名の終了時間を決定
+                    if prompt_start_time:
+                        tool_duration = prompt_start_time - start_time
+                    elif step_trigger_time:
+                        tool_duration = step_trigger_time - start_time
+                    else:
+                        tool_duration = tool_end_time - start_time
+
                     placements.append({
                         "type": "tool_name",
                         "name": f"tool_{tool_filename}_step{step_number}",
                         "path": to_windows_path(tool_path),
                         "track": "V4",
                         "time": start_time,
-                        "duration": tool_name_duration,
+                        "duration": tool_duration,
                         "scale": TOOL_NAME_SCALE,
                         "x": TOOL_NAME_X,
                         "y": TOOL_NAME_Y
                     })
-                    actual_ui_start = start_time + tool_name_duration
-                    print(f"  ツール名画像追加: {tool_filename}.png (ステップ{step_number}, {start_time}秒〜)")
+                    print(f"  ツール名画像: {tool_filename}.png ({start_time:.2f}秒〜{start_time + tool_duration:.2f}秒)")
                 else:
                     print(f"  警告: ツール名画像が見つかりません: {tool_path}")
 
-            # 動的UI画像を配置（ui_01.png, ui_02.png, ...）
+            # 2. プロンプトスクショを配置（プロンプト系の場合）
+            if prompt_start_time:
+                prompt_asset_name = f"prompt_{step_number:02d}.png"
+                prompt_path = os.path.join(project_folder, prompt_asset_name)
+                if os.path.exists(prompt_path):
+                    # プロンプトスクショの終了時間（UIが始まる時間）
+                    # セグメントの中間点をUI開始とする
+                    prompt_end_time = prompt_start_time + (end_time - prompt_start_time) * 0.4
+                    placements.append({
+                        "type": "prompt",
+                        "name": f"prompt_{step_number:02d}",
+                        "path": to_windows_path(prompt_path),
+                        "track": "V4",
+                        "time": prompt_start_time,
+                        "duration": prompt_end_time - prompt_start_time,
+                        "scale": 100,
+                        "x": 540,
+                        "y": 1266
+                    })
+                    print(f"  プロンプトスクショ: {prompt_asset_name} ({prompt_start_time:.2f}秒〜{prompt_end_time:.2f}秒)")
+
+                    # UIの開始時間を更新
+                    actual_ui_start = prompt_end_time
+                else:
+                    print(f"  警告: プロンプトスクショが見つかりません: {prompt_path}")
+                    actual_ui_start = prompt_start_time
+            elif step_trigger_time:
+                # 手順系3段階: 「〜して」の後からUI開始
+                actual_ui_start = step_trigger_time
+            else:
+                # 2段階: ツール名の後からUI開始
+                actual_ui_start = tool_end_time
+
+            # 3. UI画像を配置
             ui_asset_name = f"ui_{step_number:02d}.png"
             ui_path = os.path.join(project_folder, ui_asset_name)
             if os.path.exists(ui_path):
@@ -594,7 +733,7 @@ def create_placement_json(project_folder, segment_times, total_duration):
                     "x": 540,
                     "y": 1266
                 })
-                print(f"  UI画像追加: {ui_asset_name} (ステップ{step_number}, {actual_ui_start}秒〜)")
+                print(f"  UI画像: {ui_asset_name} ({actual_ui_start:.2f}秒〜{end_time:.2f}秒)")
             else:
                 print(f"  警告: UI画像が見つかりません: {ui_path}")
 

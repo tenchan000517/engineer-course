@@ -144,6 +144,7 @@
                 case 'completion_preview':
                 case 'trigger':
                 case 'tool_name':
+                case 'prompt':
                     result = placeMedia(seq, p);
                     break;
                 case 'se':
