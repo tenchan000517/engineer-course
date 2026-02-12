@@ -13,14 +13,14 @@
     "level": "intermediate",
     "topics": ["automation", "cli", "productivity"]
   },
-  "moduleCount": 2,
+  "moduleCount": 3,
   "hasSubcourses": true,
   "subcourses": [
     {
       "id": "claude-code-log-export",
       "title": "会話ログを自動保存する",
-      "description": "セッション終了時に会話ログをMarkdown形式で自動エクスポート。Hooksとスクリプトで実現。",
-      "moduleCount": 2,
+      "description": "Claude Codeのセットアップから、会話ログのMarkdown形式での自動エクスポートまで。Hooksとスクリプトで実現。",
+      "moduleCount": 3,
       "level": "intermediate"
     }
   ]

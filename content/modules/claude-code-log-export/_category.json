@@ -1,7 +1,7 @@
 {
   "id": "claude-code-log-export",
   "title": "会話ログを自動保存する",
-  "description": "セッション終了時に会話ログをMarkdown形式で自動エクスポート。Hooksとスクリプトで実現。",
+  "description": "Claude Codeのセットアップから、会話ログのMarkdown形式での自動エクスポートまで。Hooksとスクリプトで実現。",
   "icon": "terminal",
   "color": "orange",
   "order": 1,
@@ -11,9 +11,9 @@
     "editor": ["terminal", "vscode"],
     "platform": ["windows", "mac", "linux"],
     "level": "intermediate",
-    "topics": ["automation", "logging", "hooks"]
+    "topics": ["automation", "logging", "hooks", "setup"]
   },
-  "moduleCount": 2,
+  "moduleCount": 3,
   "isSubcourse": true,
   "parentCategory": "claude-code"
 }
