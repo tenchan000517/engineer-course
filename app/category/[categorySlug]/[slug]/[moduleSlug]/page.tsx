@@ -9,6 +9,11 @@ import {
 } from '@/lib/markdown';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 
+// サブコースIDとディレクトリのマッピング
+const subcourseDirectoryMap: Record<string, string> = {
+  'n8n-instagram': 'n8n',
+};
+
 // カラーマッピング
 const colorMap: Record<string, { bg: string; bgHover: string; light: string; lightText: string; text: string; textHover: string }> = {
   blue: { bg: 'bg-blue-600', bgHover: 'hover:bg-blue-700', light: 'bg-blue-100', lightText: 'text-blue-700', text: 'text-blue-600', textHover: 'hover:text-blue-800' },
@@ -37,7 +42,8 @@ export async function generateStaticParams() {
   categories.forEach((category) => {
     if (category.hasSubcourses && category.subcourses) {
       category.subcourses.forEach((subcourse: SubcourseData) => {
-        const modules = getModulesByCategory(subcourse.id);
+        const moduleDir = subcourseDirectoryMap[subcourse.id] || subcourse.id;
+        const modules = getModulesByCategory(moduleDir);
         modules.forEach((module) => {
           params.push({
             categorySlug: category.id,
@@ -72,12 +78,13 @@ export default async function SubcourseModulePage({
   }
 
   // モジュール情報を取得
-  const module = getModuleBySlug(subcourseSlug, moduleSlug);
+  const moduleDir = subcourseDirectoryMap[subcourseSlug] || subcourseSlug;
+  const module = getModuleBySlug(moduleDir, moduleSlug);
   if (!module) {
     notFound();
   }
 
-  const modules = getModulesByCategory(subcourseSlug);
+  const modules = getModulesByCategory(moduleDir);
   const currentIndex = modules.findIndex((m) => m.slug === moduleSlug);
   const prevModule = currentIndex > 0 ? modules[currentIndex - 1] : null;
   const nextModule = currentIndex < modules.length - 1 ? modules[currentIndex + 1] : null;

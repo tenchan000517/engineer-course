@@ -1,0 +1,18 @@
+{
+  "id": "web-analytics",
+  "title": "Webアナリティクス設定講座",
+  "description": "GA4・Googleサーチコンソールの登録からサイトマップ設定まで",
+  "icon": "search",
+  "color": "blue",
+  "order": 30,
+  "tags": {
+    "language": ["javascript", "typescript"],
+    "framework": ["nextjs", "google-analytics", "search-console"],
+    "editor": ["browser", "vscode"],
+    "platform": ["windows", "mac", "linux"],
+    "level": "beginner",
+    "topics": ["analytics", "seo", "web-performance", "indexing"]
+  },
+  "moduleCount": 5,
+  "hasSubcourses": false
+}

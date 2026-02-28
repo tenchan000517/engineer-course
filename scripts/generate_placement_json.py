@@ -59,7 +59,7 @@ CTA_TRIGGER = "今日紹介した"
 PROMPT_TRIGGER = "このプロンプト"
 
 # === 共有素材パス ===
-SHARED_FOLDER = "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材"
+SHARED_FOLDER = "C:\\Instagramショート\\Instagram_Reels_Production_V26.0.0\\共有素材"
 
 SHARED_ASSETS = {
     # 字幕背景（V14）

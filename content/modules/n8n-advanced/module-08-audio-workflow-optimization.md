@@ -455,20 +455,35 @@ return [{
 
 **解説**: `pairedItem: { item: 0 }` は「この出力アイテムは入力アイテム0から派生した」ことをn8nに伝えます。Split In Batchesは1件ずつ処理するため、常に `item: 0` で問題ありません。
 
-### ネストされたループの注意点
+### ワークフロー構造について
 
-このワークフローはLoop Sheets（外部ループ）とLoop Over Items（内部ループ）のネストされた構造です。
+このワークフローは**単一ループ構造**を採用しています。ネストしたループによる複雑さを避けるため、以下のアーキテクチャになっています：
 
-**重要**: 内部ループ（Loop Over Items）の「done」出力を外部ループ（Loop Sheets）の入力に接続**しない**でください。接続すると無限ループが発生します。
-
-**正しい構造**:
+**ワークフローの流れ**:
 ```
-Loop Over Items
-├─ Output 0 (done): 何も接続しない
-└─ Output 1 (loop): Search Video File に接続
+Manual Trigger
+    ↓
+Get Sheet A → Get Sheet B → Get Sheet C → Get Sheet D → Get Sheet E
+    ↓
+Merge All and Filter（全シート統合 + audio_status=NORMALでフィルタ）
+    ↓
+If Has Items
+    ↓
+Loop Over Items ←─────────────────────────┐
+    ↓                                      │
+Search Category Folder → Prepare Item      │
+    ↓                                      │
+Search Video File → If Video Exists        │
+    ↓                                      │
+[動画処理: Download → Audio → ffmpeg → Upload → Delete]
+    ↓                                      │
+Update audio_status ───────────────────────┘
 ```
 
-内部ループが完了すると、n8nの実行モデルが自動的に外部ループに制御を戻し、次のシートを処理します
+**ポイント**:
+- 5つのシート（canva_A〜E）を順番に取得し、Codeノードで統合
+- フィルタ後のアイテムを**単一のLoop Over Items**で処理
+- ネストしたループがないため、無限ループの問題が発生しない
 
 ---
 
@@ -505,13 +520,17 @@ Loop Over Items
 
 **インポート後に変更が必要な箇所**:
 
-| プレースホルダー | 変更内容 |
-|----------------|---------|
-| `YOUR_SPREADSHEET_ID` | あなたのスプレッドシートID |
-| `YOUR_CANVA_A_GID` 〜 `YOUR_CANVA_E_GID` | 各シートのgID（Sheet ListノードのCodeを編集） |
-| `YOUR_PARENT_FOLDER_ID` | Google Driveの親フォルダID |
-| `YOUR_VOICE_ID` | Fish AudioのVoice ID |
-| `YOUR_GAS_DEPLOY_URL` | GASのデプロイURL |
+| プレースホルダー | 変更内容 | 対象ノード |
+|----------------|---------|-----------|
+| `YOUR_SPREADSHEET_ID` | あなたのスプレッドシートID | Get Sheet A〜E |
+| `YOUR_CANVA_A_GID` | canva_AシートのgID | Get Sheet A |
+| `YOUR_CANVA_B_GID` | canva_BシートのgID | Get Sheet B |
+| `YOUR_CANVA_C_GID` | canva_CシートのgID | Get Sheet C |
+| `YOUR_CANVA_D_GID` | canva_DシートのgID | Get Sheet D |
+| `YOUR_CANVA_E_GID` | canva_EシートのgID | Get Sheet E |
+| `YOUR_PARENT_FOLDER_ID` | Google Driveの親フォルダID | Search Category Folder |
+| `YOUR_VOICE_ID` | Fish AudioのVoice ID | Generate Audio |
+| `YOUR_GAS_DEPLOY_URL` | GASのデプロイURL | Update audio_status |
 
 また、Google Sheets、Google Drive、Fish Audio APIのクレデンシャルを設定してください。
 

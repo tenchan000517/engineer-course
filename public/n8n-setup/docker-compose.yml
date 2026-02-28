@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      # タイムゾーン設定（日本時間）
+      - TZ=Asia/Tokyo
+      - GENERIC_TIMEZONE=Asia/Tokyo
+
+      # n8n基本設定
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+
+      # Webhook設定
+      - WEBHOOK_URL=http://localhost:5678/
+
+      # データ暗号化キー（セキュリティのため変更推奨）
+      - N8N_ENCRYPTION_KEY=n8n-encryption-key-2025
+
+      # 実行データの保存設定
+      - EXECUTIONS_PROCESS=main
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=all
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=all
+      - EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=true
+
+    volumes:
+      # データ永続化（ワークフロー、認証情報など）
+      - ./n8n_data:/home/node/.n8n
+
+    # ヘルスチェック
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

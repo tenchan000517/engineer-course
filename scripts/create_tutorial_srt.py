@@ -4,7 +4,7 @@
 
 入力:
   - {PROJECT_FOLDER}/audio_trimmed/*.json（Whisperタイムスタンプ）
-  - {PROJECT_FOLDER}/telop.txt（分割済みテロップ）
+  - {PROJECT_FOLDER}/narration.txt（ナレーション原稿）
 
 出力:
   - {PROJECT_FOLDER}/subtitle.srt
@@ -12,6 +12,12 @@
 
 使用方法:
   python create_tutorial_srt.py "C:\\path\\to\\project_folder"
+
+変更履歴:
+  2026-02-16: telop.txt依存を廃止、narration.txtから直接テロップを生成
+              - ひらがな数字→半角数字変換
+              - カタカナツール名→SRT表記変換
+              - 8文字分割ルール自動適用
 """
 
 import json
@@ -31,7 +37,7 @@ HOOK_DURATION = 5.0
 END_PADDING = 0.5
 
 # 共有素材パス
-SHARED_BASE = r"C:\Instagramショート\Instagram_Reels_Production\共有素材"
+SHARED_BASE = r"C:\Instagramショート\Instagram_Reels_Production_V26.0.0\共有素材"
 AVATAR_VIDEO_BASE = os.path.join(SHARED_BASE, "アバター動画")
 BGM_PATH = os.path.join(SHARED_BASE, "BGM", "Pixel_Heart_Signal.mp3")
 SE_DECISION = os.path.join(SHARED_BASE, "SE", "decision.mp3")
@@ -43,7 +49,7 @@ TELOP_BACK_PATH = os.path.join(SHARED_BASE, "ランキングボード", "telop_b
 
 # ツール名画像（AIロゴフォルダ）- Windows/WSL両対応
 _TOOL_NAME_BASE_WIN = os.path.join(SHARED_BASE, "AIロゴ")
-_TOOL_NAME_BASE_WSL = "/mnt/c/Instagramショート/Instagram_Reels_Production/共有素材/AIロゴ"
+_TOOL_NAME_BASE_WSL = "/mnt/c/Instagramショート/Instagram_Reels_Production_V26.0.0/共有素材/AIロゴ"
 TOOL_NAME_BASE = _TOOL_NAME_BASE_WSL if os.path.exists(_TOOL_NAME_BASE_WSL) else _TOOL_NAME_BASE_WIN
 # ツール名リスト（Windows/WSL両対応）
 _TOOL_LIST_WIN = r"C:\engineer-course\docs\archive\ai-tool-name-list.md"
@@ -162,7 +168,7 @@ INTRO_TRIGGERS = {
 }
 
 # 導入イラスト（訴求タイプ別）- 共有素材（Windows/WSL両対応）
-_INTRO_IMAGE_BASE_WSL = "/mnt/c/Instagramショート/Instagram_Reels_Production/共有素材/導入イラスト"
+_INTRO_IMAGE_BASE_WSL = "/mnt/c/Instagramショート/Instagram_Reels_Production_V26.0.0/共有素材/導入イラスト"
 _INTRO_IMAGE_BASE = _INTRO_IMAGE_BASE_WSL if os.path.exists(_INTRO_IMAGE_BASE_WSL) else os.path.join(SHARED_BASE, "導入イラスト")
 INTRO_IMAGES = {
     "buzz": os.path.join(_INTRO_IMAGE_BASE, "intro_buzz.png"),
@@ -224,6 +230,227 @@ def load_tool_name_mapping():
                     }
 
     return mapping
+
+
+# ========== テロップ変換機能 ==========
+
+# ひらがな数字→半角数字マッピング（ステップの直後のみ）
+HIRAGANA_TO_NUMBER = {
+    'いち': '1', 'に': '2', 'さん': '3', 'よん': '4', 'ご': '5',
+    'ろく': '6', 'なな': '7', 'はち': '8', 'きゅう': '9', 'じゅう': '10'
+}
+
+
+def convert_hiragana_numbers(text):
+    """ひらがな数字を半角数字に変換（「ステップ」の直後のみ）
+
+    例: 「ステップいち」→「ステップ1」
+    例: 「キャプションにある」→ 変換しない（「に」は残る）
+    """
+    result = text
+
+    # 「ステップ」の直後のひらがな数字のみ変換
+    for hiragana, number in HIRAGANA_TO_NUMBER.items():
+        # 「ステップ」+ひらがな数字のパターンを検索して置換
+        pattern = f'ステップ{hiragana}'
+        replacement = f'ステップ{number}'
+        result = result.replace(pattern, replacement)
+
+    return result
+
+
+def convert_tool_names_to_srt(text, tool_mapping):
+    """カタカナツール名をSRT表記（英語）に変換
+
+    例: 「ナノバナナ」→「Nano Banana」
+    """
+    result = text
+    # 長いツール名から先に変換（部分一致を防ぐ）
+    sorted_tools = sorted(tool_mapping.keys(), key=len, reverse=True)
+    for katakana_name in sorted_tools:
+        if katakana_name in result:
+            srt_name = tool_mapping[katakana_name]["display"]
+            result = result.replace(katakana_name, srt_name)
+    return result
+
+
+def split_telop_line(text, target_chars=8, max_chars=12, preserve_words=None):
+    """テキストをテロップ分割ルールに従って分割
+
+    ルール:
+    - 目標は8文字前後だが、意味の区切りを優先
+    - 助詞・動詞語尾の後で区切る（が・を・に・で・は・ます・です・して等）
+    - 単語の途中では絶対に切らない
+    - 最大12文字まで許容（それ以上は強制分割）
+    - preserve_wordsに指定した単語は分割しない
+    """
+    preserve_words = preserve_words or []
+
+    if len(text) <= target_chars:
+        return [text]
+
+    lines = []
+    remaining = text
+
+    # 区切りパターン（優先度順）- これらの後ろで区切る
+    # 長いパターンから先にマッチさせる
+    break_patterns = [
+        # 動詞・助動詞の終止形
+        'ました', 'ません', 'ます', 'です', 'ください',
+        # 接続助詞・て形
+        'ですが', 'ですけど', 'ですので', 'ですから',
+        'ますが', 'ますけど', 'ますので', 'ますから',
+        'して', 'った', 'った', 'れば',
+        # 助詞（接続）
+        'ので', 'から', 'まで', 'より', 'って', 'ても', 'けど', 'けれど',
+        # 助詞（格助詞・係助詞）
+        'には', 'では', 'とは', 'への', 'での',
+        'が', 'を', 'に', 'で', 'は', 'と', 'の', 'も', 'へ', 'や',
+    ]
+
+    # 保護ワードの位置を取得する関数
+    def get_protected_ranges(text_segment):
+        ranges = []
+        for word in preserve_words:
+            pos = text_segment.find(word)
+            if pos >= 0:
+                ranges.append((pos, pos + len(word)))
+        return ranges
+
+    def is_protected(pos, protected_ranges):
+        """指定位置が保護範囲内かどうか"""
+        for start, end in protected_ranges:
+            if start < pos < end:
+                return True
+        return False
+
+    def find_best_break(text_segment, protected_ranges):
+        """最適な区切り位置を見つける"""
+        # target_chars以内で最も良い区切り位置を探す
+        best_pos = -1
+
+        # まずtarget_chars以内で区切りパターンを探す
+        for pattern in break_patterns:
+            search_end = min(target_chars + len(pattern), len(text_segment))
+            search_range = text_segment[:search_end]
+            pos = 0
+            while True:
+                found = search_range.find(pattern, pos)
+                if found < 0:
+                    break
+                cut_pos = found + len(pattern)
+                # target_chars以内で、保護範囲内でなければ採用
+                if cut_pos <= target_chars + 2 and not is_protected(found, protected_ranges) and not is_protected(cut_pos - 1, protected_ranges):
+                    if cut_pos > best_pos:
+                        best_pos = cut_pos
+                pos = found + 1
+
+        if best_pos > 0:
+            return best_pos
+
+        # target_chars以内で見つからない場合、max_charsまで範囲を広げる
+        for pattern in break_patterns:
+            search_end = min(max_chars + len(pattern), len(text_segment))
+            search_range = text_segment[:search_end]
+            pos = 0
+            while True:
+                found = search_range.find(pattern, pos)
+                if found < 0:
+                    break
+                cut_pos = found + len(pattern)
+                if cut_pos <= max_chars and not is_protected(found, protected_ranges) and not is_protected(cut_pos - 1, protected_ranges):
+                    if best_pos < 0 or cut_pos < best_pos:  # max_chars範囲では最初に見つかったものを優先
+                        best_pos = cut_pos
+                        break
+                pos = found + 1
+            if best_pos > 0:
+                break
+
+        if best_pos > 0:
+            return best_pos
+
+        # 保護ワードがある場合は、その終わりまで含める
+        for start, end in protected_ranges:
+            if start < max_chars < end:
+                return end
+
+        # どうしても見つからない場合はmax_charsで切る
+        return min(max_chars, len(text_segment))
+
+    while remaining:
+        if len(remaining) <= target_chars:
+            lines.append(remaining)
+            break
+
+        protected_ranges = get_protected_ranges(remaining)
+        cut_pos = find_best_break(remaining, protected_ranges)
+
+        # 区切り
+        lines.append(remaining[:cut_pos])
+        remaining = remaining[cut_pos:]
+
+    return lines
+
+
+def convert_narration_to_telop(narration_text, tool_mapping):
+    """ナレーションテキストをテロップ形式に変換
+
+    スラッシュ方式:
+    - スラッシュ（/）がある場合: スラッシュで分割
+    - スラッシュがない場合: 自動分割（フォールバック）
+
+    変換処理:
+    1. ひらがな数字→半角数字（「ステップいち」→「ステップ1」）
+    2. カタカナツール名→SRT表記（「ナノバナナ」→「Nano Banana」）
+    """
+    # スラッシュで分割されているか確認
+    if '/' in narration_text:
+        # スラッシュ方式: スラッシュで分割
+        raw_lines = [line.strip() for line in narration_text.split('/') if line.strip()]
+        lines = []
+        for line in raw_lines:
+            # 1. ひらがな数字→半角数字
+            converted = convert_hiragana_numbers(line)
+            # 2. カタカナツール名→SRT表記
+            converted = convert_tool_names_to_srt(converted, tool_mapping)
+            lines.append(converted)
+        return lines
+    else:
+        # フォールバック: 自動分割（スラッシュがない場合）
+        # 1. ひらがな数字→半角数字
+        text = convert_hiragana_numbers(narration_text)
+
+        # 2. カタカナツール名→SRT表記
+        text = convert_tool_names_to_srt(text, tool_mapping)
+
+        # 3. 分割時に保護するワード（SRT表記のツール名）
+        preserve_words = [info["display"] for info in tool_mapping.values()]
+        # 重要ワードも追加
+        preserve_words.extend(['キャプション', 'プロンプト', 'モンスター', 'ASMR'])
+
+        # 4. 自動分割
+        lines = split_telop_line(text, preserve_words=preserve_words)
+
+        return lines
+
+
+def generate_telop_from_narration(narration_lines, tool_mapping):
+    """narration.txtの各行をテロップセグメントに変換
+
+    戻り値: セグメントごとのテロップ行のリスト
+    [
+        ["これ見たこと", "ありますか", ...],  # セグメント1
+        ["ステップ1", "Nano Bananaで", ...],   # セグメント2
+        ...
+    ]
+    """
+    telop_segments = []
+
+    for narration_line in narration_lines:
+        telop_lines = convert_narration_to_telop(narration_line, tool_mapping)
+        telop_segments.append(telop_lines)
+
+    return telop_segments
 
 
 def detect_tool_name(text, tool_mapping):
@@ -1082,14 +1309,14 @@ def main():
         sys.exit(1)
 
     audio_trimmed_folder = os.path.join(project_folder, "audio_trimmed")
-    telop_path = os.path.join(project_folder, "telop.txt")
+    narration_path = os.path.join(project_folder, "narration.txt")
 
     if not os.path.isdir(audio_trimmed_folder):
         print(f"エラー: audio_trimmedフォルダが見つかりません: {audio_trimmed_folder}")
         sys.exit(1)
 
-    if not os.path.isfile(telop_path):
-        print(f"エラー: telop.txtが見つかりません: {telop_path}")
+    if not os.path.isfile(narration_path):
+        print(f"エラー: narration.txtが見つかりません: {narration_path}")
         sys.exit(1)
 
     json_files = sorted(glob(os.path.join(audio_trimmed_folder, "*.json")))
@@ -1100,8 +1327,22 @@ def main():
     print(f"プロジェクト: {project_folder}")
     print(f"JSONファイル数: {len(json_files)}")
 
-    telop_segments = parse_telop(telop_path)
+    # ツール名マッピングを読み込み
+    tool_mapping = load_tool_name_mapping()
+    print(f"ツール名マッピング: {len(tool_mapping)}件")
+
+    # narration.txtを読み込んでテロップに変換
+    narration_lines = load_narration_lines(project_folder)
+    print(f"ナレーション行数: {len(narration_lines)}")
+
+    # narration.txtからテロップセグメントを生成
+    telop_segments = generate_telop_from_narration(narration_lines, tool_mapping)
     print(f"テロップセグメント数: {len(telop_segments)}")
+
+    # 変換結果を表示
+    print("\n=== テロップ変換結果 ===")
+    for i, segment in enumerate(telop_segments, 1):
+        print(f"セグメント{i}: {' / '.join(segment[:3])}{'...' if len(segment) > 3 else ''}")
 
     all_srt_entries = []
     segment_times = {}

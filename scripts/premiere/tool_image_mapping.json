@@ -1,6 +1,6 @@
 {
   "comment": "AIツール名 → 画像ファイル名のマスターマッピング（ai-tool-name-list.mdのSRT表記を使用）",
-  "image_folder": "C:\\Instagramショート\\Instagram_Reels_Production\\共有素材\\AIロゴ",
+  "image_folder": "C:\\Instagramショート\\Instagram_Reels_Production_V26.0.0\\共有素材\\AIロゴ",
   "tools": {
     "AKOOL": "AKOOL.png",
     "Anthropic": "Anthropic.png",

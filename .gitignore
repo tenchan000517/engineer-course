@@ -57,3 +57,10 @@ docs/reference/guides/ANALYSIS-*.md
 next-env.d.ts
 
 .vercel
+
+# Large video files
+public/animepv/export/*.mp4
+public/animepv/videos/*.mp4
+public/animepv/videos/*.mp3
+public/animepv/export/*.prproj
+public/animepv/export/*.prin

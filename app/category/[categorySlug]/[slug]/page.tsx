@@ -11,6 +11,11 @@ import { ReactNode } from 'react';
 import CategorySidebar from '@/components/CategorySidebar';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
 
+// サブコースIDとディレクトリのマッピング
+const subcourseDirectoryMap: Record<string, string> = {
+  'n8n-instagram': 'n8n',
+};
+
 // アイコンマッピング
 const iconMap: Record<string, ReactNode> = {
   briefcase: (
@@ -241,7 +246,8 @@ function SubcoursePage({
   category: ReturnType<typeof getCategoryBySlug> & { id: string };
   subcourse: SubcourseData;
 }) {
-  const modules = getModulesByCategory(subcourse.id);
+  const moduleDir = subcourseDirectoryMap[subcourse.id] || subcourse.id;
+  const modules = getModulesByCategory(moduleDir);
   const colors = colorMap[category.color] || colorMap.blue;
 
   return (
